@@ -9,3 +9,7 @@ dist/
 .DS_Store
 /tmp-shots/
 /lighthouse/
+
+# Canva export intermediates and the download bundle
+/design/canva/_layers/
+/design/canva/*.zip

@@ -7,7 +7,8 @@
     "dev": "astro dev",
     "build": "astro check && astro build",
     "preview": "astro preview",
-    "check": "astro check"
+    "check": "astro check",
+    "export:canva": "node scripts/canva/extract.mjs http://localhost:4322 design/canva/_layers && python3 scripts/canva/build_pptx.py design/canva/_layers design/canva"
   },
   "dependencies": {
     "@astrojs/react": "^7.1.2",

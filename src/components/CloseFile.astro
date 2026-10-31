@@ -23,7 +23,8 @@ const { href, label, flag } = Astro.props;
     position: fixed;
     z-index: var(--z-overlay);
     top: calc(var(--space-2) + var(--touch) + var(--space-2));
-    right: var(--gutter);
+    /* sits left of the docked hat (76px wide) so the two never overlap */
+    right: calc(var(--gutter) + 76px + var(--space-2));
     display: inline-flex;
     align-items: center;
     gap: var(--space-1);
