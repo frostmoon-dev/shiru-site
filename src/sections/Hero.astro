@@ -1,27 +1,31 @@
 ---
+import { Picture } from 'astro:assets';
 import { hero, ui } from '../content/site';
-import NightScene from '../components/scene/NightScene.astro';
+import { heroPortrait } from '../content/photos';
 import InkEdgeFallback from '../components/scene/InkEdgeFallback.astro';
 import Icon from '../components/Icon.astro';
 ---
 
-<section id="top" class="hero" data-tone="night" aria-labelledby="hero-title">
-  <div class="hero__scene" aria-hidden="true">
-    <NightScene />
+<section id="top" class="hero" data-tone="void" aria-labelledby="hero-title">
+  <!-- Someone is standing in the dark. You only see what the light touches. -->
+  <div class="hero__portrait" aria-hidden="true" data-effect="lantern-reveal">
+    <Picture
+      src={heroPortrait}
+      alt=""
+      formats={['avif', 'webp']}
+      widths={[480, 800, 1200]}
+      sizes="(max-width: 719px) 100vw, 60vw"
+      loading="eager"
+      decoding="async"
+    />
   </div>
-  <div class="hero__petals" aria-hidden="true" data-effect="petals-webgl"></div>
 
-  <div class="hero__content" data-effect="flicker-jitter" data-effect-options='{"every":[7,16]}'>
-    <h1
-      id="hero-title"
-      class="hero__title"
-      data-effect="bleed-title"
-      data-effect-options='{"color":"#a3141b","startEvent":"shiru:intro-done"}'
-    >
-      <span class="bleed__text">{hero.name}</span>
-    </h1>
+  <div class="hero__content" data-effect="flicker-jitter" data-effect-options='{"every":[9,20]}'>
+    <p class="hero__kicker label">{hero.kicker}</p>
+    <h1 id="hero-title" class="hero__title" data-effect="ghost-title" data-effect-options='{"every":[6,14]}'>{hero.name}</h1>
+    <span class="hero__rule" aria-hidden="true"></span>
     <p class="hero__tagline label">{hero.tagline}</p>
-    <p class="hero__sub flavour">{hero.sub}</p>
+    <p class="hero__sub">{hero.sub}</p>
   </div>
 
   <a class="hero__scroll label" href="#rabbit-hole">
@@ -41,56 +45,129 @@ import Icon from '../components/Icon.astro';
     display: grid;
     align-items: end;
     padding: var(--space-8) var(--gutter) calc(var(--space-7) + 6vh);
-    isolation: auto;
+    background:
+      radial-gradient(ellipse 60% 50% at 70% 35%, rgb(26 25 34 / 0.55), transparent 70%),
+      var(--void);
   }
-  .hero__scene,
-  .hero__petals {
+
+  /* The hidden portrait: barely there everywhere, uncovered where the lantern points. */
+  .hero__portrait {
+    --lx: 58%;
+    --ly: 34%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(64vw, 980px);
+    pointer-events: none;
+    -webkit-mask-image:
+      radial-gradient(circle at var(--lx) var(--ly), #000 0, rgb(0 0 0 / 0.55) 11%, transparent 30%),
+      linear-gradient(rgb(0 0 0 / 0.07), rgb(0 0 0 / 0.07));
+    mask-image:
+      radial-gradient(circle at var(--lx) var(--ly), #000 0, rgb(0 0 0 / 0.55) 11%, transparent 30%),
+      linear-gradient(rgb(0 0 0 / 0.07), rgb(0 0 0 / 0.07));
+  }
+  .hero__portrait :global(picture),
+  .hero__portrait :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 25%;
+    filter: grayscale(1) contrast(1.15) brightness(0.85);
+  }
+  .hero__portrait::after {
+    /* melt the left edge into the dark */
+    content: '';
     position: absolute;
     inset: 0;
-    overflow: hidden;
+    background: linear-gradient(to right, var(--void), transparent 35%, transparent 85%, var(--void));
   }
+  @property --lx {
+    syntax: '<percentage>';
+    inherits: false;
+    initial-value: 58%;
+  }
+  @property --ly {
+    syntax: '<percentage>';
+    inherits: false;
+    initial-value: 34%;
+  }
+  .hero__portrait:global(.is-drifting) {
+    animation: lantern-drift 23s ease-in-out infinite alternate;
+  }
+  @keyframes lantern-drift {
+    0% {
+      --lx: 58%;
+      --ly: 30%;
+    }
+    35% {
+      --lx: 44%;
+      --ly: 42%;
+    }
+    70% {
+      --lx: 66%;
+      --ly: 50%;
+    }
+    100% {
+      --lx: 52%;
+      --ly: 24%;
+    }
+  }
+
   .hero__content {
     position: relative;
     z-index: var(--z-content);
-    max-width: 62rem;
+    max-width: 52rem;
     margin-left: clamp(0rem, 3vw, 4rem);
-    transform: rotate(-1.2deg);
+  }
+  .hero__kicker {
+    color: var(--muted);
+    margin-bottom: var(--space-2);
   }
   .hero__title {
+    font-family: var(--font-hero);
     font-size: var(--step-6);
-    line-height: 0.9;
-    letter-spacing: 0.04em;
-    color: var(--blood);
+    font-weight: 400;
+    line-height: 0.95;
+    letter-spacing: 0.02em;
+    color: var(--bone);
     text-transform: uppercase;
-    text-shadow: 0 0.02em 0 var(--oxblood);
     margin-left: -0.04em;
   }
+  .hero__rule {
+    display: block;
+    width: 3.5rem;
+    height: 2px;
+    margin-block: var(--space-4) var(--space-3);
+    background: var(--blood);
+  }
   .hero__tagline {
-    /* room for the drips to hang */
-    margin-top: calc(var(--step-6) * 0.5);
     color: var(--bone);
     font-size: clamp(var(--text-label), 0.7rem + 0.4vw, 0.95rem);
     max-width: 44ch;
   }
   .hero__sub {
     margin-top: var(--space-1);
-    color: var(--moon);
+    color: var(--muted);
     font-size: var(--step-0);
-    font-style: italic;
-    max-width: 40ch;
+    max-width: 44ch;
   }
   .hero__scroll {
     position: absolute;
     z-index: var(--z-content);
-    right: var(--gutter);
-    top: calc(var(--space-2) + var(--touch) + var(--space-2));
+    left: var(--gutter);
+    top: calc(var(--space-2) + var(--touch) + var(--space-3));
     display: inline-flex;
     align-items: center;
     gap: var(--space-1);
     min-height: var(--touch);
     padding-inline: var(--space-1);
-    color: var(--bone);
+    color: var(--muted);
     text-decoration: none;
+  }
+  .hero__scroll:hover {
+    color: var(--bone);
   }
   .hero__scroll :global(.icon) {
     animation: nudge 2.4s var(--ease-ink) infinite;
@@ -99,9 +176,6 @@ import Icon from '../components/Icon.astro';
     50% {
       transform: translateY(5px);
     }
-  }
-  :global(html.at-hero) .hero__scroll {
-    right: calc(8vw + clamp(130px, 17vw, 240px) + var(--space-4));
   }
 
   .ink-edge {
@@ -120,7 +194,10 @@ import Icon from '../components/Icon.astro';
   @media (max-width: 719px) {
     .hero {
       padding-bottom: calc(var(--space-7) + 10vh);
-      align-items: center;
+    }
+    .hero__portrait {
+      width: 100%;
+      opacity: 0.85;
     }
     .hero__content {
       margin-left: 0;
@@ -128,11 +205,6 @@ import Icon from '../components/Icon.astro';
     .hero__scroll {
       top: auto;
       bottom: calc(10vh + var(--space-3));
-      right: auto;
-      left: var(--gutter);
-    }
-    :global(html.at-hero) .hero__scroll {
-      right: auto;
     }
   }
 </style>

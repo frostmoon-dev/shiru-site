@@ -62,11 +62,11 @@ const ogUrl = new URL(ogImage, Astro.site).href;
     <meta name="twitter:image" content={ogUrl} />
     <meta name="twitter:image:alt" content={ogImageAlt} />
 
-    <!-- Hero fonts preload; the reading faces load on demand. -->
-    <Font cssVariable="--font-display" preload />
+    <!-- Preload only what the first screen needs; the rest load on demand. -->
+    <Font cssVariable="--font-hero" preload={home} />
+    <Font cssVariable="--font-display" preload={!home} />
     <Font cssVariable="--font-label" preload />
     <Font cssVariable="--font-body" />
-    <Font cssVariable="--font-flavour" />
 
     <HeadInline intro={home} />
     <ClientRouter />
@@ -86,7 +86,6 @@ const ogUrl = new URL(ogImage, Astro.site).href;
       <div class="atmosphere__vignette"></div>
     </div>
     <div class="cursor-host" aria-hidden="true" data-effect="ember-trail" data-effect-eager transition:persist="embers"></div>
-    <div hidden data-effect="link-bleed" data-effect-eager></div>
 
     <script>
       import { startEffects, stopEffects } from '../effects/runtime';

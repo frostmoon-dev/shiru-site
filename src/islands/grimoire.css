@@ -66,7 +66,7 @@
   color: var(--oxblood);
 }
 .book__title {
-  font-family: var(--font-flavour);
+  font-family: var(--font-body);
   font-size: var(--step-2);
   line-height: 1.15;
   color: var(--ink);
@@ -92,7 +92,7 @@
   align-items: center;
   min-height: var(--touch);
   color: var(--ink);
-  font-family: var(--font-flavour);
+  font-family: var(--font-body);
   font-style: italic;
 }
 .book__folio {

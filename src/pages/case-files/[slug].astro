@@ -29,7 +29,7 @@ const next = caseFiles.files[(idx + 1) % caseFiles.files.length]!;
         <div class="folder__text">
           <p class="label folder__no">Case file {file.number}</p>
           <h1 id="file-title" class="folder__title" transition:name={`case-title-${file.slug}`}>{file.title}</h1>
-          <p class="folder__summary flavour">{file.summary}</p>
+          <p class="folder__summary flavour" data-effect="wet-ink">{file.summary}</p>
           {
             file.details.map((d) => (
               <section class="folder__block">
@@ -122,7 +122,7 @@ const next = caseFiles.files[(idx + 1) % caseFiles.files.length]!;
   }
   .folder__title {
     font-size: var(--step-4);
-    color: var(--oxblood);
+    color: var(--ink);
     margin-block: var(--space-1) var(--space-3);
   }
   .folder__summary {
@@ -150,7 +150,7 @@ const next = caseFiles.files[(idx + 1) % caseFiles.files.length]!;
   }
   .folder__next {
     margin-top: var(--space-5);
-    font-family: var(--font-flavour);
+    font-family: var(--font-body);
   }
   .folder__stamp {
     position: absolute;

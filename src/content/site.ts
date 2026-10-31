@@ -12,9 +12,9 @@ export const site = {
   locale: 'en',
   title: 'Shiru · ERP by day, words by night',
   description:
-    'Shiru builds Dynamics 365 Finance & Operations systems in X++ by day and translates English and Malay by night. A storybook left open in a haunted house.',
+    'Shiru builds Dynamics 365 Finance & Operations systems in X++ by day and translates English and Malay by night. Case No. 0: subject unknown.',
   ogImage: '/og.png',
-  ogImageAlt: 'The word SHIRU bleeding red ink on a dark storybook page, with a crooked moon.',
+  ogImageAlt: 'The name SHIRU in pale lettering on black, under the line Case No. 0, Subject: unknown.',
 } as const;
 
 export type ChapterId = 'rabbit-hole' | 'case-files' | 'grimoire' | 'tea';
@@ -58,9 +58,12 @@ export const intro = {
 };
 
 export const hero = {
-  name: 'SHIRU',
+  name: 'Shiru',
+  kicker: 'Case No. 0 · Subject: unknown',
   tagline: 'Builds ledgers by day. Translates ghosts by night.',
   sub: 'ERP developer · English–Malay translator · keeper of a lore archive',
+  /** The hidden portrait in the dark. Decorative; the light only ever shows part of it. */
+  lanternHint: 'Move the light',
   hatHint: 'Tip the hat',
 };
 
@@ -288,7 +291,7 @@ export const footer = {
   privacy:
     'No cookies, no trackers, no analytics. Your browser remembers only whether you’ve seen the intro this session and which hints you’ve used. Nothing leaves your device unless you send me a letter.',
   copyright: (year: number) => `© ${year} Shiru. Text and photos all rights reserved.`,
-  fontsCredit: 'Set in Federant, EB Garamond, IM Fell English and Special Elite (SIL OFL / Apache 2.0).',
+  fontsCredit: 'Headings in Alice in Wonderland by Marco T.L. Text in EB Garamond, IM Fell English and Special Elite (SIL OFL / Apache 2.0).',
 };
 
 export const notFound = {

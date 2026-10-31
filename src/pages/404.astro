@@ -8,9 +8,7 @@ import { notFound } from '../content/site';
   <section class="lost" data-tone="night" aria-labelledby="lost-title">
     <div class="lost__clock" aria-hidden="true"><BackwardsClock size={160} speed={3} /></div>
     <p class="label lost__label">{notFound.label}</p>
-    <h1 id="lost-title" class="lost__title" data-effect="bleed-title" data-effect-options='{"color":"#e0383f","density":0.6}'>
-      <span class="bleed__text">{notFound.title}</span>
-    </h1>
+    <h1 id="lost-title" class="lost__title" data-effect="ghost-title">{notFound.title}</h1>
     <p class="flavour lost__body">{notFound.body}</p>
     <p><a class="btn" href="/">{notFound.back}</a></p>
   </section>
@@ -36,7 +34,7 @@ import { notFound } from '../content/site';
   }
   .lost__title {
     font-size: var(--step-5);
-    color: var(--blood-lit-night);
+    color: var(--bone);
     max-width: 16ch;
     margin-bottom: var(--space-4);
   }

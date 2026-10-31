@@ -14,8 +14,9 @@ function used(): Set<string> {
 
 export function applyHints(root: ParentNode = document) {
   const done = used();
+  // Used hints keep their space (visibility, not display) so nothing shifts when they go.
   root.querySelectorAll<HTMLElement>('[data-hint]').forEach((el) => {
-    el.hidden = done.has(el.dataset.hint ?? '');
+    el.classList.toggle('is-used', done.has(el.dataset.hint ?? ''));
   });
 }
 
@@ -29,8 +30,5 @@ export function markHintUsed(key: string) {
       /* storage disabled: hint simply hides for this page view */
     }
   }
-  document.querySelectorAll<HTMLElement>(`[data-hint="${key}"]`).forEach((el) => {
-    el.classList.add('is-used');
-    window.setTimeout(() => (el.hidden = true), 400);
-  });
+  document.querySelectorAll<HTMLElement>(`[data-hint="${key}"]`).forEach((el) => el.classList.add('is-used'));
 }

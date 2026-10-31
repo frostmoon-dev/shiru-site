@@ -13,7 +13,7 @@ interface Props {
 const { href, label, flag } = Astro.props;
 ---
 
-<a class="close-file label" href={href} data-close-file data-flag={flag} data-no-bleed>
+<a class="close-file label" href={href} data-close-file data-flag={flag}>
   <Icon name="close" size={22} />
   <span>{label}</span>
 </a>

@@ -108,9 +108,9 @@ const { home = false } = Astro.props;
   }
   .chapter-index li + li::before {
     content: '';
-    width: 4px;
-    height: 4px;
-    background: var(--blood);
+    width: 3px;
+    height: 3px;
+    background: var(--muted);
     rotate: 45deg;
     align-self: center;
   }
@@ -127,7 +127,8 @@ const { home = false } = Astro.props;
     text-decoration: none;
   }
   .chapter-index__link[aria-current='true'] {
-    color: var(--blood-lit);
+    color: var(--bone);
+    text-decoration-color: var(--blood);
     text-decoration: underline;
     text-decoration-thickness: 2px;
     text-underline-offset: 0.4em;
@@ -210,9 +211,7 @@ const { home = false } = Astro.props;
   :global(html.at-hero) .hat-btn__hint {
     opacity: 1;
   }
-  .hat-btn__hint.is-used {
-    opacity: 0 !important;
-  }
+
   @keyframes hat-bob {
     0%,
     100% {
@@ -277,12 +276,16 @@ const { home = false } = Astro.props;
     font-family: var(--font-display);
     font-size: var(--step-3);
     line-height: 1.15;
-    color: var(--bone);
+    color: var(--moon);
     text-decoration: none;
   }
   .spell-menu__list a:hover,
   .spell-menu__list a:focus-visible {
-    color: var(--blood-lit);
+    color: var(--bone);
+    text-decoration: underline;
+    text-decoration-color: var(--blood);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.18em;
   }
   .spell-menu__list .label {
     font-size: var(--text-label);

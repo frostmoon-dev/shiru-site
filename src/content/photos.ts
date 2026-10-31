@@ -3,6 +3,7 @@
  * Swap a file in src/assets/placeholder/ (same name) or point an import at a new file.
  * Astro turns each into AVIF/WebP at several widths at build time.
  */
+import heroPortrait from '../assets/placeholder/hero-portrait.jpg';
 import caseErp from '../assets/placeholder/case-erp.jpg';
 import caseTranslation from '../assets/placeholder/case-translation.jpg';
 import caseLore from '../assets/placeholder/case-lore.jpg';
@@ -19,3 +20,5 @@ export const casePhotos = {
 } as const;
 
 export const introPhotos = { 'intro-1': intro1, 'intro-2': intro2, 'intro-3': intro3, 'intro-4': intro4, 'intro-5': intro5 } as const;
+
+export { heroPortrait };

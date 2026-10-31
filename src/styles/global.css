@@ -93,12 +93,13 @@ p {
   line-height: 1.4;
 }
 .flavour {
-  font-family: var(--font-flavour);
+  font-family: var(--font-body);
+  font-style: italic;
   font-size: var(--step-1);
   line-height: 1.45;
 }
 .caption {
-  font-family: var(--font-flavour);
+  font-family: var(--font-body);
   font-size: var(--text-small);
   line-height: 1.4;
   color: var(--fg-muted);
@@ -110,7 +111,7 @@ p {
   margin-top: var(--space-3);
 }
 
-/* ---------- Links (one behaviour everywhere; link-bleed effect adds drips) ---------- */
+/* ---------- Links (one behaviour everywhere: the ink underline thickens and blots) ---------- */
 a {
   color: var(--link);
   text-decoration-line: underline;
@@ -226,6 +227,9 @@ a:active {
 }
 .skip-link {
   position: fixed;
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--touch);
   left: var(--space-2);
   top: var(--space-2);
   z-index: var(--z-skip);
@@ -271,6 +275,18 @@ a:active {
   }
 }
 
+/* ---------- One-time hints ---------- */
+[data-hint] {
+  transition: opacity var(--dur-slow) var(--ease-out);
+}
+[data-hint].is-used {
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--dur-slow) var(--ease-out),
+    visibility 0s var(--dur-slow);
+}
+
 /* ---------- Effect states ---------- */
 [data-effect-state='error'] {
   /* effects fall back to static; nothing else to style */
@@ -296,38 +312,23 @@ html:focus-within {
   }
 }
 
-/* ---------- CSS petals (phone / low-power version of petals-webgl) ---------- */
-.css-petals {
+/* ---------- Ghost titles (effects/ghost-title) ---------- */
+[data-effect='ghost-title'] {
+  position: relative;
+}
+[data-effect='ghost-title'].is-veiled {
+  opacity: 0;
+}
+.ghost-title__echo {
   position: absolute;
   inset: 0;
-  overflow: hidden;
+  display: block;
+  opacity: 0;
   pointer-events: none;
+  color: inherit;
+  mix-blend-mode: screen;
 }
-.css-petals span {
-  position: absolute;
-  top: 0;
-  border-radius: 80% 10% 80% 10%;
-  background: radial-gradient(circle at 30% 30%, var(--blood), var(--oxblood));
-  animation-name: petal-fall, petal-sway;
-  animation-timing-function: linear, ease-in-out;
-  animation-iteration-count: infinite;
-  animation-direction: normal, alternate;
-  animation-play-state: var(--play, running);
-  will-change: transform;
-}
-@keyframes petal-fall {
-  from {
-    transform: translateY(-5vh) rotate(0deg);
-  }
-  to {
-    transform: translateY(105vh) rotate(540deg);
-  }
-}
-@keyframes petal-sway {
-  from {
-    translate: -14px 0;
-  }
-  to {
-    translate: 18px 0;
-  }
+[data-tone='bone'] .ghost-title__echo,
+[data-tone='sepia'] .ghost-title__echo {
+  mix-blend-mode: multiply;
 }

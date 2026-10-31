@@ -14,7 +14,7 @@ const action = endpoint || `mailto:${site.email}`;
   <Pinstripe />
   <div class="tea__inner">
     <div class="tea__lead">
-      <ChapterHeading id="tea-title" label={tea.label} title={tea.title} drip="#e74f54" />
+      <ChapterHeading id="tea-title" label={tea.label} title={tea.title} />
       <p class="tea__intro flavour">{tea.intro}</p>
     </div>
 
@@ -68,7 +68,7 @@ const action = endpoint || `mailto:${site.email}`;
       </div>
 
       <div class="letter" id="letter" data-tone="bone" data-letter>
-        <h3 class="letter__title">{tea.formTitle}</h3>
+        <h3 class="letter__title" data-effect="wet-ink">{tea.formTitle}</h3>
         <form class="letter__form" action={action} method="post" enctype={mode === 'mailto' ? 'text/plain' : undefined} novalidate data-form>
           <div class="field">
             <label for="f-name">{tea.fields.name.label}</label>
@@ -304,7 +304,7 @@ const action = endpoint || `mailto:${site.email}`;
     }
   }
   .letter__title {
-    font-family: var(--font-flavour);
+    font-family: var(--font-body);
     font-size: var(--step-2);
     margin-bottom: var(--space-3);
     color: var(--ink);

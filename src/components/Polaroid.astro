@@ -12,7 +12,7 @@ const photo = casePhotos[file.photo];
 ---
 
 <li class="polaroid-wrap" style={`--rot:${file.rotation}deg; --i:${index}`}>
-  <a class="polaroid" href={`/case-files/${file.slug}/`} data-no-bleed>
+  <a class="polaroid" href={`/case-files/${file.slug}/`}>
     <span class="polaroid__pin" aria-hidden="true"></span>
     <span class="polaroid__photo" transition:name={`case-photo-${file.slug}`} data-effect="flicker-jitter" data-effect-options='{"every":[6,18]}'>
       <Picture
@@ -99,7 +99,7 @@ const photo = casePhotos[file.photo];
     color: var(--ink-muted);
   }
   .polaroid__title {
-    font-family: var(--font-flavour);
+    font-family: var(--font-body);
     font-size: var(--step-1);
     line-height: 1.2;
   }

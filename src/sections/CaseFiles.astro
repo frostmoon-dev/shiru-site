@@ -9,7 +9,7 @@ const ch = chapters.find((c) => c.id === 'case-files')!;
 <section id={ch.id} class="cases" data-tone="void" aria-labelledby="cases-title">
   <div class="cases__inner">
     <div class="cases__lead">
-      <ChapterHeading id="cases-title" label={caseFiles.label} title={caseFiles.title} drip="#e0383f" />
+      <ChapterHeading id="cases-title" label={caseFiles.label} title={caseFiles.title} />
       <p class="cases__intro flavour">{caseFiles.intro}</p>
       <p class="cases__hint caption" data-hint="case-files">{caseFiles.hint}</p>
     </div>

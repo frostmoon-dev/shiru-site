@@ -65,7 +65,9 @@ const ch = chapters.find((c) => c.id === 'rabbit-hole')!;
   }
   .rp {
     position: absolute;
-    filter: drop-shadow(0 8px 10px rgb(42 26 18 / 0.25));
+    /* things that almost move: present, never louder than the words */
+    opacity: 0.45;
+    filter: grayscale(0.4) drop-shadow(0 8px 10px rgb(42 26 18 / 0.2));
   }
   .rp--clock1 {
     left: 4%;
@@ -147,7 +149,7 @@ const ch = chapters.find((c) => c.id === 'rabbit-hole')!;
     padding-top: 0.35em;
   }
   .specimen dd {
-    font-family: var(--font-flavour);
+    font-family: var(--font-body);
   }
   .rabbit__caption {
     color: var(--fg-muted);
@@ -184,6 +186,9 @@ const ch = chapters.find((c) => c.id === 'rabbit-hole')!;
     }
     .rabbit__lead {
       grid-column: 1;
+      background: color-mix(in oklch, var(--bone) 85%, transparent);
+      padding: var(--space-3);
+      margin: calc(var(--space-3) * -1);
       grid-row: 1 / span 2;
       position: sticky;
       top: 22vh;

@@ -44,8 +44,11 @@
   --success-on-paper: #6b5419;  /* brass darkened: 6.0:1 on bone */
 
   /* ---- Typography ---- */
-  /* fonts come from the Astro Fonts API (astro.config.mjs) as --font-display, --font-body,
-     --font-flavour, --font-label. */
+  /* Fonts come from the Astro Fonts API (astro.config.mjs):
+     --font-hero     American Horror Story: the hero name only
+     --font-display  Alice in Wonderland: chapter titles, big sizes only (≥ 32px)
+     --font-body     Atkinson Hyperlegible Next: everything you read
+     --font-label    Special Elite: labels, stamps, dates, nav (12–14px, uppercase) */
   --step-0: clamp(1.125rem, 1.08rem + 0.22vw, 1.25rem);        /* 18 → 20px body */
   --step-1: calc(var(--step-0) * 1.25);
   --step-2: calc(var(--step-0) * 1.5625);
@@ -55,7 +58,7 @@
   --step-6: clamp(4.5rem, 2.4rem + 12vw, 12rem);                /* hero logotype */
   --text-label: 0.8125rem;                                      /* 13px typewriter labels */
   --text-small: 1rem;                                           /* captions in IM Fell */
-  --leading-body: 1.65;
+  --leading-body: 1.6;
   --leading-tight: 1.05;
   --measure: 66ch;
   --tracking-label: 0.1em;
@@ -108,7 +111,6 @@
   --focus-halo: var(--void);
   --error: var(--error-on-dark);
   --success: var(--success-on-dark);
-  --drip: var(--blood-lit);
 }
 
 [data-tone='void'] {
@@ -134,7 +136,6 @@
   --success: var(--success-on-dark);
 }
 [data-tone='bone'] {
-  --drip: var(--blood);
   --bg: var(--bone);
   --fg: var(--ink);
   --fg-muted: var(--ink-muted);   /* 6.55:1 on bone */
@@ -146,7 +147,6 @@
   --success: var(--success-on-paper);
 }
 [data-tone='sepia'] {
-  --drip: var(--oxblood);
   --bg: var(--sepia);
   --fg: var(--ink);
   --fg-muted: #4a3828;            /* 5.51:1 on sepia */

@@ -3,7 +3,7 @@ import type { EffectFactory } from '../types';
 /**
  * Types the element's text letter by letter when it scrolls into view. Safety, then
  * subversion: one letter is typed wrong, hangs there a beat too long, and is corrected.
- * Screen readers get the full text immediately (aria-label); the typed copy is aria-hidden.
+ * Screen readers get the full text immediately (a visually hidden copy); the typed copy is aria-hidden.
  * Options: { typo?: { at: number, wrong: string }, speed?: number }
  */
 const typewriter: EffectFactory = () => {
@@ -21,14 +21,16 @@ const typewriter: EffectFactory = () => {
       originalHTML = target.innerHTML;
       const typo = opts.typo as { at: number; wrong: string } | undefined;
       const speed = typeof opts.speed === 'number' ? opts.speed : 90;
-      target.setAttribute('aria-label', original);
+      const sr = document.createElement('span');
+      sr.className = 'visually-hidden';
+      sr.textContent = original;
       const out = document.createElement('span');
       out.setAttribute('aria-hidden', 'true');
       const caret = document.createElement('span');
       caret.className = 'typewriter__caret';
       caret.setAttribute('aria-hidden', 'true');
       caret.textContent = '▌';
-      target.replaceChildren(out, caret);
+      target.replaceChildren(sr, out, caret);
       // keep the line's height so nothing jumps while it types
       target.style.minHeight = '1.2em';
 
@@ -45,7 +47,7 @@ const typewriter: EffectFactory = () => {
       const run = (i: number) => {
         if (i >= steps.length) return;
         steps[i]!();
-        const ch = original[out.textContent!.length - 1];
+        const ch = out.textContent!.slice(-1);
         timer = window.setTimeout(() => run(i + 1), speed + (ch === ' ' ? 120 : Math.random() * 70));
       };
       io = new IntersectionObserver(
@@ -64,7 +66,6 @@ const typewriter: EffectFactory = () => {
       window.clearTimeout(timer);
       if (el) {
         el.innerHTML = originalHTML;
-        el.removeAttribute('aria-label');
         el.style.minHeight = '';
       }
       el = undefined;

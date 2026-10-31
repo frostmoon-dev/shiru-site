@@ -17,7 +17,8 @@ const { intro = false } = Astro.props;
     var root = document.documentElement;
     root.classList.add('js');
     try {
-      if (intro && !sessionStorage.getItem('shiru:intro-seen')) {
+      // Deep links (/#tea) go straight to the content: no intro in the way.
+      if (intro && !location.hash && !sessionStorage.getItem('shiru:intro-seen')) {
         root.classList.add('intro-pending');
         // Fail-safe: if the intro script never starts, the page is never held hostage.
         window.__introFailsafe = window.setTimeout(function () {

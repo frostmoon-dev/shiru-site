@@ -57,10 +57,12 @@ const openBtn = page.getByRole('button', { name: 'Open the grimoire' });
 await openBtn.click();
 await page.waitForTimeout(2200);
 await shot('grimoire-open');
+const before = await page.textContent('.book__count');
 await page.keyboard.press('ArrowRight');
 await page.waitForTimeout(1400);
 await shot('grimoire-turned');
-check('→ turns page', (await page.textContent('.book__count'))?.includes('3'));
+const after = await page.textContent('.book__count');
+check(`→ turns page ("${before}" → "${after}")`, before !== after);
 await page.goBack();
 await page.waitForTimeout(1200);
 check('Back closes book', (await page.locator('.book.is-open').count()) === 0 && (await page.evaluate(() => location.pathname)) === '/');
@@ -80,15 +82,17 @@ check('Esc closes envelope', (await page.locator('.envelope.is-open').count()) =
 
 // Case file + back restores scroll
 await scrollTo('#case-files', 200);
+await page.locator('.polaroid').first().scrollIntoViewIfNeeded();
+await page.waitForTimeout(800);
 const y = await page.evaluate(() => window.scrollY);
-await page.click('.polaroid >> nth=0');
+await page.locator('.polaroid').first().evaluate((a) => a.click()); // no auto-scroll
 await page.waitForTimeout(2000);
 await shot('case-file');
 check('case file page loaded', (await page.evaluate(() => location.pathname)) === '/case-files/erp/');
 await page.keyboard.press('Escape');
 await page.waitForTimeout(2000);
 const y2 = await page.evaluate(() => window.scrollY);
-check(`Esc returns home, scroll restored (${y} → ${y2})`, (await page.evaluate(() => location.pathname)) === '/' && Math.abs(y - y2) < 120);
+check(`Esc returns home, scroll restored (${y} → ${y2})`, (await page.evaluate(() => location.pathname)) === '/' && Math.abs(y - y2) < 20);
 
 // 404
 await page.goto(base + "/nope", { waitUntil: 'networkidle' });

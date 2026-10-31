@@ -22,9 +22,7 @@ const date = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'long', y
     <CloseFile href="/#grimoire" label="Back to the grimoire" flag="shiru:from-grimoire" />
     <header class="entry__head">
       <p class="label">Chapter {entry.numeral} · <time datetime={entry.date}>{date}</time></p>
-      <h1 id="entry-title" class="entry__title" data-effect="bleed-title" data-effect-options='{"color":"#5c0e12","density":0.5}'>
-        <span class="bleed__text">{entry.title}</span>
-      </h1>
+      <h1 id="entry-title" class="entry__title" data-effect="ghost-title">{entry.title}</h1>
       <p class="entry__excerpt flavour">{entry.excerpt}</p>
     </header>
     <div class="entry__body prose">
@@ -56,7 +54,7 @@ const date = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'long', y
   }
   .entry__title {
     font-size: var(--step-5);
-    color: var(--oxblood);
+    color: var(--ink);
     margin-block: var(--space-2) var(--space-5);
   }
   .entry__excerpt {
@@ -75,7 +73,7 @@ const date = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'long', y
     justify-content: space-between;
     gap: var(--space-3);
     flex-wrap: wrap;
-    font-family: var(--font-flavour);
+    font-family: var(--font-body);
   }
   .entry__nav a {
     min-height: var(--touch);
