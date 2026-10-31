@@ -13,21 +13,22 @@ import lace from '../assets/design/lace-frame.png';
 import gingham from '../assets/design/gingham.jpg';
 import pocketWatch from '../assets/design/pocket-watch.png';
 import paperclip from '../assets/collage/paperclip.png';
-import archiveMoonpaper from '../assets/placeholder/archive-moonpaper.jpg';
-import archiveNapyru from '../assets/placeholder/archive-napyru.jpg';
-import archiveMoona from '../assets/placeholder/archive-moona.jpg';
-import archiveVisualThemes from '../assets/placeholder/archive-visual-themes.jpg';
+import workMoonpaper from '../assets/works/moonpaper.webp';
+import workNapyru from '../assets/works/napyru.webp';
+import workMoona from '../assets/works/moona.webp';
+import workBondGarden from '../assets/works/bond-garden.webp';
 import intro1 from '../assets/placeholder/intro-1.jpg';
 import intro2 from '../assets/placeholder/intro-2.jpg';
 import intro3 from '../assets/placeholder/intro-3.jpg';
 import intro4 from '../assets/placeholder/intro-4.jpg';
 import intro5 from '../assets/placeholder/intro-5.jpg';
 
+/** Screenshots of Teha's own projects (the archives). */
 export const casePhotos = {
-  'archive-moonpaper': archiveMoonpaper,
-  'archive-napyru': archiveNapyru,
-  'archive-moona': archiveMoona,
-  'archive-visual-themes': archiveVisualThemes,
+  moonpaper: workMoonpaper,
+  napyru: workNapyru,
+  moona: workMoona,
+  'bond-garden': workBondGarden,
 } as const;
 
 export const introPhotos = { 'intro-1': intro1, 'intro-2': intro2, 'intro-3': intro3, 'intro-4': intro4, 'intro-5': intro5 } as const;

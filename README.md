@@ -82,6 +82,7 @@ metrics (`size-adjust`, `ascent-override`, …). To swap a face, change one entr
 
 | What | Where | Note |
 | --- | --- | --- |
+| Project screenshots: MoonPaper, Napyru, Moona, Bond Garden | `src/assets/works/` | Her own apps, used on the archive board (cropped square, see `focus` in `site.ts`) and uncropped on each file page. In the Napyru shot, the photo of the other person in the chat is blurred. |
 | Hooded girl illustration | `src/assets/portrait/shiru.jpg` | Not used since the hero follows the Canva design. ⚠️ If it comes back, confirm you have the artist's permission. |
 | Revised designs (Oct 2026): bow (now the favicon), hamster (no longer used), lace frame, torn black edge, brush stroke, scroll banner, pastry (no longer used), black/cream gingham, archive frame, peek photo, pocket watch | `src/assets/design/` | Cut from her revised Canva pages. Lace, torn edge and brush were vector shapes, exported at 3×. The torn newspaper and paperclip are in `src/assets/collage/`; the eye (menu button), the moth (pinned in the lace frame) and the moon video (intro, `public/media/moon.mp4`) come from her cut-out sheets and footage. |
 | Cut-outs: eye, hand, moth, keyhole, envelope, torn letter paper | `src/assets/collage/` | Cut from the Canva sheets she supplied. The torn-page and heart pieces with lorem-ipsum text weren't used. |

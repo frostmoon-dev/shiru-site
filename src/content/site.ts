@@ -8,7 +8,7 @@
 export const site = {
   name: 'Teha',
   /** Used for the mailto fallback, the contact icons and the footer. */
-  email: 'shinabaeing@gmail.com',
+  email: 'shirubawing@gmail.com',
   locale: 'en',
   title: 'Teha · ERP by day, words by night',
   description:
@@ -83,8 +83,7 @@ export const about = {
   facts: [
     { term: 'Hours', detail: 'Mostly after dark' },
     { term: 'Curiosities', detail: 'An unreasonable number' },
-    /** TODO: your real LinkedIn URL. */
-    { term: 'LinkedIn', detail: 'The professional record', href: 'https://www.linkedin.com/' },
+    { term: 'LinkedIn', detail: 'The professional record', href: 'https://www.linkedin.com/in/fatihahmuhd/' },
   ] as { term: string; detail: string; href?: string }[],
   warning: 'Careful. Looks can deceive.',
 };
@@ -95,8 +94,10 @@ export type CaseFile = {
   title: string;
   stamp: string;
   summary: string;
-  photo: 'archive-moonpaper' | 'archive-napyru' | 'archive-moona' | 'archive-visual-themes';
+  photo: 'moonpaper' | 'napyru' | 'moona' | 'bond-garden';
   photoAlt: string;
+  /** Where the square polaroid crop of the (wide) screenshot centres: a CSS object-position. */
+  focus?: string;
   rotation: number;
   details: { heading: string; body: string }[];
   evidence: string[];
@@ -108,55 +109,95 @@ export const caseFiles = {
   intro: 'Four open investigations. None of them are closed.',
   hint: 'Pick a file. They don’t bite. Mostly.',
   swipeHint: 'Swipe through the files',
-  /** TODO: everything below each title is placeholder: what each project is, and a real photo. */
+  /** Written from the screenshots: check the wording, and add a link to any file you want public. */
   files: [
     {
       slug: 'moonpaper',
       number: 'No. 1',
       title: 'MoonPaper',
       stamp: 'Project',
-      summary: 'TODO: one or two lines on what MoonPaper is.',
-      photo: 'archive-moonpaper',
-      photoAlt: 'Placeholder image for MoonPaper.',
+      summary: 'My own AI roleplay client: bots, personas, prompts and lore, wired to whichever model I connect.',
+      photo: 'moonpaper',
+      photoAlt: 'MoonPaper: a chat with BB, a purple-haired character, her reply set over a moonlit illustration.',
+      focus: '56% 40%',
       rotation: -2,
-      details: [{ heading: 'What it is', body: 'TODO: describe MoonPaper.' }],
-      evidence: ['TODO'],
+      details: [
+        {
+          heading: 'What it is',
+          body: 'A chat client for writing stories with AI characters. Each bot keeps its own chats; I write as one of my personas, and choose the model per chat.',
+        },
+        {
+          heading: 'Inside',
+          body: 'Editors for bots, personas, prompts and lore; connection settings for the model; chat memory, scene and character panels; artwork behind the conversation; and the model’s reasoning folded away above each reply.',
+        },
+      ],
+      evidence: ['AI chat', 'Roleplay', 'Personas', 'Lore', 'Memory'],
     },
     {
       slug: 'napyru',
       number: 'No. 2',
       title: 'Napyru',
       stamp: 'Project',
-      summary: 'TODO: one or two lines on what Napyru is.',
-      photo: 'archive-napyru',
-      photoAlt: 'Placeholder image for Napyru.',
+      summary: 'A private messenger for two, with plans, a map, shared memories and a bond rank of its own.',
+      photo: 'napyru',
+      photoAlt: 'Napyru: a two-person chat over a black-and-white drawing, with a sidebar for chat, plans, map, memories and bond.',
+      focus: '45% 50%',
       rotation: 1.5,
-      details: [{ heading: 'What it is', body: 'TODO: describe Napyru.' }],
-      evidence: ['TODO'],
+      details: [
+        {
+          heading: 'What it is',
+          body: 'A messenger built for exactly two people: messages, photos and stickers, seen receipts, a status, and a clock that knows when it is late at night.',
+        },
+        {
+          heading: 'Inside',
+          body: 'Beyond the chat: plans, a map, a memories page, and a bond rank that grows over time.',
+        },
+      ],
+      evidence: ['Messenger', 'For two', 'Plans', 'Map', 'Memories'],
     },
     {
       slug: 'moona',
       number: 'No. 3',
       title: 'Moona',
       stamp: 'Project',
-      summary: 'TODO: one or two lines on what Moona is.',
-      photo: 'archive-moona',
-      photoAlt: 'Placeholder image for Moona.',
+      summary: 'A quiet place for the month: money, tasks, calories and budgets, counted in ringgit.',
+      photo: 'moona',
+      photoAlt: 'Moona: a home screen greeting “Good evening” beside an illustrated character, with the month’s income, spending and balance below.',
+      focus: '62% 30%',
       rotation: -1.5,
-      details: [{ heading: 'What it is', body: 'TODO: describe Moona.' }],
-      evidence: ['TODO'],
+      details: [
+        {
+          heading: 'What it is',
+          body: 'A personal tracker for the month. The home page shows it at a glance: net, income, spent and balance, top spending, recent entries and a quick add.',
+        },
+        {
+          heading: 'Inside',
+          body: 'Pages for activity, calories, tasks and budgets, and recurring entries for things like a monthly salary.',
+        },
+      ],
+      evidence: ['Personal finance', 'Budgets', 'Tasks', 'Calories', 'Ringgit'],
     },
     {
-      slug: 'visual-themes',
+      slug: 'bond-garden',
       number: 'No. 4',
-      title: 'Visual themes',
+      title: 'Bond Garden',
       stamp: 'Project',
-      summary: 'TODO: one or two lines on the visual themes.',
-      photo: 'archive-visual-themes',
-      photoAlt: 'Placeholder image for Visual themes.',
+      summary: 'Fate/Grand Order servants to talk to, with bond levels that grow and interludes that unlock.',
+      photo: 'bond-garden',
+      photoAlt: 'Bond Garden: a grid of character cards (BB, Castoria, Charlemagne, Ereshkigal) with bond levels and Start buttons.',
+      focus: '42% 50%',
       rotation: 2,
-      details: [{ heading: 'What they are', body: 'TODO: describe the visual themes.' }],
-      evidence: ['TODO'],
+      details: [
+        {
+          heading: 'What it is',
+          body: 'A place to start stories with Fate/Grand Order servants. Pick a character (and a form, for those with several ascensions), or write your own opening scene and choose who is in it.',
+        },
+        {
+          heading: 'Inside',
+          body: 'Bond levels that rise as you talk, interludes that unlock along the way, saved moments, backgrounds, a lorebook and personas.',
+        },
+      ],
+      evidence: ['Fate/Grand Order', 'Character chat', 'Bond levels', 'Interludes', 'Lorebook'],
     },
   ] satisfies CaseFile[],
   closeLabel: 'Close the file',
@@ -265,9 +306,9 @@ export const tea = {
   error: (email: string) => `The raven got lost. Try again, or email me directly at ${email}.`,
   /** Shown as icons. TODO: real LinkedIn and GitHub URLs. */
   links: [
-    { label: 'Email', icon: 'mail', href: 'mailto:shinabaeing@gmail.com', detail: 'shinabaeing@gmail.com' },
-    { label: 'LinkedIn', icon: 'linkedin', href: 'https://www.linkedin.com/', detail: 'The professional record' },
-    { label: 'GitHub', icon: 'github', href: 'https://github.com/', detail: 'Code, experiments, unfinished things' },
+    { label: 'Email', icon: 'mail', href: 'mailto:shirubawing@gmail.com', detail: 'shirubawing@gmail.com' },
+    { label: 'LinkedIn', icon: 'linkedin', href: 'https://www.linkedin.com/in/fatihahmuhd/', detail: 'The professional record' },
+    { label: 'GitHub', icon: 'github', href: 'https://github.com/frostmoon-dev', detail: 'Code, experiments, unfinished things' },
   ] as { label: string; icon: 'mail' | 'linkedin' | 'github'; href: string; detail: string }[],
 };
 

@@ -11,7 +11,7 @@ const { file, index } = Astro.props;
 const photo = casePhotos[file.photo];
 ---
 
-<li class="polaroid-wrap" style={`--rot:${file.rotation}deg; --i:${index}`}>
+<li class="polaroid-wrap" style={`--rot:${file.rotation}deg; --i:${index}; --focus:${file.focus ?? '50% 50%'}`}>
   <a class="polaroid" href={`/archives/${file.slug}/`}>
     <span class="polaroid__photo" transition:name={`case-photo-${file.slug}`}>
       <Picture
@@ -69,6 +69,7 @@ const photo = casePhotos[file.photo];
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: var(--focus);
     filter: grayscale(1) contrast(1.05);
     transition: filter var(--dur-slow) var(--ease-out);
   }

@@ -28,7 +28,15 @@ const next = caseFiles.files[(idx + 1) % caseFiles.files.length]!;
 
       <div class="file__grid">
         <figure class="file__photo" transition:name={`case-photo-${file.slug}`}>
-          <Picture src={casePhotos[file.photo]} alt={file.photoAlt} formats={['avif', 'webp']} widths={[360, 560, 840]} sizes="(max-width: 959px) 90vw, 420px" loading="eager" fetchpriority="high" />
+          <Picture
+            src={casePhotos[file.photo]}
+            alt={file.photoAlt}
+            formats={['avif', 'webp']}
+            widths={[480, 800, 1200, 1600]}
+            sizes="(max-width: 1279px) calc(100vw - 3rem), 1200px"
+            loading="eager"
+            fetchpriority="high"
+          />
         </figure>
 
         <div class="file__text">
@@ -81,19 +89,26 @@ const next = caseFiles.files[(idx + 1) % caseFiles.files.length]!;
     grid-template-columns: minmax(0, 1fr);
     gap: var(--space-7);
   }
+  /* the whole screenshot, uncropped: a wide photograph pinned to the file */
   .file__photo {
     margin: 0;
-    padding: var(--space-2) var(--space-2) var(--space-6);
+    padding: var(--space-2) var(--space-2) var(--space-5);
     background: var(--bone);
-    rotate: -1.5deg;
-    justify-self: start;
-    width: min(100%, 26rem);
+    rotate: -0.6deg;
+    width: fit-content;
+    max-width: 100%;
+    box-shadow: 0 18px 40px rgb(0 0 0 / 0.5);
   }
   .file__photo :global(img) {
-    width: 100%;
+    display: block;
+    width: auto;
+    max-width: 100%;
     height: auto;
-    aspect-ratio: 1;
-    object-fit: cover;
+    /* never taller than the screen, whatever shape the screenshot is */
+    max-height: 72svh;
+  }
+  .file__text {
+    max-width: 48rem;
   }
   .file__tags {
     display: flex;
@@ -126,10 +141,5 @@ const next = caseFiles.files[(idx + 1) % caseFiles.files.length]!;
   .file__next a:hover .file__next-title {
     color: var(--blood-lit);
   }
-  @media (min-width: 960px) {
-    .file__grid {
-      grid-template-columns: 5fr 7fr;
-      align-items: start;
-    }
-  }
+
 </style>
