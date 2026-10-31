@@ -1,0 +1,138 @@
+---
+import { hero, ui } from '../content/site';
+import NightScene from '../components/scene/NightScene.astro';
+import InkEdgeFallback from '../components/scene/InkEdgeFallback.astro';
+import Icon from '../components/Icon.astro';
+---
+
+<section id="top" class="hero" data-tone="night" aria-labelledby="hero-title">
+  <div class="hero__scene" aria-hidden="true">
+    <NightScene />
+  </div>
+  <div class="hero__petals" aria-hidden="true" data-effect="petals-webgl"></div>
+
+  <div class="hero__content" data-effect="flicker-jitter" data-effect-options='{"every":[7,16]}'>
+    <h1
+      id="hero-title"
+      class="hero__title"
+      data-effect="bleed-title"
+      data-effect-options='{"color":"#a3141b","startEvent":"shiru:intro-done"}'
+    >
+      <span class="bleed__text">{hero.name}</span>
+    </h1>
+    <p class="hero__tagline label">{hero.tagline}</p>
+    <p class="hero__sub flavour">{hero.sub}</p>
+  </div>
+
+  <a class="hero__scroll label" href="#rabbit-hole">
+    {ui.scrollHint}
+    <Icon name="arrow-down" size={20} />
+  </a>
+
+  <div class="ink-edge" aria-hidden="true" data-effect="ink-edge" data-effect-options='{"rest":0.18}'>
+    <InkEdgeFallback rest={0.18} />
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    min-height: 100svh;
+    display: grid;
+    align-items: end;
+    padding: var(--space-8) var(--gutter) calc(var(--space-7) + 6vh);
+    isolation: auto;
+  }
+  .hero__scene,
+  .hero__petals {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+  .hero__content {
+    position: relative;
+    z-index: var(--z-content);
+    max-width: 62rem;
+    margin-left: clamp(0rem, 3vw, 4rem);
+    transform: rotate(-1.2deg);
+  }
+  .hero__title {
+    font-size: var(--step-6);
+    line-height: 0.9;
+    letter-spacing: 0.04em;
+    color: var(--blood);
+    text-transform: uppercase;
+    text-shadow: 0 0.02em 0 var(--oxblood);
+    margin-left: -0.04em;
+  }
+  .hero__tagline {
+    /* room for the drips to hang */
+    margin-top: calc(var(--step-6) * 0.5);
+    color: var(--bone);
+    font-size: clamp(var(--text-label), 0.7rem + 0.4vw, 0.95rem);
+    max-width: 44ch;
+  }
+  .hero__sub {
+    margin-top: var(--space-1);
+    color: var(--moon);
+    font-size: var(--step-0);
+    font-style: italic;
+    max-width: 40ch;
+  }
+  .hero__scroll {
+    position: absolute;
+    z-index: var(--z-content);
+    right: var(--gutter);
+    top: calc(var(--space-2) + var(--touch) + var(--space-2));
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    min-height: var(--touch);
+    padding-inline: var(--space-1);
+    color: var(--bone);
+    text-decoration: none;
+  }
+  .hero__scroll :global(.icon) {
+    animation: nudge 2.4s var(--ease-ink) infinite;
+  }
+  @keyframes nudge {
+    50% {
+      transform: translateY(5px);
+    }
+  }
+  :global(html.at-hero) .hero__scroll {
+    right: calc(8vw + clamp(130px, 17vw, 240px) + var(--space-4));
+  }
+
+  .ink-edge {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(100% - 8vh);
+    height: 45vh;
+    z-index: var(--z-webgl);
+    pointer-events: none;
+  }
+  .ink-edge[data-webgl='on'] :global(.ink-fallback) {
+    visibility: hidden;
+  }
+
+  @media (max-width: 719px) {
+    .hero {
+      padding-bottom: calc(var(--space-7) + 10vh);
+      align-items: center;
+    }
+    .hero__content {
+      margin-left: 0;
+    }
+    .hero__scroll {
+      top: auto;
+      bottom: calc(10vh + var(--space-3));
+      right: auto;
+      left: var(--gutter);
+    }
+    :global(html.at-hero) .hero__scroll {
+      right: auto;
+    }
+  }
+</style>

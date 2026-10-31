@@ -1,0 +1,244 @@
+/* The grimoire island. Lives inside the sepia chapter; tokens come from tokens.css. */
+.book {
+  display: grid;
+  gap: var(--space-3);
+  justify-items: center;
+}
+.book__stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10.5;
+  max-height: 78vh;
+}
+.book__stage canvas {
+  position: absolute !important;
+  inset: 0;
+}
+.book__loading {
+  position: absolute;
+  inset: auto 0 45% 0;
+  text-align: center;
+  color: var(--fg-muted);
+}
+
+/* ---- DOM pages (real text) ---- */
+.book__pages {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.book__page {
+  position: absolute;
+  pointer-events: auto;
+  padding: 7% 8% 9%;
+  color: var(--ink);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  overflow: hidden;
+  animation: page-ink-in 420ms var(--ease-out) both;
+}
+.book--3d .book__page {
+  animation-delay: 200ms;
+}
+.book--3d.is-open .book__page {
+  animation-delay: 900ms;
+}
+.book.is-turning .book__page {
+  animation: page-ink-out 260ms var(--ease-ink) both;
+}
+@keyframes page-ink-in {
+  from {
+    opacity: 0;
+    filter: blur(2px);
+  }
+}
+@keyframes page-ink-out {
+  to {
+    opacity: 0;
+    filter: blur(2px);
+  }
+}
+.book__numeral {
+  font-family: var(--font-display);
+  font-size: var(--step-3);
+  line-height: 1;
+  color: var(--oxblood);
+}
+.book__title {
+  font-family: var(--font-flavour);
+  font-size: var(--step-2);
+  line-height: 1.15;
+  color: var(--ink);
+}
+.book__title:focus {
+  outline: none;
+}
+.book__title:focus-visible {
+  outline: 2px solid var(--ink);
+}
+.book__date {
+  color: #4a3828;
+}
+.book__excerpt {
+  font-size: var(--step-0);
+  line-height: 1.55;
+  max-width: 32ch;
+}
+.book__read {
+  margin-top: auto;
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--touch);
+  color: var(--ink);
+  font-family: var(--font-flavour);
+  font-style: italic;
+}
+.book__folio {
+  position: absolute;
+  bottom: 4%;
+  left: 0;
+  right: 0;
+  text-align: center;
+  color: #4a3828;
+}
+
+/* ---- controls ---- */
+.book__controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: var(--touch);
+}
+.book__count {
+  min-width: 16ch;
+  text-align: center;
+  color: var(--fg-muted);
+}
+.book__arrow {
+  border: 1px solid currentColor;
+  color: var(--ink);
+}
+.book__arrow:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+.book__hint {
+  color: var(--fg-muted);
+}
+
+/* ---- 2D book: mobile, reduced motion, no WebGL ---- */
+.book--2d .book__stage,
+.book--pending .book__stage {
+  aspect-ratio: 3 / 4;
+  max-width: 30rem;
+  perspective: 1400px;
+}
+.book2d {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+.book2d::before {
+  /* the page block */
+  content: '';
+  position: absolute;
+  inset: 1.5% 1% 1.5% 3%;
+  background:
+    repeating-linear-gradient(0deg, #d9c9a3 0 2px, #c9b48c 2px 3px) right / 10px 100% no-repeat,
+    radial-gradient(ellipse at 50% 45%, #ece1c9, #bfa77a);
+  box-shadow: 10px 14px 0 rgb(42 26 18 / 0.3);
+}
+.book2d__cover {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 30% 25%, rgb(92 14 18 / 0.45), transparent 60%),
+    repeating-linear-gradient(115deg, rgb(0 0 0 / 0.08) 0 2px, transparent 2px 5px),
+    var(--leather);
+  border: 2px solid #1f0c0f;
+  outline: 1px solid rgb(201 162 74 / 0.6);
+  outline-offset: -14px;
+  transform-origin: 0 50%;
+  transition: transform 900ms var(--ease-ink);
+  backface-visibility: hidden;
+  display: grid;
+  place-items: center;
+  box-shadow: 10px 14px 0 rgb(42 26 18 / 0.35);
+}
+.book.is-open .book2d__cover {
+  transform: rotateY(-178deg);
+}
+.book[data-reduced='true'] .book2d__cover {
+  transition: none;
+}
+.book.is-open .book2d__cover {
+  visibility: hidden;
+  transition:
+    transform 900ms var(--ease-ink),
+    visibility 0s 900ms;
+}
+.book2d__hat {
+  width: 58%;
+  fill: rgb(201 162 74 / 0.28);
+  stroke: rgb(201 162 74 / 0.6);
+  stroke-width: 1.2;
+  filter: drop-shadow(0 1px 0 rgb(0 0 0 / 0.6));
+}
+.book2d__corner {
+  position: absolute;
+  width: 34px;
+  height: 34px;
+  background: linear-gradient(135deg, var(--brass-hi), var(--brass-lo));
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+}
+.book2d__corner--tl {
+  top: -2px;
+  left: -2px;
+}
+.book2d__corner--tr {
+  top: -2px;
+  right: -2px;
+  rotate: 90deg;
+}
+.book2d__corner--br {
+  bottom: -2px;
+  right: -2px;
+  rotate: 180deg;
+}
+.book2d__corner--bl {
+  bottom: -2px;
+  left: -2px;
+  rotate: 270deg;
+}
+.book--2d .book__page--single {
+  inset: 1.5% 1% 1.5% 3%;
+  transform-origin: 0 50%;
+}
+.book--2d.is-turning .book__page--single {
+  animation: page-flip-out 300ms var(--ease-ink) both;
+}
+@keyframes page-flip-out {
+  to {
+    transform: rotateY(-80deg);
+    opacity: 0.2;
+  }
+}
+.book--2d .book__page--single {
+  animation: page-flip-in 300ms var(--ease-out) both;
+}
+@keyframes page-flip-in {
+  from {
+    transform: rotateY(60deg);
+    opacity: 0.2;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .book__page,
+  .book.is-turning .book__page {
+    animation: none !important;
+  }
+}

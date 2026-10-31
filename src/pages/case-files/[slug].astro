@@ -1,0 +1,172 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { Picture } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import CloseFile from '../../components/CloseFile.astro';
+import { caseFiles, type CaseFile } from '../../content/site';
+import { casePhotos } from '../../content/photos';
+
+export const getStaticPaths = (() => caseFiles.files.map((file) => ({ params: { slug: file.slug }, props: { file } }))) satisfies GetStaticPaths;
+
+interface Props {
+  file: CaseFile;
+}
+const { file } = Astro.props;
+const idx = caseFiles.files.findIndex((f) => f.slug === file.slug);
+const next = caseFiles.files[(idx + 1) % caseFiles.files.length]!;
+---
+
+<Base title={file.title} description={file.summary}>
+  <article class="folder-page" data-tone="void" aria-labelledby="file-title">
+    <CloseFile href="/#case-files" label={caseFiles.closeLabel} flag="shiru:from-board" />
+    <div class="folder">
+      <div class="folder__tab label" aria-hidden="true">{file.number} · {file.stamp}</div>
+      <div class="folder__sheet" data-tone="sepia">
+        <div class="folder__photo" transition:name={`case-photo-${file.slug}`}>
+          <span class="folder__clip" aria-hidden="true"></span>
+          <Picture src={casePhotos[file.photo]} alt={file.photoAlt} formats={['avif', 'webp']} widths={[360, 560, 840]} sizes="(max-width: 719px) 80vw, 360px" />
+        </div>
+        <div class="folder__text">
+          <p class="label folder__no">Case file {file.number}</p>
+          <h1 id="file-title" class="folder__title" transition:name={`case-title-${file.slug}`}>{file.title}</h1>
+          <p class="folder__summary flavour">{file.summary}</p>
+          {
+            file.details.map((d) => (
+              <section class="folder__block">
+                <h2 class="label">{d.heading}</h2>
+                <p>{d.body}</p>
+              </section>
+            ))
+          }
+          <section class="folder__block">
+            <h2 class="label">{caseFiles.evidenceLabel}</h2>
+            <ul class="evidence">
+              {file.evidence.map((e) => <li class="label">{e}</li>)}
+            </ul>
+          </section>
+          {
+            file.link && (
+              <p class="folder__block">
+                <a href={file.link.href} rel="noopener" class="todo">
+                  {file.link.label}
+                </a>
+              </p>
+            )
+          }
+          <p class="folder__next">
+            <a href={`/case-files/${next.slug}/`}>Next file: {next.title}</a>
+          </p>
+        </div>
+        <p class="folder__stamp label" aria-hidden="true">Open</p>
+      </div>
+    </div>
+  </article>
+</Base>
+
+<style>
+  .folder-page {
+    min-height: 100svh;
+    padding: calc(var(--space-7) + var(--space-4)) var(--gutter) var(--space-8);
+    display: grid;
+    place-items: center;
+  }
+  .folder {
+    position: relative;
+    width: min(100%, 64rem);
+    transform: rotate(-0.6deg);
+  }
+  .folder__tab {
+    display: inline-block;
+    padding: var(--space-1) var(--space-3);
+    background: #b89f6f;
+    color: var(--ink);
+    margin-left: var(--space-5);
+    clip-path: polygon(6% 0, 94% 0, 100% 100%, 0 100%);
+  }
+  .folder__sheet {
+    position: relative;
+    display: grid;
+    gap: var(--space-5);
+    padding: var(--space-5) var(--space-4);
+    box-shadow: 12px 18px 0 rgb(5 3 4 / 0.6);
+  }
+  .folder__photo {
+    position: relative;
+    justify-self: start;
+    align-self: start;
+    width: min(100%, 360px);
+    padding: var(--space-1) var(--space-1) var(--space-4);
+    background: var(--bone);
+    transform: rotate(-3deg);
+    box-shadow: 4px 6px 0 rgb(42 26 18 / 0.35);
+  }
+  .folder__photo :global(img) {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+    object-fit: cover;
+    filter: sepia(0.35);
+  }
+  .folder__clip {
+    position: absolute;
+    top: -14px;
+    left: 24px;
+    width: 18px;
+    height: 46px;
+    border: 3px solid var(--brass-lo);
+    border-radius: 9px;
+    z-index: 1;
+  }
+  .folder__no {
+    color: var(--fg-muted);
+  }
+  .folder__title {
+    font-size: var(--step-4);
+    color: var(--oxblood);
+    margin-block: var(--space-1) var(--space-3);
+  }
+  .folder__summary {
+    max-width: 36ch;
+  }
+  .folder__block {
+    margin-top: var(--space-4);
+    max-width: var(--measure);
+  }
+  .folder__block h2 {
+    margin-bottom: var(--space-1);
+    color: var(--fg-muted);
+  }
+  .evidence {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+    padding: 0;
+    list-style: none;
+  }
+  .evidence li {
+    padding: 0.2em 0.7em;
+    border: 1px solid var(--ink);
+    background: color-mix(in oklch, var(--bone) 55%, transparent);
+  }
+  .folder__next {
+    margin-top: var(--space-5);
+    font-family: var(--font-flavour);
+  }
+  .folder__stamp {
+    position: absolute;
+    right: var(--space-4);
+    top: var(--space-4);
+    padding: 0.2em 0.7em;
+    border: 3px double var(--oxblood);
+    color: var(--oxblood);
+    font-size: 1.1rem;
+    transform: rotate(8deg);
+    opacity: 0.8;
+  }
+  @media (min-width: 860px) {
+    .folder__sheet {
+      grid-template-columns: 360px 1fr;
+      padding: var(--space-6) var(--space-5);
+    }
+  }
+</style>

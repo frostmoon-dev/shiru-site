@@ -1,0 +1,510 @@
+---
+import { chapters, ui } from '../content/site';
+import Icon from './Icon.astro';
+import HatSvg from './HatSvg.astro';
+
+interface Props {
+  home?: boolean;
+}
+const { home = false } = Astro.props;
+---
+
+<header class="site-nav" data-home={home ? 'true' : 'false'}>
+  <nav class="chapter-index" aria-label={ui.navLabel}>
+    <a class="chapter-index__home label" href="/" aria-label="Shiru, back to the beginning">Shiru</a>
+    <ol>
+      {
+        chapters.map((c) => (
+          <li>
+            <a class="chapter-index__link label" href={`/#${c.id}`} data-chapter-link={c.id}>
+              <span aria-hidden="true">{c.numeral}</span>
+              <span class="visually-hidden">
+                Chapter {c.numeral}: {c.label}
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+    <p class="chapter-index__now label" aria-live="polite" data-chapter-now>
+      <span class="visually-hidden">Now reading:</span>
+      <span data-chapter-now-text>{home ? 'Prologue' : ''}</span>
+    </p>
+  </nav>
+
+  <div class="site-nav__tools">
+    <button class="icon-btn sound-toggle" type="button" aria-pressed="false" data-sound-toggle>
+      <span class="visually-hidden">{ui.soundLabel}</span>
+      <span class="sound-toggle__on"><Icon name="sound-on" /></span>
+      <span class="sound-toggle__off"><Icon name="sound-off" /></span>
+    </button>
+  </div>
+</header>
+
+<button
+  class="hat-btn"
+  type="button"
+  aria-haspopup="dialog"
+  aria-expanded="false"
+  aria-controls="spell-menu"
+  data-hat
+>
+  <span class="visually-hidden">{ui.menuOpen}</span>
+  <span class="hat-btn__float"><HatSvg /></span>
+  <span class="hat-btn__hint label" data-hint="hat" aria-hidden="true">{ui.menuHint}</span>
+</button>
+
+<dialog id="spell-menu" class="spell-menu" aria-label={ui.menuTitle} data-spell-menu>
+  <div class="spell-menu__inner">
+    <p class="spell-menu__title flavour">{ui.menuTitle}</p>
+    <ul class="spell-menu__list">
+      <li><a href="/" data-spell-link>Prologue</a></li>
+      {
+        chapters.map((c) => (
+          <li>
+            <a href={`/#${c.id}`} data-spell-link>
+              <span class="label">{c.numeral} ·</span> {c.title}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <button class="icon-btn spell-menu__close" type="button" data-spell-close>
+      <Icon name="close" size={28} />
+      <span class="visually-hidden">{ui.menuClose}</span>
+    </button>
+  </div>
+</dialog>
+
+<style>
+  .site-nav {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: var(--z-nav);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: var(--space-2) var(--gutter);
+    pointer-events: none;
+    color: var(--bone);
+  }
+  .site-nav > * {
+    pointer-events: auto;
+  }
+  .chapter-index {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-2);
+    background: color-mix(in oklch, var(--void) 72%, transparent);
+    padding: 0 var(--space-2);
+    border: 1px solid color-mix(in oklch, var(--bone) 18%, transparent);
+  }
+  .chapter-index ol {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    gap: 0;
+  }
+  .chapter-index li + li::before {
+    content: '';
+    width: 4px;
+    height: 4px;
+    background: var(--blood);
+    rotate: 45deg;
+    align-self: center;
+  }
+  .chapter-index li {
+    display: flex;
+  }
+  .chapter-index__home,
+  .chapter-index__link {
+    display: inline-grid;
+    place-items: center;
+    min-width: var(--touch);
+    min-height: var(--touch);
+    color: var(--bone);
+    text-decoration: none;
+  }
+  .chapter-index__link[aria-current='true'] {
+    color: var(--blood-lit);
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.4em;
+  }
+  .chapter-index__now {
+    color: var(--muted);
+    min-width: 10ch;
+  }
+  .site-nav__tools {
+    display: flex;
+    gap: var(--space-1);
+    background: color-mix(in oklch, var(--void) 72%, transparent);
+    border: 1px solid color-mix(in oklch, var(--bone) 18%, transparent);
+  }
+  .sound-toggle__off {
+    display: contents;
+  }
+  .sound-toggle__on {
+    display: none;
+  }
+  .sound-toggle[aria-pressed='true'] .sound-toggle__on {
+    display: contents;
+  }
+  .sound-toggle[aria-pressed='true'] .sound-toggle__off {
+    display: none;
+  }
+  :global(html:not(.js)) .sound-toggle,
+  :global(html:not(.js)) .hat-btn {
+    display: none;
+  }
+
+  /* ---- The hat: floats large over the hero, docks small once you scroll ---- */
+  .hat-btn {
+    position: fixed;
+    z-index: var(--z-nav);
+    right: var(--gutter);
+    top: calc(var(--space-2) + var(--touch) + var(--space-1));
+    width: 76px;
+    height: 64px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--bone);
+    transform-origin: 50% 80%;
+    transition:
+      width var(--dur-slow) var(--ease-ink),
+      height var(--dur-slow) var(--ease-ink),
+      top var(--dur-slow) var(--ease-ink),
+      right var(--dur-slow) var(--ease-ink);
+  }
+  :global(html.at-hero) .hat-btn {
+    width: clamp(130px, 17vw, 240px);
+    height: clamp(100px, 13vw, 186px);
+    top: 20vh;
+    right: 8vw;
+  }
+  .hat-btn__float {
+    display: block;
+    width: 100%;
+    height: 100%;
+    animation: hat-bob 6s var(--ease-ink) infinite;
+    filter: drop-shadow(0 10px 14px rgb(5 3 4 / 0.6));
+  }
+  .hat-btn:hover .hat-btn__float {
+    animation-duration: 2.4s;
+  }
+  .hat-btn:active .hat-btn__float {
+    transform: rotate(-12deg);
+  }
+  .hat-btn__hint {
+    position: absolute;
+    left: 50%;
+    bottom: -1.6em;
+    translate: -50% 0;
+    white-space: nowrap;
+    color: var(--muted);
+    opacity: 0;
+    transition: opacity var(--dur-base);
+  }
+  :global(html.at-hero) .hat-btn__hint {
+    opacity: 1;
+  }
+  .hat-btn__hint.is-used {
+    opacity: 0 !important;
+  }
+  @keyframes hat-bob {
+    0%,
+    100% {
+      transform: translateY(0) rotate(-3deg);
+    }
+    50% {
+      transform: translateY(-9px) rotate(4deg);
+    }
+  }
+
+  /* ---- Spell menu ---- */
+  .spell-menu {
+    margin: 0;
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    max-height: none;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--bone);
+    overflow: hidden;
+  }
+  .spell-menu::backdrop {
+    background: radial-gradient(ellipse at 80% 20%, rgb(26 25 34 / 0.75), rgb(5 3 4 / 0.94) 60%);
+  }
+  .spell-menu__inner {
+    position: relative;
+    min-height: 100%;
+    display: grid;
+    align-content: center;
+    justify-items: end;
+    padding: var(--space-7) calc(var(--gutter) + var(--space-4));
+  }
+  .spell-menu__title {
+    color: var(--muted);
+    margin-bottom: var(--space-3);
+  }
+  .spell-menu__list {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: var(--space-1);
+    text-align: right;
+  }
+  .spell-menu__list li:nth-child(2) {
+    margin-right: var(--space-4);
+  }
+  .spell-menu__list li:nth-child(3) {
+    margin-right: var(--space-6);
+  }
+  .spell-menu__list li:nth-child(4) {
+    margin-right: var(--space-5);
+  }
+  .spell-menu__list li:nth-child(5) {
+    margin-right: var(--space-2);
+  }
+  .spell-menu__list a {
+    display: inline-block;
+    min-height: var(--touch);
+    padding: var(--space-half) 0;
+    font-family: var(--font-display);
+    font-size: var(--step-3);
+    line-height: 1.15;
+    color: var(--bone);
+    text-decoration: none;
+  }
+  .spell-menu__list a:hover,
+  .spell-menu__list a:focus-visible {
+    color: var(--blood-lit);
+  }
+  .spell-menu__list .label {
+    font-size: var(--text-label);
+    color: var(--muted);
+    vertical-align: middle;
+  }
+  .spell-menu__close {
+    position: absolute;
+    top: var(--space-2);
+    right: var(--gutter);
+    color: var(--bone);
+  }
+
+  @media (max-width: 719px) {
+    .site-nav {
+      inset: auto 0 0 0;
+      padding: var(--space-1);
+      padding-bottom: max(var(--space-1), env(safe-area-inset-bottom));
+      align-items: flex-end;
+      gap: var(--space-1);
+    }
+    .chapter-index {
+      flex: 1;
+      padding: 0 var(--space-1);
+      justify-content: space-between;
+    }
+    .chapter-index__now {
+      display: none;
+    }
+    .hat-btn {
+      top: auto;
+      bottom: calc(var(--touch) + var(--space-3) + env(safe-area-inset-bottom));
+      right: var(--space-2);
+      width: 64px;
+      height: 54px;
+    }
+    :global(html.at-hero) .hat-btn {
+      top: auto;
+      bottom: calc(var(--touch) + var(--space-5));
+      right: var(--space-3);
+      width: 116px;
+      height: 90px;
+    }
+    .spell-menu__inner {
+      justify-items: start;
+      padding-inline: var(--space-4);
+    }
+    .spell-menu__list {
+      text-align: left;
+    }
+    .spell-menu__list li {
+      margin-right: 0 !important;
+    }
+    .spell-menu__list li:nth-child(even) {
+      margin-left: var(--space-3);
+    }
+  }
+</style>
+
+<script>
+  import { chapters } from '../content/site';
+  import { setSound, soundEnabled, sfx } from '../lib/sfx';
+  import { markHintUsed } from '../lib/hints';
+  import { gsap, lockScroll } from '../lib/motion';
+  import { prefersReducedMotion } from '../lib/env';
+  import { navigate } from 'astro:transitions/client';
+
+  let chapterIO: IntersectionObserver | undefined;
+
+  function setupChapterTracking() {
+    chapterIO?.disconnect();
+    const nowText = document.querySelector<HTMLElement>('[data-chapter-now-text]');
+    const links = document.querySelectorAll<HTMLAnchorElement>('[data-chapter-link]');
+    const setCurrent = (id: string | null) => {
+      links.forEach((l) => {
+        if (l.dataset.chapterLink === id) l.setAttribute('aria-current', 'true');
+        else l.removeAttribute('aria-current');
+      });
+      const ch = chapters.find((c) => c.id === id);
+      if (nowText) nowText.textContent = ch ? `${ch.numeral} · ${ch.title}` : 'Prologue';
+    };
+    const sections = chapters
+      .map((c) => document.getElementById(c.id))
+      .filter((s): s is HTMLElement => !!s);
+    if (!sections.length) {
+      if (nowText) nowText.textContent = '';
+      return;
+    }
+    setCurrent(null);
+    const visible = new Map<string, number>();
+    chapterIO = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => visible.set(e.target.id, e.isIntersecting ? e.intersectionRatio : 0));
+        let best: string | null = null;
+        let max = 0;
+        visible.forEach((r, id) => {
+          if (r > max) {
+            max = r;
+            best = id;
+          }
+        });
+        setCurrent(best);
+      },
+      { rootMargin: '-45% 0px -45% 0px', threshold: [0, 0.01] },
+    );
+    sections.forEach((s) => chapterIO!.observe(s));
+  }
+
+  function setupHeroState() {
+    const update = () => {
+      const isHome = document.querySelector('.site-nav')?.getAttribute('data-home') === 'true';
+      document.documentElement.classList.toggle('at-hero', isHome && window.scrollY < window.innerHeight * 0.4);
+    };
+    update();
+    window.addEventListener('scroll', update, { passive: true });
+  }
+
+  function setupSound() {
+    const btn = document.querySelector<HTMLButtonElement>('[data-sound-toggle]');
+    if (!btn) return;
+    // Sound is off until clicked; the state survives page transitions but not a reload.
+    btn.setAttribute('aria-pressed', String(soundEnabled()));
+    btn.onclick = () => {
+      const on = !soundEnabled();
+      btn.setAttribute('aria-pressed', String(on));
+      setSound(on);
+    };
+  }
+
+  function setupHatMenu() {
+    const hat = document.querySelector<HTMLButtonElement>('[data-hat]');
+    const dialog = document.querySelector<HTMLDialogElement>('[data-spell-menu]');
+    if (!hat || !dialog) return;
+    const links = [...dialog.querySelectorAll<HTMLAnchorElement>('[data-spell-link]')];
+    const float = hat.querySelector<HTMLElement>('.hat-btn__float');
+
+    const closeNow = () => {
+      if (!dialog.open) return;
+      const reduce = prefersReducedMotion();
+      gsap.to(links, {
+        opacity: 0,
+        y: -10,
+        duration: reduce ? 0 : 0.18,
+        stagger: reduce ? 0 : 0.03,
+        onComplete: () => {
+          dialog.close();
+          lockScroll(false);
+          hat.setAttribute('aria-expanded', 'false');
+          if (float) gsap.to(float, { rotate: 0, x: 0, y: 0, duration: reduce ? 0 : 0.5, ease: 'back.out(2)', clearProps: 'transform' });
+          hat.focus();
+        },
+      });
+    };
+
+    const open = () => {
+      if (dialog.open) return;
+      markHintUsed('hat');
+      sfx('hat');
+      const reduce = prefersReducedMotion();
+      const hr = hat.getBoundingClientRect();
+      hat.setAttribute('aria-expanded', 'true');
+      const show = () => {
+        dialog.showModal();
+        lockScroll(true);
+        window.shiruOverlay.open('menu', closeNow);
+        if (reduce) {
+          gsap.set(links, { opacity: 1, x: 0, y: 0, rotate: 0, scale: 1 });
+          return;
+        }
+        // The links spill out of the hat's mouth like a spell.
+        links.forEach((l, i) => {
+          const r = l.getBoundingClientRect();
+          const dx = hr.left + hr.width / 2 - (r.left + r.width / 2);
+          const dy = hr.top + hr.height * 0.8 - (r.top + r.height / 2);
+          gsap.fromTo(
+            l,
+            { x: dx, y: dy, scale: 0.15, rotate: -40 + i * 12, opacity: 0 },
+            {
+              x: 0,
+              y: 0,
+              scale: 1,
+              rotate: 0,
+              opacity: 1,
+              duration: 0.75,
+              delay: 0.05 + i * 0.07,
+              ease: 'back.out(1.4)',
+            },
+          );
+        });
+      };
+      if (reduce || !float) show();
+      else
+        gsap
+          .timeline({ onComplete: show })
+          .to(float, { rotate: -24, y: -6, duration: 0.14, ease: 'power2.out' })
+          .to(float, { rotate: 118, x: -12, y: 10, duration: 0.32, ease: 'power3.in' });
+    };
+
+    hat.onclick = open;
+    dialog.querySelector<HTMLButtonElement>('[data-spell-close]')!.onclick = () => window.shiruOverlay.close('menu');
+    dialog.addEventListener('cancel', (e) => {
+      e.preventDefault();
+      window.shiruOverlay.close('menu');
+    });
+    dialog.addEventListener('click', (e) => {
+      if (e.target === dialog || (e.target as HTMLElement).classList.contains('spell-menu__inner'))
+        window.shiruOverlay.close('menu');
+    });
+    links.forEach((l) => {
+      l.onclick = (e) => {
+        e.preventDefault();
+        const href = l.getAttribute('href') ?? '/';
+        window.shiruOverlay.close('menu', () => void navigate(href));
+      };
+    });
+  }
+
+  document.addEventListener('astro:page-load', () => {
+    setupChapterTracking();
+    setupSound();
+    setupHatMenu();
+  });
+  setupHeroState();
+  document.addEventListener('astro:after-swap', () => window.dispatchEvent(new Event('scroll')));
+</script>

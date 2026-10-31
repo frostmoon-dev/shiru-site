@@ -1,0 +1,159 @@
+/*
+ * Shiru design tokens. Every colour, size, space and timing on the site comes from here.
+ * Hex values are the source of truth for contrast (measured, see CONTRAST in README).
+ * Scales and interaction states are derived in OKLCH by shifting lightness only.
+ */
+:root {
+  /* ---- Palette (brief) ---- */
+  --void: #050304;          /* oklch(10.3% 0.008 345) ink black */
+  --night: #1a1922;         /* oklch(21.9% 0.018 290) Burton dusk */
+  --blood: #a3141b;         /* oklch(45.9% 0.175 26) decoration on dark, text only on bone */
+  --blood-lit: #e0383f;     /* oklch(60% 0.204 24) large red text on dark; small text on void */
+  --blood-lit-night: #e74f54; /* 4.68:1 on night: small red text on night */
+  --oxblood: #5c0e12;
+  --leather: #2b1215;
+  --bone: #e8dcc2;
+  --sepia: #c9b48c;
+  --brass: #c9a24a;
+  --moon: #d9d2bd;
+
+  /* ---- Derived neutrals (all tinted, none pure) ---- */
+  --ink: #2a1a12;           /* 12.31:1 on bone, 8.28:1 on sepia */
+  --bone-dim: #d9c9a3;      /* 12.05:1 on void */
+  --muted-large: #7d6a4a;   /* 3.95:1 on void, large labels only */
+  --muted: #a8916c;         /* 6.79:1 on void, 5.75:1 on night */
+  --ink-muted: #5a4632;     /* small muted text on bone/sepia */
+
+  /* ---- OKLCH lightness scales (state shifts) ---- */
+  --bone-hi: oklch(93.5% 0.03 86.2);
+  --bone-lo: oklch(84% 0.04 86.2);
+  --sepia-lo: oklch(72% 0.06 83.4);
+  --night-hi: oklch(27% 0.02 290);
+  --night-lo: oklch(17% 0.016 290);
+  --void-hi: oklch(15% 0.01 345);
+  --blood-hi: oklch(52% 0.175 26);
+  --blood-lo: oklch(39% 0.16 26);
+  --blood-lit-hi: oklch(67% 0.18 23);
+  --brass-hi: oklch(80% 0.11 85.2);
+  --brass-lo: oklch(64% 0.11 85.2);
+
+  /* ---- Semantic ---- */
+  --error-on-dark: var(--blood-lit-night); /* always paired with icon + text */
+  --error-on-paper: var(--blood);
+  --success-on-dark: var(--brass);
+  --success-on-paper: #6b5419;  /* brass darkened: 6.0:1 on bone */
+
+  /* ---- Typography ---- */
+  /* fonts come from the Astro Fonts API (astro.config.mjs) as --font-display, --font-body,
+     --font-flavour, --font-label. */
+  --step-0: clamp(1.125rem, 1.08rem + 0.22vw, 1.25rem);        /* 18 → 20px body */
+  --step-1: calc(var(--step-0) * 1.25);
+  --step-2: calc(var(--step-0) * 1.5625);
+  --step-3: calc(var(--step-0) * 1.953);                        /* ≥ 35px, display minimum */
+  --step-4: calc(var(--step-0) * 2.441);
+  --step-5: clamp(2.6rem, 1.9rem + 3.2vw, calc(var(--step-0) * 3.815));
+  --step-6: clamp(4.5rem, 2.4rem + 12vw, 12rem);                /* hero logotype */
+  --text-label: 0.8125rem;                                      /* 13px typewriter labels */
+  --text-small: 1rem;                                           /* captions in IM Fell */
+  --leading-body: 1.65;
+  --leading-tight: 1.05;
+  --measure: 66ch;
+  --tracking-label: 0.1em;
+
+  /* ---- Spacing (8px base) ---- */
+  --space-half: 0.25rem;  /* 4 */
+  --space-1: 0.5rem;      /* 8 */
+  --space-2: 1rem;        /* 16 */
+  --space-3: 1.5rem;      /* 24 */
+  --space-4: 2rem;        /* 32 */
+  --space-5: 3rem;        /* 48 */
+  --space-6: 4rem;        /* 64 */
+  --space-7: 6rem;        /* 96 */
+  --space-8: 8rem;        /* 128 */
+  --gutter: clamp(var(--space-2), 5vw, var(--space-6));
+
+  /* ---- Shape ---- */
+  --radius-0: 0;
+  --radius-1: 2px;
+  --hairline: 1px;
+  --touch: 44px;
+
+  /* ---- Motion ---- */
+  --ease-ink: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-drop: cubic-bezier(0.55, 0, 0.9, 0.4);
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --dur-quick: 160ms;
+  --dur-base: 320ms;
+  --dur-slow: 700ms;
+  --dur-transition: 550ms;
+
+  /* ---- Layers ---- */
+  --z-scene: 0;
+  --z-webgl: 1;
+  --z-content: 2;
+  --z-nav: 50;
+  --z-overlay: 60;
+  --z-cursor: 70;
+  --z-grain: 80;
+  --z-intro: 90;
+  --z-skip: 100;
+
+  /* ---- Default tone (dark) ---- */
+  --bg: var(--night);
+  --fg: var(--bone);
+  --fg-muted: var(--muted);
+  --link: var(--bone);
+  --accent-text: var(--blood-lit-night);
+  --focus: var(--bone);
+  --focus-halo: var(--void);
+  --error: var(--error-on-dark);
+  --success: var(--success-on-dark);
+  --drip: var(--blood-lit);
+}
+
+[data-tone='void'] {
+  --bg: var(--void);
+  --fg: var(--bone-dim);
+  --fg-muted: var(--muted);
+  --link: var(--bone);
+  --accent-text: var(--blood-lit);
+  --focus: var(--bone);
+  --focus-halo: var(--void);
+  --error: var(--blood-lit);
+  --success: var(--success-on-dark);
+}
+[data-tone='night'] {
+  --bg: var(--night);
+  --fg: var(--bone);
+  --fg-muted: var(--muted);
+  --link: var(--bone);
+  --accent-text: var(--blood-lit-night);
+  --focus: var(--bone);
+  --focus-halo: var(--void);
+  --error: var(--error-on-dark);
+  --success: var(--success-on-dark);
+}
+[data-tone='bone'] {
+  --drip: var(--blood);
+  --bg: var(--bone);
+  --fg: var(--ink);
+  --fg-muted: var(--ink-muted);   /* 6.55:1 on bone */
+  --link: var(--ink);
+  --accent-text: var(--blood);    /* 5.78:1 on bone */
+  --focus: var(--blood);
+  --focus-halo: var(--bone);
+  --error: var(--error-on-paper);
+  --success: var(--success-on-paper);
+}
+[data-tone='sepia'] {
+  --drip: var(--oxblood);
+  --bg: var(--sepia);
+  --fg: var(--ink);
+  --fg-muted: #4a3828;            /* 5.51:1 on sepia */
+  --link: var(--ink);
+  --accent-text: var(--oxblood);  /* 6.81:1; blood on sepia is 3.89:1, so large/decoration only */
+  --focus: var(--ink);
+  --focus-halo: var(--sepia);
+  --error: var(--oxblood);
+  --success: #4d3c0f;             /* brass darkened: 5.28:1 on sepia */
+}

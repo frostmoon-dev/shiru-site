@@ -1,0 +1,78 @@
+---
+import { footer, site } from '../content/site';
+const year = new Date().getFullYear();
+---
+
+<footer class="footer" data-tone="void">
+  <div class="footer__rise" aria-hidden="true" data-effect="section-wipe" data-effect-options='{"variant":"ink-rise"}'>
+    <svg viewBox="0 0 1200 80" preserveAspectRatio="none" focusable="false">
+      <path
+        d="M0 80V34c40-6 60 10 90 4 20-4 18-26 30-26s10 20 30 24c40 8 90-14 140-8 30 4 40 22 70 20 30-2 30-30 60-30 26 0 30 26 60 28 50 4 100-20 160-16 40 3 60 20 100 18 30-2 40-24 70-24s34 22 66 24c44 3 100-16 150-12 40 3 60 18 90 16 20-2 40-12 84-10v48z"
+        fill="#050304"></path>
+    </svg>
+  </div>
+  <div class="footer__inner">
+    <p class="footer__line" data-effect="typewriter" data-effect-options={JSON.stringify({ typo: footer.typo })}>{footer.line}</p>
+    <p class="footer__mail flavour"><a href={`mailto:${site.email}`}>{site.email}</a></p>
+    <p class="footer__note caption">{footer.privacy}</p>
+    <p class="footer__small caption">{footer.copyright(year)} {footer.fontsCredit}</p>
+    <p class="footer__top label"><a href="#top">Back to the first page ↑</a></p>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    position: relative;
+    padding: var(--space-8) var(--gutter) calc(var(--space-6) + var(--touch));
+  }
+  .footer__rise {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -78px;
+    height: 80px;
+  }
+  .footer__rise svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .footer__inner {
+    position: relative;
+    z-index: var(--z-content);
+    max-width: 72rem;
+    margin-inline: auto;
+    display: grid;
+    gap: var(--space-3);
+  }
+  .footer__line {
+    font-family: var(--font-label);
+    font-size: clamp(1.5rem, 1rem + 3.4vw, 3.8rem);
+    letter-spacing: 0.14em;
+    color: var(--bone);
+    line-height: 1.2;
+  }
+  .footer__line :global(.typewriter__caret) {
+    color: var(--blood-lit);
+    animation: caret 1s steps(1) infinite;
+    margin-left: 0.1em;
+  }
+  @keyframes caret {
+    50% {
+      opacity: 0;
+    }
+  }
+  .footer__note {
+    max-width: 60ch;
+    color: var(--muted);
+  }
+  .footer__small {
+    color: var(--muted);
+    max-width: 70ch;
+  }
+  .footer__top a {
+    display: inline-flex;
+    min-height: var(--touch);
+    align-items: center;
+  }
+</style>

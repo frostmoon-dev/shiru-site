@@ -1,0 +1,85 @@
+---
+/**
+ * Runs before first paint and before Astro's router module, on purpose:
+ * 1. marks <html class="js"> so no-JS visitors get the static story,
+ * 2. decides whether the intro plays (once per session, home page only),
+ * 3. owns the overlay history so Esc, close buttons and the browser Back button all close
+ *    overlays without Astro's router treating Back as a page navigation.
+ */
+interface Props {
+  intro?: boolean;
+}
+const { intro = false } = Astro.props;
+---
+
+<script is:inline define:vars={{ intro }}>
+  (function () {
+    var root = document.documentElement;
+    root.classList.add('js');
+    try {
+      if (intro && !sessionStorage.getItem('shiru:intro-seen')) {
+        root.classList.add('intro-pending');
+        // Fail-safe: if the intro script never starts, the page is never held hostage.
+        window.__introFailsafe = window.setTimeout(function () {
+          root.classList.remove('intro-pending');
+          window.dispatchEvent(new Event('shiru:intro-done'));
+        }, 3500);
+      }
+    } catch (e) {
+      /* storage blocked: skip the intro */
+    }
+
+    var stack = [];
+    var docPath = location.pathname;
+    var pending = null;
+    function run(fn) {
+      if (typeof fn === 'function') window.setTimeout(fn, 0);
+    }
+    window.shiruOverlay = {
+      open: function (id, close) {
+        var state = Object.assign({}, history.state || {}, { shiruOverlay: id });
+        history.pushState(state, '');
+        stack.push({ id: id, close: close });
+      },
+      close: function (id, then) {
+        var top = stack[stack.length - 1];
+        if (top && top.id === id && history.state && history.state.shiruOverlay === id) {
+          pending = then || null;
+          history.back();
+          return;
+        }
+        for (var i = stack.length - 1; i >= 0; i--) {
+          if (stack[i].id === id) {
+            var item = stack.splice(i, 1)[0];
+            item.close();
+          }
+        }
+        run(then);
+      },
+      isOpen: function (id) {
+        return stack.some(function (s) {
+          return s.id === id;
+        });
+      },
+    };
+    window.addEventListener('popstate', function (e) {
+      if (location.pathname !== docPath) return; // a real page change: Astro's router handles it
+      var st = e.state || {};
+      var top = stack[stack.length - 1];
+      if (top && st.shiruOverlay !== top.id) {
+        e.stopImmediatePropagation();
+        stack.pop();
+        top.close();
+        var then = pending;
+        pending = null;
+        run(then);
+        return;
+      }
+      if (st.shiruOverlay) e.stopImmediatePropagation(); // stale overlay entry (Forward): ignore
+    });
+    document.addEventListener('astro:after-swap', function () {
+      stack.length = 0;
+      docPath = location.pathname;
+    });
+  })();
+</script>

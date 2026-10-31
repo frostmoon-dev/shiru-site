@@ -1,0 +1,297 @@
+@import './tokens.css';
+
+/* ---------- Reset ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+* {
+  margin: 0;
+}
+html {
+  color-scheme: dark;
+  background: var(--void);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  hanging-punctuation: first last;
+}
+body {
+  min-height: 100svh;
+  background: var(--void);
+  color: var(--bone);
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: var(--leading-body);
+  font-kerning: normal;
+  font-variant-ligatures: common-ligatures;
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+img,
+svg,
+video,
+canvas {
+  display: block;
+  max-width: 100%;
+}
+img {
+  height: auto;
+}
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+button {
+  cursor: pointer;
+}
+p,
+h1,
+h2,
+h3,
+h4 {
+  overflow-wrap: break-word;
+}
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: var(--leading-tight);
+  text-wrap: balance;
+}
+p {
+  text-wrap: pretty;
+}
+::selection {
+  background: var(--blood);
+  color: var(--bone);
+}
+
+/* ---------- Tone surfaces ---------- */
+[data-tone] {
+  background-color: var(--bg);
+  color: var(--fg);
+}
+/* Paper fibre: low-contrast turbulence, multiplied so ink stays crisp. */
+[data-tone='bone'],
+[data-tone='sepia'] {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012 .9' numOctaves='3' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .25 0 0 0 0 .12 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E"),
+    radial-gradient(ellipse at 50% 40%, transparent 55%, rgb(92 14 18 / 0.12));
+  color-scheme: light;
+}
+
+/* ---------- Type roles ---------- */
+.label {
+  font-family: var(--font-label);
+  font-size: var(--text-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+.flavour {
+  font-family: var(--font-flavour);
+  font-size: var(--step-1);
+  line-height: 1.45;
+}
+.caption {
+  font-family: var(--font-flavour);
+  font-size: var(--text-small);
+  line-height: 1.4;
+  color: var(--fg-muted);
+}
+.prose {
+  max-width: var(--measure);
+}
+.prose > * + * {
+  margin-top: var(--space-3);
+}
+
+/* ---------- Links (one behaviour everywhere; link-bleed effect adds drips) ---------- */
+a {
+  color: var(--link);
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.22em;
+  text-decoration-color: color-mix(in oklch, var(--link) 45%, transparent);
+  transition:
+    text-decoration-color var(--dur-quick) var(--ease-out),
+    text-shadow var(--dur-base) var(--ease-out);
+}
+a:hover {
+  text-decoration-color: var(--accent-text);
+  text-decoration-thickness: 2px;
+  text-shadow: 0 0 0.6px currentColor, 0 0.04em 0.35em color-mix(in oklch, var(--blood) 45%, transparent);
+}
+a:active {
+  color: var(--accent-text);
+}
+
+/* ---------- Focus ---------- */
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 5px var(--focus-halo);
+  border-radius: var(--radius-1);
+}
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ---------- Buttons (shared states) ---------- */
+.btn {
+  --btn-fg: var(--fg);
+  --btn-line: currentColor;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  min-height: var(--touch);
+  min-width: var(--touch);
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--btn-line);
+  border-radius: var(--radius-0);
+  background: transparent;
+  color: var(--btn-fg);
+  font-family: var(--font-label);
+  font-size: var(--text-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  text-decoration: none;
+  transition:
+    background-color var(--dur-quick) var(--ease-out),
+    color var(--dur-quick) var(--ease-out),
+    transform var(--dur-quick) var(--ease-out);
+}
+.btn:hover {
+  background: color-mix(in oklch, var(--fg) 10%, transparent);
+}
+.btn:active {
+  transform: translateY(1px) rotate(-0.4deg);
+  background: color-mix(in oklch, var(--fg) 18%, transparent);
+}
+.btn:disabled,
+.btn[aria-disabled='true'] {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+.btn[aria-busy='true'] {
+  cursor: progress;
+}
+.btn[aria-busy='true']::after {
+  content: '';
+  width: 0.9em;
+  height: 0.9em;
+  border: 1px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spin 900ms linear infinite;
+}
+.btn--solid {
+  background: var(--fg);
+  color: var(--bg);
+  border-color: var(--fg);
+}
+.btn--solid:hover {
+  background: color-mix(in oklch, var(--fg) 86%, var(--bg));
+}
+.icon-btn {
+  display: inline-grid;
+  place-items: center;
+  width: var(--touch);
+  height: var(--touch);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---------- Utilities ---------- */
+.visually-hidden:not(:focus):not(:active) {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+  clip-path: inset(50%) !important;
+  white-space: nowrap !important;
+}
+.skip-link {
+  position: fixed;
+  left: var(--space-2);
+  top: var(--space-2);
+  z-index: var(--z-skip);
+  padding: var(--space-1) var(--space-2);
+  background: var(--bone);
+  color: var(--ink);
+  font-family: var(--font-label);
+  font-size: var(--text-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  transform: translateY(-200%);
+}
+.skip-link:focus {
+  transform: none;
+}
+.todo {
+  outline: 1px dashed var(--brass);
+  outline-offset: 2px;
+}
+
+/* ---------- Atmosphere (static; film-grain effect animates it) ---------- */
+.atmosphere {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: var(--z-grain);
+}
+.atmosphere__grain {
+  position: absolute;
+  inset: -50%;
+  opacity: 0.075;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .9 0 0 0 0 .86 0 0 0 0 .76 0 0 0 1.4 -.2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.atmosphere__vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 120% 90% at 50% 45%, transparent 58%, rgb(5 3 4 / 0.55) 100%);
+}
+@media (max-width: 640px) {
+  .atmosphere__grain {
+    opacity: 0.05;
+  }
+}
+
+/* ---------- Effect states ---------- */
+[data-effect-state='error'] {
+  /* effects fall back to static; nothing else to style */
+}
+
+/* ---------- Reduced motion: static everything ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+html:focus-within {
+  scroll-behavior: smooth;
+}
+@media (prefers-reduced-motion: reduce) {
+  html:focus-within {
+    scroll-behavior: auto;
+  }
+}

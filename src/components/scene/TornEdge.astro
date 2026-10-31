@@ -1,0 +1,54 @@
+---
+/**
+ * A ragged paper tear between a paper section and a dark one below.
+ * section-wipe (variant "tear") pulls the two lips apart a little as you scroll through.
+ */
+interface Props {
+  class?: string;
+  fill?: string;
+  seed?: number;
+}
+const { class: cls, fill = 'var(--bone)', seed = 3 } = Astro.props;
+let s = seed;
+const rand = () => {
+  s = (s * 16807) % 2147483647;
+  return (s - 1) / 2147483646;
+};
+const pts: string[] = [];
+for (let x = 0; x <= 1200; x += 14 + Math.round(rand() * 22)) pts.push(`${x},${(18 + rand() * 30).toFixed(1)}`);
+pts.push('1200,30');
+const lip = `M0,0 L1200,0 L${pts.reverse().join(' L')} L0,26 Z`;
+const pts2: string[] = [];
+for (let x = 0; x <= 1200; x += 10 + Math.round(rand() * 18)) pts2.push(`${x},${(4 + rand() * 18).toFixed(1)}`);
+const under = `M0,0 L1200,0 L${pts2.reverse().join(' L')} L0,12 Z`;
+---
+
+<div class:list={['torn', cls]} aria-hidden="true" data-effect="section-wipe" data-effect-options='{"variant":"tear"}'>
+  <svg class="torn__under" viewBox="0 0 1200 60" preserveAspectRatio="none" focusable="false">
+    <path d={under} fill="#c9b48c"></path>
+  </svg>
+  <svg class="torn__lip" viewBox="0 0 1200 60" preserveAspectRatio="none" focusable="false">
+    <path d={lip} style={`fill:${fill}`}></path>
+  </svg>
+</div>
+
+<style>
+  .torn {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -56px;
+    height: 60px;
+    z-index: var(--z-content);
+    pointer-events: none;
+  }
+  .torn svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .torn__lip {
+    filter: drop-shadow(0 6px 4px rgb(5 3 4 / 0.55));
+  }
+</style>

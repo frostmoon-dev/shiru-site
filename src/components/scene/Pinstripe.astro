@@ -1,0 +1,47 @@
+---
+/** Burton pinstripe divider with curling ends. section-wipe draws it across as you arrive. */
+---
+
+<div class="pinstripe" aria-hidden="true" data-effect="section-wipe" data-effect-options='{"variant":"pinstripe"}'>
+  <svg viewBox="0 0 1200 60" preserveAspectRatio="none" focusable="false">
+    <rect width="1200" height="60" fill="#050304"></rect>
+    <g stroke="#e8dcc2" stroke-width="3">
+      {Array.from({ length: 80 }, (_, i) => <line x1={i * 15 + 4} y1="10" x2={i * 15 + 4} y2="50" />)}
+    </g>
+    <path d="M0 8h1200M0 52h1200" stroke="#a3141b" stroke-width="2"></path>
+  </svg>
+  <svg class="pinstripe__curl pinstripe__curl--l" viewBox="0 0 80 80" focusable="false">
+    <path d="M78 40C50 40 30 44 22 30 15 18 30 6 42 14c10 7 2 20-8 15" fill="none" stroke="#e8dcc2" stroke-width="3" stroke-linecap="round"></path>
+  </svg>
+  <svg class="pinstripe__curl pinstripe__curl--r" viewBox="0 0 80 80" focusable="false">
+    <path d="M2 40c28 0 48 4 56-10 7-12-8-24-20-16-10 7-2 20 8 15" fill="none" stroke="#e8dcc2" stroke-width="3" stroke-linecap="round"></path>
+  </svg>
+</div>
+
+<style>
+  .pinstripe {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 60px;
+    z-index: var(--z-content);
+  }
+  .pinstripe > svg:first-child {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .pinstripe__curl {
+    position: absolute;
+    top: -10px;
+    width: 80px;
+    height: 80px;
+  }
+  .pinstripe__curl--l {
+    left: 0;
+  }
+  .pinstripe__curl--r {
+    right: 0;
+  }
+</style>

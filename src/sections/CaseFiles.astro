@@ -1,0 +1,138 @@
+---
+import { caseFiles, chapters } from '../content/site';
+import ChapterHeading from '../components/ChapterHeading.astro';
+import Polaroid from '../components/Polaroid.astro';
+
+const ch = chapters.find((c) => c.id === 'case-files')!;
+---
+
+<section id={ch.id} class="cases" data-tone="void" aria-labelledby="cases-title">
+  <div class="cases__inner">
+    <div class="cases__lead">
+      <ChapterHeading id="cases-title" label={caseFiles.label} title={caseFiles.title} drip="#e0383f" />
+      <p class="cases__intro flavour">{caseFiles.intro}</p>
+      <p class="cases__hint caption" data-hint="case-files">{caseFiles.hint}</p>
+    </div>
+
+    <div class="board">
+      <svg class="board__string" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+        <path d="M18 8 C 40 30, 55 18, 82 22 M82 22 C 70 50, 50 60, 30 72" fill="none" stroke="#a3141b" stroke-width=".35" vector-effect="non-scaling-stroke"></path>
+      </svg>
+      <ol class="board__files" aria-label="Case files">
+        {caseFiles.files.map((f, i) => <Polaroid file={f} index={i} />)}
+      </ol>
+      <p class="board__swipe label" aria-hidden="true">{caseFiles.swipeHint} →</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cases {
+    position: relative;
+    padding: calc(var(--space-8) + 40px) var(--gutter) var(--space-8);
+    background-image:
+      repeating-linear-gradient(90deg, rgb(217 210 189 / 0.025) 0 2px, transparent 2px 46px),
+      radial-gradient(ellipse at 70% 40%, rgb(43 18 21 / 0.55), transparent 70%);
+  }
+  .cases__inner {
+    position: relative;
+    z-index: var(--z-content);
+    max-width: 76rem;
+    margin-inline: auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-6);
+  }
+  .cases__inner > * {
+    min-width: 0;
+  }
+  .cases__intro {
+    margin-top: var(--space-4);
+    max-width: 28ch;
+  }
+  .cases__hint {
+    margin-top: var(--space-2);
+  }
+  .board {
+    position: relative;
+  }
+  .board__string {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+  .board__files {
+    position: relative;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-5);
+    align-items: start;
+  }
+  .board__files > :global(li:nth-child(2)) {
+    margin-top: var(--space-7);
+  }
+  .board__files > :global(li:nth-child(3)) {
+    margin-top: var(--space-3);
+    margin-left: calc(var(--space-4) * -1);
+  }
+  .board__swipe {
+    display: none;
+  }
+
+  @media (min-width: 1000px) {
+    .cases__inner {
+      grid-template-columns: 4fr 8fr;
+      align-items: start;
+    }
+    .cases__lead {
+      position: sticky;
+      top: 20vh;
+    }
+  }
+
+  /* Small screens: a swipeable stack (native scroll-snap, works with touch, keyboard and SR). */
+  @media (max-width: 719px) {
+    .board__string {
+      display: none;
+    }
+    .board__files {
+      display: flex;
+      gap: var(--space-3);
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      overscroll-behavior-x: contain;
+      padding: var(--space-3) 15vw var(--space-5);
+      margin-inline: calc(var(--gutter) * -1);
+      scrollbar-width: none;
+    }
+    .board__files > :global(li) {
+      flex: 0 0 70vw;
+      scroll-snap-align: center;
+      margin: 0 !important;
+    }
+    .board__swipe {
+      display: block;
+      color: var(--muted);
+      text-align: center;
+    }
+  }
+</style>
+
+<script>
+  import { markHintUsed } from '../lib/hints';
+  document.addEventListener('astro:page-load', () => {
+    document.querySelectorAll<HTMLAnchorElement>('.board .polaroid').forEach((a) =>
+      a.addEventListener('click', () => {
+        markHintUsed('case-files');
+        try {
+          sessionStorage.setItem('shiru:from-board', '1');
+        } catch {
+          /* ignore */
+        }
+      }),
+    );
+  });
+</script>

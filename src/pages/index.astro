@@ -1,0 +1,20 @@
+---
+import Base from '../layouts/Base.astro';
+import Intro from '../sections/Intro.astro';
+import Hero from '../sections/Hero.astro';
+import RabbitHole from '../sections/RabbitHole.astro';
+import CaseFiles from '../sections/CaseFiles.astro';
+import Grimoire from '../sections/Grimoire.astro';
+import Tea from '../sections/Tea.astro';
+import Footer from '../sections/Footer.astro';
+---
+
+<Base home>
+  <Intro slot="intro" />
+  <Hero />
+  <RabbitHole />
+  <CaseFiles />
+  <Grimoire />
+  <Tea />
+  <Footer slot="footer" />
+</Base>

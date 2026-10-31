@@ -1,0 +1,85 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Base from '../../layouts/Base.astro';
+import CloseFile from '../../components/CloseFile.astro';
+import { grimoire, type GrimoireEntry } from '../../content/site';
+
+export const getStaticPaths = (() =>
+  grimoire.entries.map((entry) => ({ params: { slug: entry.slug }, props: { entry } }))) satisfies GetStaticPaths;
+
+interface Props {
+  entry: GrimoireEntry;
+}
+const { entry } = Astro.props;
+const i = grimoire.entries.findIndex((e) => e.slug === entry.slug);
+const prev = grimoire.entries[i - 1];
+const next = grimoire.entries[i + 1];
+const date = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(entry.date));
+---
+
+<Base title={entry.title} description={entry.excerpt}>
+  <article class="entry" data-tone="sepia" aria-labelledby="entry-title">
+    <CloseFile href="/#grimoire" label="Back to the grimoire" flag="shiru:from-grimoire" />
+    <header class="entry__head">
+      <p class="label">Chapter {entry.numeral} · <time datetime={entry.date}>{date}</time></p>
+      <h1 id="entry-title" class="entry__title" data-effect="bleed-title" data-effect-options='{"color":"#5c0e12","density":0.5}'>
+        <span class="bleed__text">{entry.title}</span>
+      </h1>
+      <p class="entry__excerpt flavour">{entry.excerpt}</p>
+    </header>
+    <div class="entry__body prose">
+      {entry.body.map((p) => <p>{p}</p>)}
+    </div>
+    <nav class="entry__nav" aria-label="More chapters">
+      {prev && <a href={`/grimoire/${prev.slug}/`}>← {prev.title}</a>}
+      {next && <a href={`/grimoire/${next.slug}/`}>{next.title} →</a>}
+    </nav>
+  </article>
+</Base>
+
+<style>
+  .entry {
+    min-height: 100svh;
+    padding: var(--space-8) var(--gutter);
+    display: grid;
+    justify-items: center;
+    align-content: start;
+    gap: var(--space-5);
+  }
+  .entry__head,
+  .entry__body,
+  .entry__nav {
+    width: min(100%, var(--measure));
+  }
+  .entry__head .label {
+    color: var(--fg-muted);
+  }
+  .entry__title {
+    font-size: var(--step-5);
+    color: var(--oxblood);
+    margin-block: var(--space-2) var(--space-5);
+  }
+  .entry__excerpt {
+    color: var(--ink);
+  }
+  .entry__body p:first-child::first-letter {
+    font-family: var(--font-display);
+    float: left;
+    font-size: 3.4em;
+    line-height: 0.85;
+    padding: 0.06em 0.1em 0 0;
+    color: var(--oxblood);
+  }
+  .entry__nav {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+    font-family: var(--font-flavour);
+  }
+  .entry__nav a {
+    min-height: var(--touch);
+    display: inline-flex;
+    align-items: center;
+  }
+</style>

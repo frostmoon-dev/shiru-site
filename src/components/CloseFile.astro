@@ -1,0 +1,82 @@
+---
+import Icon from './Icon.astro';
+/**
+ * Close control for sub-pages (case files, grimoire chapters). It's a real link to the chapter,
+ * so it works without JS. With JS, if the visitor came from that chapter, it goes Back instead
+ * (restores their scroll position), and Esc does the same.
+ */
+interface Props {
+  href: string;
+  label: string;
+  flag: string;
+}
+const { href, label, flag } = Astro.props;
+---
+
+<a class="close-file label" href={href} data-close-file data-flag={flag} data-no-bleed>
+  <Icon name="close" size={22} />
+  <span>{label}</span>
+</a>
+
+<style>
+  .close-file {
+    position: fixed;
+    z-index: var(--z-overlay);
+    top: calc(var(--space-2) + var(--touch) + var(--space-2));
+    right: var(--gutter);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    min-height: var(--touch);
+    padding: 0 var(--space-2);
+    background: var(--void);
+    color: var(--bone);
+    border: 1px solid color-mix(in oklch, var(--bone) 35%, transparent);
+    text-decoration: none;
+  }
+  .close-file:hover {
+    color: var(--blood-lit);
+    border-color: currentColor;
+  }
+  @media (max-width: 719px) {
+    /* the nav lives at the bottom on phones, so the close control takes the top corner */
+    .close-file {
+      top: var(--space-2);
+      right: var(--space-2);
+    }
+  }
+</style>
+
+<script>
+  function bind() {
+    const link = document.querySelector<HTMLAnchorElement>('[data-close-file]');
+    if (!link) return;
+    const flag = link.dataset.flag ?? '';
+    const cameFromChapter = () => {
+      try {
+        return sessionStorage.getItem(flag) === '1' && history.length > 1;
+      } catch {
+        return false;
+      }
+    };
+    const close = (e?: Event) => {
+      if (!cameFromChapter()) return; // let the link navigate normally
+      e?.preventDefault();
+      try {
+        sessionStorage.removeItem(flag);
+      } catch {
+        /* ignore */
+      }
+      history.back();
+    };
+    link.onclick = close;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape' || document.querySelector('dialog[open]')) return;
+      if (cameFromChapter()) close(e);
+      else link.click();
+    };
+    document.addEventListener('keydown', onKey);
+    document.addEventListener('astro:before-swap', () => document.removeEventListener('keydown', onKey), { once: true });
+  }
+  document.addEventListener('astro:page-load', bind);
+</script>

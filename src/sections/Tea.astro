@@ -1,0 +1,574 @@
+---
+import { chapters, site, tea } from '../content/site';
+import ChapterHeading from '../components/ChapterHeading.astro';
+import Icon from '../components/Icon.astro';
+import Pinstripe from '../components/scene/Pinstripe.astro';
+
+const ch = chapters.find((c) => c.id === 'tea')!;
+const endpoint = import.meta.env.PUBLIC_CONTACT_ENDPOINT?.trim() || '';
+const mode = endpoint ? 'endpoint' : 'mailto';
+const action = endpoint || `mailto:${site.email}`;
+---
+
+<section id={ch.id} class="tea" data-tone="night" aria-labelledby="tea-title">
+  <Pinstripe />
+  <div class="tea__inner">
+    <div class="tea__lead">
+      <ChapterHeading id="tea-title" label={tea.label} title={tea.title} drip="#e74f54" />
+      <p class="tea__intro flavour">{tea.intro}</p>
+    </div>
+
+    <div class="tea__table">
+      <svg class="tea__setting" viewBox="0 0 900 260" aria-hidden="true" focusable="false">
+        <path d="M0 210h900" stroke="#c9a24a" stroke-opacity=".4" stroke-width="2"></path>
+        <path d="M0 214c150 10 300-4 450 4s300-6 450 0v42H0z" fill="#2b1215" opacity=".7"></path>
+        <g fill="none" stroke="#d9d2bd" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".75">
+          <!-- crooked teapot -->
+          <path d="M70 206c-20-20-22-62 8-84 26-19 76-19 102 2 26 22 22 62 2 82z" fill="#1a1922"></path>
+          <path d="M112 118c2-14 18-16 22-2"></path>
+          <path d="M180 140c26-12 34-36 20-52-10-12-26-2-18 10"></path>
+          <path d="M70 148c-28-6-44 10-40 30 3 16 24 18 30 4"></path>
+          <!-- cup, upright -->
+          <path d="M300 206c-14-6-20-40-16-58h66c4 18-2 52-16 58z" fill="#1a1922"></path>
+          <path d="M350 160c16-4 20 18 4 24"></path>
+          <path d="M270 208h100"></path>
+          <!-- cup, tipped over, spilling ink -->
+          <g transform="rotate(-78 610 190)">
+            <path d="M590 206c-14-6-20-40-16-58h66c4 18-2 52-16 58z" fill="#1a1922"></path>
+          </g>
+          <path d="M650 208c40 4 90-2 130 4" stroke="#050304" stroke-opacity="1" stroke-width="8"></path>
+          <!-- pocket watch -->
+          <circle cx="830" cy="186" r="20" fill="#1a1922"></circle>
+          <path d="M830 186v-12M830 186l-8 4"></path>
+        </g>
+        <g fill="#a3141b"><circle cx="760" cy="216" r="4"></circle><circle cx="785" cy="222" r="2.5"></circle></g>
+      </svg>
+
+      <div class="envelope" data-envelope data-mode={mode}>
+        <div class="envelope__body" aria-hidden="true">
+          <div class="envelope__back"></div>
+          <div class="envelope__flap"></div>
+          <div class="envelope__front"></div>
+        </div>
+        <button class="envelope__seal" type="button" data-seal aria-expanded="false" aria-controls="letter">
+          <span class="visually-hidden">{tea.sealLabel}</span>
+          <svg viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+            <g class="seal__l">
+              <path d="M50 6C24 4 6 24 8 50c2 24 20 42 42 44V6z" fill="#a3141b"></path>
+            </g>
+            <g class="seal__r">
+              <path d="M50 6c26-2 44 18 42 44-2 24-20 42-42 44V6z" fill="#8f1218"></path>
+            </g>
+            <circle cx="50" cy="50" r="28" fill="none" stroke="#5c0e12" stroke-width="2.5"></circle>
+            <path d="M50 50c3-3 7 0 5 4-3 5-11 4-12-2-2-8 6-13 13-11 9 3 11 13 7 20" fill="none" stroke="#5c0e12" stroke-width="2.5"></path>
+            <path class="seal__crack" d="M50 6l-3 18 5 12-4 14 4 16-3 14 1 14" fill="none" stroke="#2b1215" stroke-width="2"></path>
+          </svg>
+        </button>
+        <p class="envelope__hint label" data-hint="seal">↑ {tea.sealHint}</p>
+      </div>
+
+      <div class="letter" id="letter" data-tone="bone" data-letter>
+        <h3 class="letter__title">{tea.formTitle}</h3>
+        <form class="letter__form" action={action} method="post" enctype={mode === 'mailto' ? 'text/plain' : undefined} novalidate data-form>
+          <div class="field">
+            <label for="f-name">{tea.fields.name.label}</label>
+            <input id="f-name" name="name" type="text" autocomplete="name" required aria-describedby="e-name" />
+            <p class="field__error" id="e-name" hidden><Icon name="warn" size={18} /><span>{tea.fields.name.error}</span></p>
+          </div>
+          <div class="field">
+            <label for="f-email">{tea.fields.email.label}</label>
+            <input id="f-email" name="email" type="email" autocomplete="email" inputmode="email" required aria-describedby="e-email" />
+            <p class="field__error" id="e-email" hidden><Icon name="warn" size={18} /><span>{tea.fields.email.error}</span></p>
+          </div>
+          <div class="field">
+            <label for="f-message">{tea.fields.message.label}</label>
+            <textarea id="f-message" name="message" rows="5" required minlength="10" aria-describedby="e-message"></textarea>
+            <p class="field__error" id="e-message" hidden><Icon name="warn" size={18} /><span>{tea.fields.message.error}</span></p>
+          </div>
+          <div class="field field--trap" aria-hidden="true">
+            <label for="f-website">{tea.fields.honeypot}</label>
+            <input id="f-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+          </div>
+          <div class="letter__actions">
+            <button class="btn btn--solid" type="submit" data-submit>
+              <Icon name="quill" size={18} />
+              <span data-submit-label>{mode === 'mailto' ? tea.submitMailto : tea.submit}</span>
+            </button>
+            <button class="btn letter__fold" type="button" data-fold>{tea.closeEnvelope}</button>
+          </div>
+          <div class="letter__status" role="status" aria-live="polite" data-status></div>
+        </form>
+      </div>
+    </div>
+
+    <div class="tea__elsewhere">
+      <p class="label">{tea.elsewhere}</p>
+      <ul>
+        {
+          tea.links.map((l) => (
+            <li>
+              <a href={l.href} rel={l.href.startsWith('http') ? 'me noopener' : undefined}>
+                {l.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</section>
+
+<script
+  is:inline
+  type="application/json"
+  id="tea-copy"
+  set:html={JSON.stringify({
+    sending: tea.sending,
+    success: tea.success,
+    successMailto: tea.successMailto,
+    error: tea.error(site.email),
+    email: site.email,
+  })}
+></script>
+<template id="tea-icon-error"><Icon name="warn" size={20} /></template>
+<template id="tea-icon-success"><Icon name="check" size={20} /></template>
+
+<style>
+  .tea {
+    position: relative;
+    padding: var(--space-7) var(--gutter) var(--space-8);
+    background-image: radial-gradient(ellipse at 50% 80%, rgb(92 14 18 / 0.25), transparent 60%);
+  }
+  .tea__inner {
+    position: relative;
+    z-index: var(--z-content);
+    max-width: 72rem;
+    margin-inline: auto;
+    display: grid;
+    gap: var(--space-6);
+  }
+  .tea__intro {
+    margin-top: var(--space-3);
+    max-width: 32ch;
+  }
+  .tea__table {
+    position: relative;
+    display: grid;
+    justify-items: center;
+    padding-bottom: 120px;
+  }
+  .tea__setting {
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: min(900px, 140%);
+    translate: -50% 0;
+  }
+
+  /* ---- envelope ---- */
+  .envelope {
+    position: relative;
+    width: min(100%, 30rem);
+    aspect-ratio: 1.55;
+    transform: rotate(-2deg);
+    perspective: 1000px;
+  }
+  .envelope__body > * {
+    position: absolute;
+    inset: 0;
+  }
+  .envelope__back {
+    background: #d6c49c;
+    box-shadow: 10px 14px 0 rgb(5 3 4 / 0.55);
+  }
+  .envelope__front {
+    background:
+      linear-gradient(to top right, transparent 49.6%, rgb(42 26 18 / 0.18) 50%, transparent 50.4%),
+      linear-gradient(to top left, transparent 49.6%, rgb(42 26 18 / 0.18) 50%, transparent 50.4%),
+      var(--sepia);
+    clip-path: polygon(0 0, 50% 52%, 100% 0, 100% 100%, 0 100%);
+  }
+  .envelope__flap {
+    z-index: 2;
+    height: 56%;
+    background: #ddcba4;
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    transform-origin: 50% 0;
+    transition: transform 700ms var(--ease-ink) 250ms;
+    filter: drop-shadow(0 2px 0 rgb(42 26 18 / 0.25));
+  }
+  .envelope.is-open .envelope__flap {
+    transform: rotateX(178deg);
+    z-index: 0;
+  }
+  .envelope__seal {
+    position: absolute;
+    z-index: 3;
+    left: 50%;
+    top: 56%;
+    width: 84px;
+    height: 84px;
+    margin: -42px 0 0 -42px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    filter: drop-shadow(2px 4px 0 rgb(5 3 4 / 0.45));
+    transition: transform var(--dur-quick) var(--ease-out);
+  }
+  .envelope__seal:hover {
+    transform: scale(1.06) rotate(-4deg);
+  }
+  .envelope__seal:active {
+    transform: scale(0.96);
+  }
+  .envelope__seal:focus-visible {
+    outline-color: var(--bone);
+    box-shadow: 0 0 0 6px var(--night);
+    border-radius: 50%;
+  }
+  .envelope__seal svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+  .seal__l,
+  .seal__r {
+    transition: transform 500ms var(--ease-drop);
+    transform-box: fill-box;
+  }
+  .seal__crack {
+    opacity: 0;
+  }
+  .envelope.is-open .seal__crack {
+    opacity: 1;
+  }
+  .envelope.is-open .seal__l {
+    transform: translate(-30px, 60px) rotate(-30deg);
+  }
+  .envelope.is-open .seal__r {
+    transform: translate(30px, 70px) rotate(25deg);
+  }
+  .envelope.is-open .envelope__seal {
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 300ms 500ms;
+  }
+  .envelope__hint {
+    position: absolute;
+    left: 50%;
+    top: calc(100% + var(--space-2));
+    translate: -50% 0;
+    color: var(--bone);
+    white-space: nowrap;
+    animation: hint-sway 3s var(--ease-ink) infinite;
+  }
+  @keyframes hint-sway {
+    50% {
+      translate: -50% -4px;
+    }
+  }
+
+  /* ---- the letter (form) ---- */
+  .letter {
+    position: relative;
+    z-index: 2;
+    width: min(100%, 34rem);
+    margin-top: -40%;
+    padding: var(--space-4) var(--space-4) var(--space-3);
+    box-shadow: 10px 14px 0 rgb(5 3 4 / 0.5);
+    transform: rotate(1deg);
+  }
+  :global(html.js) .letter {
+    display: none;
+  }
+  :global(html.js) .envelope.is-open + .letter {
+    display: block;
+    animation: letter-out 800ms var(--ease-out) 350ms both;
+  }
+  :global(html:not(.js)) .letter {
+    margin-top: var(--space-4);
+  }
+  :global(html:not(.js)) .envelope__seal,
+  :global(html:not(.js)) .envelope__hint {
+    display: none;
+  }
+  @keyframes letter-out {
+    from {
+      transform: translateY(30%) rotate(1deg);
+      opacity: 0;
+      clip-path: inset(0 0 60% 0);
+    }
+    to {
+      clip-path: inset(0 0 0 0);
+    }
+  }
+  .letter__title {
+    font-family: var(--font-flavour);
+    font-size: var(--step-2);
+    margin-bottom: var(--space-3);
+    color: var(--ink);
+  }
+  .letter__form {
+    display: grid;
+    gap: var(--space-3);
+  }
+  .field {
+    display: grid;
+    gap: var(--space-half);
+  }
+  .field label {
+    font-family: var(--font-label);
+    font-size: var(--text-label);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+  .field input,
+  .field textarea {
+    width: 100%;
+    min-height: var(--touch);
+    padding: var(--space-1) var(--space-1);
+    border: 0;
+    border-bottom: 1px solid var(--ink);
+    background: rgb(255 250 235 / 0.35);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: var(--step-0);
+    border-radius: 0;
+  }
+  .field textarea {
+    resize: vertical;
+    background-image: repeating-linear-gradient(transparent 0 1.6em, rgb(42 26 18 / 0.15) 1.6em calc(1.6em + 1px));
+    line-height: 1.6;
+  }
+  .field input:hover,
+  .field textarea:hover {
+    background-color: rgb(255 250 235 / 0.55);
+  }
+  .field input:focus-visible,
+  .field textarea:focus-visible {
+    outline: 2px solid var(--blood);
+    outline-offset: 2px;
+    box-shadow: none;
+  }
+  .field [aria-invalid='true'] {
+    border-bottom: 2px solid var(--error);
+  }
+  .field input:disabled,
+  .field textarea:disabled {
+    opacity: 0.6;
+  }
+  .field__error {
+    display: flex;
+    gap: var(--space-1);
+    align-items: center;
+    color: var(--error);
+    font-size: var(--text-small);
+  }
+  .field__error[hidden] {
+    display: none;
+  }
+  .field--trap {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+  .letter__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  :global(html:not(.js)) .letter__fold {
+    display: none;
+  }
+  .letter__status:empty {
+    display: none;
+  }
+  .letter__status {
+    display: flex;
+    gap: var(--space-1);
+    align-items: flex-start;
+    padding: var(--space-2);
+    border: 1px solid currentColor;
+  }
+  .letter__status[data-kind='success'] {
+    color: var(--success);
+  }
+  .letter__status[data-kind='error'] {
+    color: var(--error);
+  }
+  .letter__status[data-kind='sending'] {
+    color: var(--fg-muted);
+  }
+
+  .tea__elsewhere ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-4);
+    list-style: none;
+    padding: 0;
+    margin-top: var(--space-1);
+  }
+  .tea__elsewhere a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--touch);
+  }
+  @media (min-width: 900px) {
+    .tea__inner {
+      grid-template-columns: 4fr 7fr;
+      align-items: start;
+    }
+    .tea__elsewhere {
+      grid-column: 1;
+      grid-row: 2;
+    }
+    .tea__table {
+      grid-row: 1 / span 2;
+      grid-column: 2;
+    }
+  }
+</style>
+
+<script>
+  import { markHintUsed } from '../lib/hints';
+  import { sfx } from '../lib/sfx';
+
+  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+  function bind() {
+    const env = document.querySelector<HTMLElement>('[data-envelope]');
+    const seal = document.querySelector<HTMLButtonElement>('[data-seal]');
+    const letter = document.querySelector<HTMLElement>('[data-letter]');
+    const form = document.querySelector<HTMLFormElement>('[data-form]');
+    const copyEl = document.getElementById('tea-copy');
+    if (!env || !seal || !letter || !form || !copyEl) return;
+    const copy = JSON.parse(copyEl.textContent ?? '{}') as {
+      sending: string;
+      success: string;
+      successMailto: string;
+      error: string;
+      email: string;
+    };
+    const mode = env.dataset.mode;
+    const status = form.querySelector<HTMLElement>('[data-status]')!;
+    const submit = form.querySelector<HTMLButtonElement>('[data-submit]')!;
+    const submitLabel = form.querySelector<HTMLElement>('[data-submit-label]')!;
+    const fields = {
+      name: form.querySelector<HTMLInputElement>('#f-name')!,
+      email: form.querySelector<HTMLInputElement>('#f-email')!,
+      message: form.querySelector<HTMLTextAreaElement>('#f-message')!,
+    };
+    const trap = form.querySelector<HTMLInputElement>('#f-website')!;
+    let attempted = false;
+    let busy = false;
+
+    const close = () => {
+      env.classList.remove('is-open');
+      seal.setAttribute('aria-expanded', 'false');
+      seal.focus();
+    };
+    const open = () => {
+      if (env.classList.contains('is-open')) return;
+      env.classList.add('is-open');
+      seal.setAttribute('aria-expanded', 'true');
+      markHintUsed('seal');
+      sfx('seal');
+      window.shiruOverlay.open('letter', close);
+      window.setTimeout(() => fields.name.focus({ preventScroll: true }), 900);
+    };
+    seal.onclick = open;
+    form.querySelector<HTMLButtonElement>('[data-fold]')!.onclick = () => window.shiruOverlay.close('letter');
+    letter.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') window.shiruOverlay.close('letter');
+    });
+
+    const check = (focusFirst: boolean) => {
+      const bad: (keyof typeof fields)[] = [];
+      if (!fields.name.value.trim()) bad.push('name');
+      if (!EMAIL_RE.test(fields.email.value.trim())) bad.push('email');
+      if (fields.message.value.trim().length < 10) bad.push('message');
+      (Object.keys(fields) as (keyof typeof fields)[]).forEach((k) => {
+        const isBad = bad.includes(k);
+        fields[k].setAttribute('aria-invalid', String(isBad));
+        form.querySelector<HTMLElement>(`#e-${k}`)!.hidden = !isBad;
+      });
+      if (focusFirst && bad[0]) fields[bad[0]].focus();
+      return bad.length === 0;
+    };
+    Object.values(fields).forEach((f) => f.addEventListener('blur', () => attempted && check(false)));
+
+    const setStatus = (kind: 'sending' | 'success' | 'error' | '', text: string) => {
+      status.dataset.kind = kind;
+      status.replaceChildren();
+      const icon = document.querySelector<HTMLTemplateElement>(`#tea-icon-${kind}`);
+      if (icon) status.append(icon.content.cloneNode(true));
+      const span = document.createElement('span');
+      span.textContent = text;
+      status.append(span);
+    };
+    const setBusy = (b: boolean) => {
+      busy = b;
+      submit.disabled = b;
+      submit.setAttribute('aria-busy', String(b));
+      Object.values(fields).forEach((f) => (f.disabled = b));
+    };
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (busy) return; // no double sends
+      attempted = true;
+      if (!check(true)) return;
+      if (trap.value) {
+        // Bot filled the honeypot: pretend all is well, send nothing.
+        setStatus('success', copy.success);
+        form.reset();
+        return;
+      }
+      const data = {
+        name: fields.name.value.trim(),
+        email: fields.email.value.trim(),
+        message: fields.message.value.trim(),
+      };
+      if (mode === 'mailto') {
+        setBusy(true);
+        const subject = encodeURIComponent(`A letter from ${data.name}`);
+        const body = encodeURIComponent(`${data.message}\n\n${data.name} (${data.email})`);
+        window.location.href = `mailto:${copy.email}?subject=${subject}&body=${body}`;
+        setStatus('success', copy.successMailto);
+        window.setTimeout(() => setBusy(false), 2500);
+        return;
+      }
+      setBusy(true);
+      const label = submitLabel.textContent;
+      submitLabel.textContent = copy.sending;
+      setStatus('sending', copy.sending);
+      const ctrl = new AbortController();
+      const timeout = window.setTimeout(() => ctrl.abort(), 12000);
+      try {
+        const res = await fetch(form.action, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify(data),
+          signal: ctrl.signal,
+        });
+        if (!res.ok) throw new Error(String(res.status));
+        setStatus('success', copy.success);
+        sfx('page');
+        form.reset();
+        attempted = false;
+      } catch {
+        setStatus('error', copy.error);
+      } finally {
+        window.clearTimeout(timeout);
+        submitLabel.textContent = label;
+        setBusy(false);
+      }
+    });
+  }
+
+  document.addEventListener('astro:page-load', bind);
+</script>

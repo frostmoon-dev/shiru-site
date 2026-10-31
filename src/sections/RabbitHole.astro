@@ -1,0 +1,216 @@
+---
+import { about, chapters } from '../content/site';
+import ChapterHeading from '../components/ChapterHeading.astro';
+import BackwardsClock from '../components/props/BackwardsClock.astro';
+import Prop from '../components/props/Props.astro';
+import TornEdge from '../components/scene/TornEdge.astro';
+
+const ch = chapters.find((c) => c.id === 'rabbit-hole')!;
+---
+
+<section id={ch.id} class="rabbit" data-tone="bone" aria-labelledby="rabbit-title" data-effect="fall-parallax">
+  <div class="rabbit__props" aria-hidden="true">
+    <div class="rp rp--clock1" data-depth="0.9" data-spin="25"><BackwardsClock size={150} /></div>
+    <div class="rp rp--clock2" data-depth="-0.5" data-spin="-40"><BackwardsClock size={84} speed={2.2} /></div>
+    <div class="rp rp--key1" data-depth="1.2" data-spin="160"><Prop kind="key" size={150} /></div>
+    <div class="rp rp--key2" data-depth="-0.8" data-spin="-90"><Prop kind="key" size={90} /></div>
+    <div class="rp rp--card1" data-depth="0.6" data-spin="70"><Prop kind="card-hearts" size={88} /></div>
+    <div class="rp rp--card2" data-depth="1.4" data-spin="-120"><Prop kind="card-spades" size={70} /></div>
+    <div class="rp rp--drink" data-depth="0.3" data-spin="18"><Prop kind="drink-me" size={150} /></div>
+    <div class="rp rp--clock3" data-depth="1.6" data-spin="80"><BackwardsClock size={56} speed={4} /></div>
+  </div>
+
+  <div class="rabbit__inner" data-fall-zoom>
+    <div class="rabbit__lead">
+      <ChapterHeading id="rabbit-title" label={about.label} title={about.title} />
+      <p class="rabbit__intro flavour" data-effect="wet-ink">{about.intro}</p>
+    </div>
+
+    <div class="rabbit__body prose">
+      {about.body.map((p) => <p>{p}</p>)}
+    </div>
+
+    <dl class="specimen">
+      <p class="specimen__head label" aria-hidden="true">Specimen No. 1 · Shiru</p>
+      {
+        about.facts.map((f) => (
+          <div class="specimen__row">
+            <dt class="label">{f.term}</dt>
+            <dd>{f.detail}</dd>
+          </div>
+        ))
+      }
+    </dl>
+    <p class="rabbit__caption caption">{about.clockCaption}</p>
+  </div>
+
+  <div class="floor" aria-hidden="true">
+    <div class="floor__plane" data-floor></div>
+  </div>
+
+  <TornEdge class="rabbit__tear" />
+</section>
+
+<style>
+  .rabbit {
+    position: relative;
+    padding: 38vh var(--gutter) 0;
+    overflow-x: clip;
+  }
+  .rabbit__props {
+    position: absolute;
+    inset: 0;
+    overflow: clip;
+    pointer-events: none;
+  }
+  .rp {
+    position: absolute;
+    filter: drop-shadow(0 8px 10px rgb(42 26 18 / 0.25));
+  }
+  .rp--clock1 {
+    left: 4%;
+    top: 30%;
+  }
+  .rp--clock2 {
+    right: 7%;
+    top: 26%;
+  }
+  .rp--key1 {
+    right: 16%;
+    top: 58%;
+  }
+  .rp--key2 {
+    left: 38%;
+    top: 22%;
+  }
+  .rp--card1 {
+    left: 12%;
+    top: 68%;
+  }
+  .rp--card2 {
+    right: 3%;
+    top: 44%;
+  }
+  .rp--drink {
+    left: 52%;
+    top: 80%;
+  }
+  .rp--clock3 {
+    left: 30%;
+    top: 52%;
+  }
+
+  .rabbit__inner {
+    position: relative;
+    z-index: var(--z-content);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-5);
+    max-width: 72rem;
+    margin-inline: auto;
+  }
+  .rabbit__intro {
+    margin-top: var(--space-4);
+    max-width: 30ch;
+    color: var(--fg);
+  }
+  .rabbit__body {
+    background: color-mix(in oklch, var(--bone) 88%, transparent);
+    padding: var(--space-3);
+    margin-inline: calc(var(--space-3) * -1);
+  }
+  .specimen {
+    justify-self: start;
+    max-width: 24rem;
+    padding: var(--space-3);
+    background: var(--sepia);
+    color: var(--ink);
+    border: 1px solid var(--ink);
+    outline: 3px double var(--ink);
+    outline-offset: 4px;
+    transform: rotate(2.4deg);
+    box-shadow: 6px 8px 0 rgb(42 26 18 / 0.18);
+  }
+  .specimen__head {
+    border-bottom: 1px solid var(--ink);
+    padding-bottom: var(--space-1);
+    margin-bottom: var(--space-2);
+  }
+  .specimen__row {
+    display: grid;
+    grid-template-columns: 7.5rem 1fr;
+    gap: var(--space-2);
+    padding-block: var(--space-half);
+  }
+  .specimen dt {
+    color: #4a3828;
+    padding-top: 0.35em;
+  }
+  .specimen dd {
+    font-family: var(--font-flavour);
+  }
+  .rabbit__caption {
+    color: var(--fg-muted);
+    justify-self: end;
+    max-width: 30ch;
+    transform: rotate(-1deg);
+  }
+
+  .floor {
+    position: relative;
+    height: 46vh;
+    margin-inline: calc(var(--gutter) * -1);
+    perspective: 700px;
+    perspective-origin: 50% 0%;
+    overflow: hidden;
+  }
+  .floor__plane {
+    position: absolute;
+    left: -60%;
+    right: -60%;
+    top: 0;
+    height: 220%;
+    transform-origin: 50% 0;
+    transform: rotateX(68deg);
+    background: repeating-conic-gradient(var(--ink) 0 25%, var(--bone) 0 50%) 0 0 / 90px 90px;
+    mask-image: linear-gradient(to bottom, transparent, #000 25%);
+  }
+
+  @media (min-width: 900px) {
+    .rabbit__inner {
+      grid-template-columns: 5fr 6fr;
+      column-gap: var(--space-7);
+      align-items: start;
+    }
+    .rabbit__lead {
+      grid-column: 1;
+      grid-row: 1 / span 2;
+      position: sticky;
+      top: 22vh;
+    }
+    .rabbit__body {
+      grid-column: 2;
+      margin-top: var(--space-8);
+    }
+    .specimen {
+      grid-column: 2;
+      margin-left: var(--space-5);
+    }
+    .rabbit__caption {
+      grid-column: 1 / -1;
+    }
+  }
+  @media (max-width: 719px) {
+    .rabbit {
+      padding-top: 30vh;
+    }
+    .rp--key2,
+    .rp--clock3,
+    .rp--card2 {
+      display: none;
+    }
+    .rabbit__lead :global(.chapter-heading__title) {
+      font-size: var(--step-4);
+    }
+  }
+</style>
