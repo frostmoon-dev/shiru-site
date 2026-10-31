@@ -33,6 +33,7 @@ class Stage {
   private losses = 0;
   private destroying = false;
   private width = 0;
+  private ro?: ResizeObserver;
   private height = 0;
 
   supported(): boolean {
@@ -103,13 +104,19 @@ class Stage {
     this.start = performance.now();
     this.resize();
     window.addEventListener('resize', this.resize, { passive: true });
+    // the scrollbar can appear/disappear without a window resize (content height changes)
+    this.ro = new ResizeObserver(this.resize);
+    this.ro.observe(document.documentElement);
     return renderer;
   }
 
   private resize = () => {
     if (!this.renderer) return;
-    this.width = window.innerWidth;
-    this.height = window.innerHeight;
+    // clientWidth/Height, NOT innerWidth/Height: inner* include the scrollbar, the fixed canvas
+    // doesn't. With a classic (Windows) scrollbar that mismatch squashed the drawing and left a
+    // scrollbar-wide gap on the right of every WebGL view.
+    this.width = document.documentElement.clientWidth;
+    this.height = document.documentElement.clientHeight;
     this.renderer.setSize(this.width, this.height, false);
   };
 
@@ -148,6 +155,8 @@ class Stage {
     cancelAnimationFrame(this.raf);
     this.raf = 0;
     window.removeEventListener('resize', this.resize);
+    this.ro?.disconnect();
+    this.ro = undefined;
     if (this.renderer) {
       this.destroying = true;
       this.renderer.dispose();

@@ -87,6 +87,7 @@ p {
 /* ---------- Type roles ---------- */
 .label {
   font-family: var(--font-label);
+  font-weight: 700;
   font-size: var(--text-label);
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;
@@ -331,4 +332,52 @@ html:focus-within {
 [data-tone='bone'] .ghost-title__echo,
 [data-tone='sepia'] .ghost-title__echo {
   mix-blend-mode: multiply;
+}
+
+/* ---------- Lumos cursor (effects/lumos) ---------- */
+.lumos__motes {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.lumos__core,
+.lumos__halo {
+  position: absolute;
+  left: 0;
+  top: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--dur-base) var(--ease-out);
+  will-change: transform;
+}
+.lumos.is-lit .lumos__core,
+.lumos.is-lit .lumos__halo {
+  opacity: 1;
+}
+.lumos__core {
+  width: 8px;
+  height: 8px;
+  margin: -4px 0 0 -4px;
+  background: #f3ead6;
+  box-shadow:
+    0 0 6px 2px rgb(243 234 214 / 0.9),
+    0 0 22px 8px rgb(201 162 74 / 0.35);
+}
+.lumos__halo {
+  width: 520px;
+  height: 520px;
+  margin: -260px 0 0 -260px;
+  background: radial-gradient(circle, rgb(243 234 214 / 0.16) 0, rgb(232 220 194 / 0.07) 28%, transparent 62%);
+  mix-blend-mode: screen;
+}
+.lumos__halo.is-flaring {
+  animation: lumos-flare 520ms var(--ease-out);
+}
+@keyframes lumos-flare {
+  30% {
+    scale: 1.45;
+    filter: brightness(1.8);
+  }
 }

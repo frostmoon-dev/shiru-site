@@ -1,6 +1,6 @@
 import { CanvasTexture, SRGBColorSpace, RepeatWrapping } from 'three';
 
-// The hat silhouette from HatSvg.astro (brim + crown), reused for the embossing.
+// A wide-brimmed hat silhouette (brim + crown), embossed into the grimoire's cover.
 const HAT_BRIM =
   'M6 116c6-6 14-8 22-6 22-9 52-13 82-13s62 4 84 13c8-2 16 0 21 6-4 1-9 2-13 4-21 12-55 19-92 19s-70-7-91-19c-4-2-9-3-13-4z';
 const HAT_CROWN =

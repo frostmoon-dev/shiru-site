@@ -63,10 +63,8 @@ const ogUrl = new URL(ogImage, Astro.site).href;
     <meta name="twitter:image:alt" content={ogImageAlt} />
 
     <!-- Preload only what the first screen needs; the rest load on demand. -->
-    <Font cssVariable="--font-hero" preload={home} />
-    <Font cssVariable="--font-display" preload={!home} />
-    <Font cssVariable="--font-label" preload />
-    <Font cssVariable="--font-body" />
+    <Font cssVariable="--font-display" preload />
+    <Font cssVariable="--font-body" preload={[{ weight: 400, style: 'normal', subset: 'latin' }]} />
 
     <HeadInline intro={home} />
     <ClientRouter />
@@ -85,7 +83,7 @@ const ogUrl = new URL(ogImage, Astro.site).href;
       <div class="atmosphere__grain"></div>
       <div class="atmosphere__vignette"></div>
     </div>
-    <div class="cursor-host" aria-hidden="true" data-effect="ember-trail" data-effect-eager transition:persist="embers"></div>
+    <div class="cursor-host" aria-hidden="true" data-effect="lumos" data-effect-eager data-effect-priority="high" transition:persist="lumos"></div>
 
     <script>
       import { startEffects, stopEffects } from '../effects/runtime';

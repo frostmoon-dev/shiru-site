@@ -5,7 +5,7 @@ import { mkdirSync, readFileSync } from 'node:fs';
 const { chromium } = createRequire(import.meta.url)('playwright');
 
 const grain = `<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .9 0 0 0 0 .85 0 0 0 0 .7 0 0 0 .55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>`;
-const fonts = `<link href="https://fonts.googleapis.com/css2?family=Federant&family=IM+Fell+English:ital@0;1&family=Special+Elite&display=block" rel="stylesheet">`;
+const fonts = `<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;700&family=Special+Elite&display=block" rel="stylesheet">`;
 
 const photo = (title, motif) => `<!doctype html><html><head>${fonts}<style>
 html,body{margin:0;width:100%;height:100%;}
@@ -29,13 +29,13 @@ const heroFont = readFileSync('src/assets/fonts/american-horror-story/AmericanHo
 const og = `<!doctype html><html><head>${fonts}<style>
 @font-face{font-family:Hero;src:url(data:font/otf;base64,${heroFont}) format('opentype')}
 html,body{margin:0;width:1200px;height:630px;overflow:hidden}
-body{background:#050304;position:relative;font-family:'Special Elite';color:#e8dcc2}
+body{background:#050304;position:relative;font-family:'Atkinson Hyperlegible Next';font-weight:700;color:#e8dcc2}
 .light{position:absolute;right:-60px;top:-40px;width:720px;height:720px;background:radial-gradient(circle at 55% 40%,rgba(217,210,189,.16),transparent 60%)}
 .kicker{position:absolute;left:96px;top:150px;font-size:20px;letter-spacing:.16em;color:#a8916c}
 .title{position:absolute;left:90px;top:190px;font-family:Hero;font-size:190px;line-height:1;color:#e8dcc2;letter-spacing:.02em}
 .ghost{color:transparent;-webkit-text-stroke:0;opacity:.18;transform:translate(6px,-3px);color:#e8dcc2}
 .tag{position:absolute;left:96px;top:440px;font-size:24px;letter-spacing:.12em}
-.sub{position:absolute;left:96px;top:486px;font-family:'Special Elite';font-size:18px;letter-spacing:.08em;color:#a8916c}
+.sub{position:absolute;left:96px;top:486px;font-size:18px;letter-spacing:.08em;color:#a8916c}
 .line{position:absolute;left:96px;top:420px;width:60px;height:2px;background:#a3141b}
 .grain{position:absolute;inset:0;background:url("data:image/svg+xml,${encodeURIComponent(grain)}");mix-blend-mode:overlay;opacity:.55}
 .vig{position:absolute;inset:0;background:radial-gradient(ellipse at 40% 50%,transparent 45%,rgba(5,3,4,.85))}
@@ -47,24 +47,6 @@ body{background:#050304;position:relative;font-family:'Special Elite';color:#e8d
 const iconHtml = (size) => `<!doctype html><html><body style="margin:0;width:${size}px;height:${size}px;background:#1a1922;display:grid;place-items:center">
 <svg width="${size * 0.86}" height="${size * 0.86}" viewBox="0 0 220 170"><path fill="#0b090d" d="M6 116c6-6 14-8 22-6 22-9 52-13 82-13s62 4 84 13c8-2 16 0 21 6-4 1-9 2-13 4-21 12-55 19-92 19s-70-7-91-19c-4-2-9-3-13-4z"/><path fill="#2a2533" d="M64 111c4-21 11-42 21-61 9-17 20-31 34-40 11-7 24-9 36-6-12 3-22 9-29 18-7 10-9 21-7 33 3 19 15 36 26 56-26 6-56 6-81 0z"/><path fill="#a3141b" d="M65 100c26 6 54 6 80 0l2 11c-27 7-57 7-84 0z"/><rect x="96" y="99" width="16" height="15" fill="none" stroke="#c9a24a" stroke-width="3"/></svg></body></html>`;
 
-// A faceless girl in the dark: long hair, a shoulder, half a face. Placeholder for Shiru's portrait.
-const heroPortrait = `<!doctype html><html><head>${fonts}<style>
-html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#0b0a0c}
-.g{position:absolute;inset:0;background:radial-gradient(ellipse at 55% 35%,#3a352f,#141215 55%,#0b0a0c)}
-svg{position:absolute;inset:0;width:100%;height:100%}
-.stamp{position:absolute;bottom:5%;right:6%;font-family:'Special Elite';letter-spacing:.14em;color:#8a8070;font-size:26px;border:2px solid #8a8070;padding:.2em .5em;transform:rotate(-4deg)}
-.grain{position:absolute;inset:0;background:url("data:image/svg+xml,${encodeURIComponent(grain)}");mix-blend-mode:overlay;opacity:.8}
-</style></head><body><div class="g"></div>
-<svg viewBox="0 0 1200 1500" preserveAspectRatio="xMidYMid slice">
-<defs><radialGradient id="skin" cx="45%" cy="40%" r="60%"><stop offset="0" stop-color="#c9bfae"/><stop offset="1" stop-color="#6d655a"/></radialGradient></defs>
-<path d="M300 1500c40-260 160-420 330-450s300 120 330 450z" fill="#121013"/>
-<ellipse cx="610" cy="640" rx="190" ry="250" fill="url(#skin)"/>
-<path d="M610 360c-200 0-290 150-290 330 0 220-60 420-140 560 120-40 190-200 220-380 30-170 30-300 110-370 70 40 190 50 330 20-20 160 0 420 70 560 40 80 110 140 170 170-60-160-80-360-80-560 0-220-110-330-390-330z" fill="#0d0b0e"/>
-<path d="M470 470c40 120 40 300-10 470M520 450c10 160-20 300-70 420" stroke="#1d1a1f" stroke-width="6" fill="none"/>
-<path d="M560 700c20 8 50 8 70 0" stroke="#3b3530" stroke-width="5" fill="none" opacity=".7"/>
-</svg>
-<div class="grain"></div><div class="stamp">PLACEHOLDER</div></body></html>`;
-
 mkdirSync('src/assets/placeholder', { recursive: true });
 const browser = await chromium.launch();
 const page = await browser.newPage();
@@ -75,7 +57,6 @@ async function shot(html, path, w, h, type = 'jpeg') {
   await page.screenshot({ path, type, ...(type === 'jpeg' ? { quality: 88 } : {}) });
   console.log('wrote', path);
 }
-await shot(heroPortrait, 'src/assets/placeholder/hero-portrait.jpg', 1200, 1500);
 await shot(photo('No. 365', motifs.ledger), 'src/assets/placeholder/case-erp.jpg', 900, 900);
 await shot(photo('No. 2', motifs.letters), 'src/assets/placeholder/case-translation.jpg', 900, 900);
 await shot(photo('No. 7', motifs.cards), 'src/assets/placeholder/case-lore.jpg', 900, 900);

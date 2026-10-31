@@ -4,6 +4,8 @@ import ChapterHeading from '../components/ChapterHeading.astro';
 import BackwardsClock from '../components/props/BackwardsClock.astro';
 import Prop from '../components/props/Props.astro';
 import TornEdge from '../components/scene/TornEdge.astro';
+import { Image } from 'astro:assets';
+import { collage } from '../content/photos';
 
 const ch = chapters.find((c) => c.id === 'rabbit-hole')!;
 ---
@@ -17,6 +19,7 @@ const ch = chapters.find((c) => c.id === 'rabbit-hole')!;
     <div class="rp rp--card1" data-depth="0.6" data-spin="70"><Prop kind="card-hearts" size={88} /></div>
     <div class="rp rp--card2" data-depth="1.4" data-spin="-120"><Prop kind="card-spades" size={70} /></div>
     <div class="rp rp--drink" data-depth="0.3" data-spin="18"><Prop kind="drink-me" size={150} /></div>
+    <div class="rp rp--keyhole" data-depth="-0.3" data-spin="6"><Image src={collage.keyhole} alt="" width={140} loading="lazy" decoding="async" /></div>
     <div class="rp rp--clock3" data-depth="1.6" data-spin="80"><BackwardsClock size={56} speed={4} /></div>
   </div>
 
@@ -97,6 +100,14 @@ const ch = chapters.find((c) => c.id === 'rabbit-hole')!;
     left: 52%;
     top: 80%;
   }
+  .rp--keyhole {
+    left: 70%;
+    top: 74%;
+  }
+  .rp--keyhole :global(img) {
+    width: clamp(70px, 9vw, 130px);
+    height: auto;
+  }
   .rp--clock3 {
     left: 30%;
     top: 52%;
@@ -174,7 +185,12 @@ const ch = chapters.find((c) => c.id === 'rabbit-hole')!;
     height: 220%;
     transform-origin: 50% 0;
     transform: rotateX(68deg);
-    background: repeating-conic-gradient(var(--ink) 0 25%, var(--bone) 0 50%) 0 0 / 90px 90px;
+    /* gingham: two half-strength red weaves over cream; full red where they cross */
+    background:
+      linear-gradient(90deg, rgb(163 20 27 / 0.55) 50%, transparent 0) 0 0 / 90px 90px,
+      linear-gradient(rgb(163 20 27 / 0.55) 50%, transparent 0) 0 0 / 90px 90px,
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='w'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9 .06' numOctaves='2' seed='3'/%3E%3CfeColorMatrix values='0 0 0 0 .3 0 0 0 0 .2 0 0 0 0 .15 0 0 0 .18 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23w)'/%3E%3C/svg%3E"),
+      var(--bone);
     mask-image: linear-gradient(to bottom, transparent, #000 25%);
   }
 

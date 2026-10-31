@@ -20,21 +20,8 @@ export default defineConfig({
   prefetch: { prefetchAll: false, defaultStrategy: 'hover' },
   fonts: [
     {
-      // Display face, supplied by Shiru: "Alice in Wonderland" by Marco T.L. (2010).
-      // Licence (see src/assets/fonts/alice-in-wonderland/Shhhst!.txt): free for personal,
-      // NON-commercial use; do not rename; do not distribute edited versions. So the original TTF
-      // is served byte-for-byte (no subsetting, no WOFF2 conversion) with its readme alongside.
-      provider: fontProviders.local(),
-      name: 'Alice in Wonderland',
-      cssVariable: '--font-display',
-      fallbacks: ['Georgia', 'serif'],
-      options: {
-        variants: [{ src: ['./src/assets/fonts/alice-in-wonderland/Alice_in_Wonderland_3.ttf'], weight: 400, style: 'normal' }],
-      },
-    },
-    {
-      // Reading face: Atkinson Hyperlegible Next (Braille Institute, 2025, SIL OFL 1.1).
-      // Built for legibility: letters that are easy to tell apart (I l 1, O 0, b d p q).
+      // Everything else (reading text AND labels): Atkinson Hyperlegible Next (Braille Institute,
+      // 2025, SIL OFL 1.1). Built for legibility; monoline like the AHS lettering, so they sit together.
       provider: fontProviders.google(),
       name: 'Atkinson Hyperlegible Next',
       cssVariable: '--font-body',
@@ -44,24 +31,15 @@ export default defineConfig({
       fallbacks: ['Arial', 'sans-serif'],
     },
     {
-      // Hero name only: "American Horror Story" by KELGE (2018), supplied by Shiru.
-      // No licence file shipped with it (copyright KELGE): served unmodified, used for one word.
+      // Display face for every heading: "American Horror Story" by KELGE (2018), supplied by Shiru.
+      // No licence file shipped with it (copyright KELGE): served unmodified. Confirm rights before launch.
       provider: fontProviders.local(),
       name: 'American Horror Story',
-      cssVariable: '--font-hero',
+      cssVariable: '--font-display',
       fallbacks: ['Georgia', 'serif'],
       options: {
         variants: [{ src: ['./src/assets/fonts/american-horror-story/AmericanHorrorStory-Regular.otf'], weight: 400, style: 'normal' }],
       },
-    },
-    {
-      provider: fontProviders.google(),
-      name: 'Special Elite',
-      cssVariable: '--font-label',
-      weights: [400],
-      styles: ['normal'],
-      subsets: ['latin'],
-      fallbacks: ['Courier New', 'monospace'],
     },
   ],
   vite: {

@@ -1,23 +1,29 @@
 ---
-import { Picture } from 'astro:assets';
+import { Image, Picture } from 'astro:assets';
 import { hero, ui } from '../content/site';
-import { heroPortrait } from '../content/photos';
+import { heroPortrait, collage } from '../content/photos';
 import InkEdgeFallback from '../components/scene/InkEdgeFallback.astro';
 import Icon from '../components/Icon.astro';
 ---
 
 <section id="top" class="hero" data-tone="void" aria-labelledby="hero-title">
-  <!-- Someone is standing in the dark. You only see what the light touches. -->
-  <div class="hero__portrait" aria-hidden="true" data-effect="lantern-reveal">
-    <Picture
-      src={heroPortrait}
-      alt=""
-      formats={['avif', 'webp']}
-      widths={[480, 800, 1200]}
-      sizes="(max-width: 719px) 100vw, 60vw"
-      loading="eager"
-      decoding="async"
-    />
+  <!-- Someone is sitting in the dark, and she isn't alone. You only see what the light touches. -->
+  <div class="hero__dark" aria-hidden="true" data-effect="lantern-reveal">
+    <div class="hero__portrait">
+      <Picture
+        src={heroPortrait}
+        alt=""
+        formats={['avif', 'webp']}
+        widths={[480, 768]}
+        sizes="(max-width: 719px) 90vw, 46vw"
+        loading="eager"
+        fetchpriority="high"
+        decoding="async"
+      />
+    </div>
+    <Image class="secret secret--eye" data-watch src={collage.eye} alt="" width={180} loading="lazy" decoding="async" />
+    <Image class="secret secret--hand" src={collage.hand} alt="" width={260} loading="lazy" decoding="async" />
+    <Image class="secret secret--moth" src={collage.butterfly} alt="" width={200} loading="lazy" decoding="async" />
   </div>
 
   <div class="hero__content" data-effect="flicker-jitter" data-effect-options='{"every":[9,20]}'>
@@ -50,22 +56,27 @@ import Icon from '../components/Icon.astro';
       var(--void);
   }
 
-  /* The hidden portrait: barely there everywhere, uncovered where the lantern points. */
-  .hero__portrait {
-    --lx: 58%;
+  /* The dark layer: barely there everywhere, uncovered only where the light falls. */
+  .hero__dark {
+    --lx: 62%;
     --ly: 34%;
     position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    width: min(64vw, 980px);
+    inset: 0;
+    overflow: hidden;
     pointer-events: none;
     -webkit-mask-image:
-      radial-gradient(circle at var(--lx) var(--ly), #000 0, rgb(0 0 0 / 0.55) 11%, transparent 30%),
-      linear-gradient(rgb(0 0 0 / 0.07), rgb(0 0 0 / 0.07));
+      radial-gradient(circle 280px at var(--lx) var(--ly), #000 0, rgb(0 0 0 / 0.6) 45%, transparent 100%),
+      linear-gradient(rgb(0 0 0 / 0.06), rgb(0 0 0 / 0.06));
     mask-image:
-      radial-gradient(circle at var(--lx) var(--ly), #000 0, rgb(0 0 0 / 0.55) 11%, transparent 30%),
-      linear-gradient(rgb(0 0 0 / 0.07), rgb(0 0 0 / 0.07));
+      radial-gradient(circle 280px at var(--lx) var(--ly), #000 0, rgb(0 0 0 / 0.6) 45%, transparent 100%),
+      linear-gradient(rgb(0 0 0 / 0.06), rgb(0 0 0 / 0.06));
+  }
+  .hero__portrait {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 4vw;
+    width: min(46vw, 620px);
   }
   .hero__portrait :global(picture),
   .hero__portrait :global(img) {
@@ -73,45 +84,70 @@ import Icon from '../components/Icon.astro';
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: 50% 25%;
-    filter: grayscale(1) contrast(1.15) brightness(0.85);
+    object-position: 50% 15%;
+    filter: grayscale(1) contrast(1.2) brightness(0.8);
   }
   .hero__portrait::after {
-    /* melt the left edge into the dark */
+    /* melt her edges into the dark */
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(to right, var(--void), transparent 35%, transparent 85%, var(--void));
+    background:
+      linear-gradient(to right, var(--void), transparent 30%, transparent 75%, var(--void)),
+      linear-gradient(to bottom, transparent 60%, var(--void));
+  }
+  .secret {
+    position: absolute;
+    height: auto;
+    filter: grayscale(1) contrast(1.1);
+  }
+  .secret--eye {
+    width: clamp(90px, 11vw, 170px);
+    left: 38%;
+    top: 14%;
+    transform: rotate(-8deg);
+  }
+  .secret--hand {
+    width: clamp(130px, 16vw, 250px);
+    left: 2%;
+    bottom: 4%;
+    transform: rotate(18deg);
+  }
+  .secret--moth {
+    width: clamp(90px, 10vw, 180px);
+    left: 52%;
+    top: 64%;
+    transform: rotate(-14deg);
   }
   @property --lx {
     syntax: '<percentage>';
     inherits: false;
-    initial-value: 58%;
+    initial-value: 62%;
   }
   @property --ly {
     syntax: '<percentage>';
     inherits: false;
     initial-value: 34%;
   }
-  .hero__portrait:global(.is-drifting) {
+  .hero__dark:global(.is-drifting) {
     animation: lantern-drift 23s ease-in-out infinite alternate;
   }
   @keyframes lantern-drift {
     0% {
-      --lx: 58%;
+      --lx: 62%;
       --ly: 30%;
     }
-    35% {
-      --lx: 44%;
-      --ly: 42%;
+    30% {
+      --lx: 40%;
+      --ly: 18%;
     }
-    70% {
-      --lx: 66%;
-      --ly: 50%;
+    60% {
+      --lx: 70%;
+      --ly: 55%;
     }
     100% {
-      --lx: 52%;
-      --ly: 24%;
+      --lx: 22%;
+      --ly: 80%;
     }
   }
 
@@ -126,7 +162,7 @@ import Icon from '../components/Icon.astro';
     margin-bottom: var(--space-2);
   }
   .hero__title {
-    font-family: var(--font-hero);
+    font-family: var(--font-display);
     font-size: var(--step-6);
     font-weight: 400;
     line-height: 0.95;
@@ -196,8 +232,17 @@ import Icon from '../components/Icon.astro';
       padding-bottom: calc(var(--space-7) + 10vh);
     }
     .hero__portrait {
-      width: 100%;
-      opacity: 0.85;
+      right: -10vw;
+      width: 90vw;
+    }
+    .secret--eye {
+      left: auto;
+      right: 4%;
+      top: 4%;
+    }
+    .secret--moth {
+      left: 60%;
+      top: 70%;
     }
     .hero__content {
       margin-left: 0;

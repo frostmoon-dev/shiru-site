@@ -112,8 +112,8 @@ The interface doesn't care what's inside `mount()`:
 
 - **GSAP / ScrollTrigger:** `import { gsap, ScrollTrigger } from '../../lib/motion'` (already synced with Lenis). Wrap your tweens in `gsap.context(() => …, el)` and call `ctx.revert()` in `unmount()`.
 - **Lottie:** `npm i lottie-web`, then `const lottie = (await import('lottie-web')).default` inside `mount()`; `anim.destroy()` in `unmount()`.
-- **Canvas 2D:** see `ember-trail`.
-- **Video:** create the `<video muted playsinline>` in `mount()`, remove it in `unmount()`, and show a poster image in `reducedMotion()`.
+- **Canvas 2D:** see `lumos` (the motes).
+- **Video:** use `ambient-video` (`<video data-effect="ambient-video" data-src="/media/x.mp4" muted loop playsinline preload="none" poster="…">`).
 - **React Three Fiber:** for a whole interactive scene, make a React island instead (see `src/islands/GrimoireBook.tsx`).
 
 ## Rules every effect must follow
@@ -134,7 +134,8 @@ The interface doesn't care what's inside `mount()`:
 | `lantern-reveal` | a hidden portrait in the dark is uncovered only where the light falls; the light trails the cursor, drifts by itself on touch | still pool of light |
 | `wet-ink` | text swells and smears for a moment | nothing |
 | `ink-edge` | liquid ink shader at the hero's bottom, scroll-stretched (desktop); animated SVG on phones | frozen SVG drips |
-| `ember-trail` | embers behind a mouse cursor (not on touch) | none |
+| `lumos` | the cursor carries a small light: a bright tip, a trailing halo, pale motes; a click flares it (mouse only, system cursor stays) | light follows exactly, no motes/flare |
+| `ambient-video` | a silent looping background video, fetched only near the viewport and dropped when far away | poster frame |
 | `fall-parallax` | rabbit-hole drift, tumbling props, zoom-in, tilting floor | props at rest |
 | `section-wipe` | `tear`, `burn`, `pinstripe`, `ink-rise` chapter transitions | the static edge |
 | `typewriter` | types a line, makes one mistake, corrects it | full text |

@@ -3,14 +3,30 @@ import { chapters, site, tea } from '../content/site';
 import ChapterHeading from '../components/ChapterHeading.astro';
 import Icon from '../components/Icon.astro';
 import Pinstripe from '../components/scene/Pinstripe.astro';
+import { Image, getImage } from 'astro:assets';
+import { collage } from '../content/photos';
 
 const ch = chapters.find((c) => c.id === 'tea')!;
 const endpoint = import.meta.env.PUBLIC_CONTACT_ENDPOINT?.trim() || '';
 const mode = endpoint ? 'endpoint' : 'mailto';
 const action = endpoint || `mailto:${site.email}`;
+const paper = await getImage({ src: collage.paper, width: 900, format: 'webp', quality: 72 });
+const moonPoster = await getImage({ src: collage.moonPoster, width: 960, format: 'webp', quality: 60 });
 ---
 
 <section id={ch.id} class="tea" data-tone="night" aria-labelledby="tea-title">
+  <!-- midnight: the moon through bare branches, behind everything -->
+  <video
+    class="tea__moon"
+    aria-hidden="true"
+    tabindex="-1"
+    muted
+    loop
+    playsinline
+    preload="none"
+    poster={moonPoster.src}
+    data-src="/media/moon.mp4"
+    data-effect="ambient-video"></video>
   <Pinstripe />
   <div class="tea__inner">
     <div class="tea__lead">
@@ -21,7 +37,16 @@ const action = endpoint || `mailto:${site.email}`;
     <div class="tea__table">
       <svg class="tea__setting" viewBox="0 0 900 260" aria-hidden="true" focusable="false">
         <path d="M0 210h900" stroke="#c9a24a" stroke-opacity=".4" stroke-width="2"></path>
-        <path d="M0 214c150 10 300-4 450 4s300-6 450 0v42H0z" fill="#2b1215" opacity=".7"></path>
+        <defs>
+          <!-- gingham: two half-strength red weaves over cream; where they cross, full red -->
+          <pattern id="gingham" width="36" height="36" patternUnits="userSpaceOnUse" patternTransform="skewX(-28)">
+            <rect width="36" height="36" fill="#e8dcc2"></rect>
+            <rect width="18" height="36" fill="#a3141b" opacity=".55"></rect>
+            <rect width="36" height="18" fill="#a3141b" opacity=".55"></rect>
+          </pattern>
+        </defs>
+        <path d="M0 214c150 10 300-4 450 4s300-6 450 0v42H0z" fill="url(#gingham)"></path>
+        <path d="M0 214c150 10 300-4 450 4s300-6 450 0v42H0z" fill="#050304" opacity=".35"></path>
         <g fill="none" stroke="#d9d2bd" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".75">
           <!-- crooked teapot -->
           <path d="M70 206c-20-20-22-62 8-84 26-19 76-19 102 2 26 22 22 62 2 82z" fill="#1a1922"></path>
@@ -45,29 +70,19 @@ const action = endpoint || `mailto:${site.email}`;
       </svg>
 
       <div class="envelope" data-envelope data-mode={mode}>
-        <div class="envelope__body" aria-hidden="true">
-          <div class="envelope__back"></div>
-          <div class="envelope__flap"></div>
-          <div class="envelope__front"></div>
-        </div>
+        <Image class="envelope__img" src={collage.envelope} alt="" width={640} loading="lazy" decoding="async" />
         <button class="envelope__seal" type="button" data-seal aria-expanded="false" aria-controls="letter">
           <span class="visually-hidden">{tea.sealLabel}</span>
+          <!-- the wax seal is in the watercolour; this draws the crack when it breaks -->
           <svg viewBox="0 0 100 100" aria-hidden="true" focusable="false">
-            <g class="seal__l">
-              <path d="M50 6C24 4 6 24 8 50c2 24 20 42 42 44V6z" fill="#a3141b"></path>
-            </g>
-            <g class="seal__r">
-              <path d="M50 6c26-2 44 18 42 44-2 24-20 42-42 44V6z" fill="#8f1218"></path>
-            </g>
-            <circle cx="50" cy="50" r="28" fill="none" stroke="#5c0e12" stroke-width="2.5"></circle>
-            <path d="M50 50c3-3 7 0 5 4-3 5-11 4-12-2-2-8 6-13 13-11 9 3 11 13 7 20" fill="none" stroke="#5c0e12" stroke-width="2.5"></path>
-            <path class="seal__crack" d="M50 6l-3 18 5 12-4 14 4 16-3 14 1 14" fill="none" stroke="#2b1215" stroke-width="2"></path>
+            <path class="seal__crack" d="M46 4l4 20-6 12 7 14-5 16 6 14-3 16" fill="none" stroke="#2b1215" stroke-width="3" stroke-linecap="round"></path>
+            <path class="seal__crack" d="M50 50l18-6 14 4M48 66l-20 8" fill="none" stroke="#2b1215" stroke-width="2.4" stroke-linecap="round"></path>
           </svg>
         </button>
         <p class="envelope__hint label" data-hint="seal">↑ {tea.sealHint}</p>
       </div>
 
-      <div class="letter" id="letter" data-tone="bone" data-letter>
+      <div class="letter" id="letter" data-tone="bone" data-letter style={`--paper:url(${paper.src})`}>
         <h3 class="letter__title" data-effect="wet-ink">{tea.formTitle}</h3>
         <form class="letter__form" action={action} method="post" enctype={mode === 'mailto' ? 'text/plain' : undefined} novalidate data-form>
           <div class="field">
@@ -157,6 +172,27 @@ const action = endpoint || `mailto:${site.email}`;
     justify-items: center;
     padding-bottom: 120px;
   }
+  /* The moon hangs in the gap between the title and the envelope. Screen blending drops the
+     video's black, so only the moon and its branches show. Phones have no free gap: no moon. */
+  .tea__moon {
+    position: absolute;
+    top: var(--space-2);
+    left: clamp(120px, 17vw, 260px);
+    width: min(50vw, 640px);
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    opacity: 0.8;
+    mix-blend-mode: screen;
+    filter: grayscale(0.5) contrast(1.15);
+    pointer-events: none;
+    -webkit-mask-image: radial-gradient(ellipse 50% 60% at 42% 45%, #000 50%, transparent 80%);
+    mask-image: radial-gradient(ellipse 50% 60% at 42% 45%, #000 50%, transparent 80%);
+  }
+  @media (max-width: 899px) {
+    .tea__moon {
+      display: none;
+    }
+  }
   .tea__setting {
     position: absolute;
     left: 50%;
@@ -165,59 +201,44 @@ const action = endpoint || `mailto:${site.email}`;
     translate: -50% 0;
   }
 
-  /* ---- envelope ---- */
+  /* ---- envelope (watercolour cut-out; the seal button sits on its wax seal) ---- */
   .envelope {
     position: relative;
-    width: min(100%, 30rem);
-    aspect-ratio: 1.55;
-    transform: rotate(-2deg);
-    perspective: 1000px;
+    width: min(100%, 28rem);
+    aspect-ratio: 766 / 638;
+    transform: rotate(-3deg);
+    transition:
+      transform 900ms var(--ease-ink) 300ms,
+      opacity 900ms var(--ease-ink) 300ms;
   }
-  .envelope__body > * {
-    position: absolute;
-    inset: 0;
+  .envelope__img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(10px 14px 0 rgb(5 3 4 / 0.55));
   }
-  .envelope__back {
-    background: #d6c49c;
-    box-shadow: 10px 14px 0 rgb(5 3 4 / 0.55);
-  }
-  .envelope__front {
-    background:
-      linear-gradient(to top right, transparent 49.6%, rgb(42 26 18 / 0.18) 50%, transparent 50.4%),
-      linear-gradient(to top left, transparent 49.6%, rgb(42 26 18 / 0.18) 50%, transparent 50.4%),
-      var(--sepia);
-    clip-path: polygon(0 0, 50% 52%, 100% 0, 100% 100%, 0 100%);
-  }
-  .envelope__flap {
-    z-index: 2;
-    height: 56%;
-    background: #ddcba4;
-    clip-path: polygon(0 0, 100% 0, 50% 100%);
-    transform-origin: 50% 0;
-    transition: transform 700ms var(--ease-ink) 250ms;
-    filter: drop-shadow(0 2px 0 rgb(42 26 18 / 0.25));
-  }
-  .envelope.is-open .envelope__flap {
-    transform: rotateX(178deg);
-    z-index: 0;
+  .envelope.is-open {
+    transform: rotate(-9deg) translate(-12%, 18%) scale(0.86);
+    opacity: 0.55;
   }
   .envelope__seal {
     position: absolute;
     z-index: 3;
     left: 50%;
-    top: 56%;
-    width: 84px;
-    height: 84px;
-    margin: -42px 0 0 -42px;
+    top: 57.7%;
+    width: 22%;
+    aspect-ratio: 1;
+    min-width: var(--touch);
+    translate: -50% -50%;
     padding: 0;
     border: 0;
     border-radius: 50%;
     background: transparent;
-    filter: drop-shadow(2px 4px 0 rgb(5 3 4 / 0.45));
-    transition: transform var(--dur-quick) var(--ease-out);
+    transition: transform var(--dur-quick) var(--ease-out), box-shadow var(--dur-base);
   }
   .envelope__seal:hover {
     transform: scale(1.06) rotate(-4deg);
+    box-shadow: 0 0 0 3px rgb(232 220 194 / 0.35), 0 0 28px 6px rgb(163 20 27 / 0.35);
   }
   .envelope__seal:active {
     transform: scale(0.96);
@@ -225,34 +246,22 @@ const action = endpoint || `mailto:${site.email}`;
   .envelope__seal:focus-visible {
     outline-color: var(--bone);
     box-shadow: 0 0 0 6px var(--night);
-    border-radius: 50%;
   }
   .envelope__seal svg {
     width: 100%;
     height: 100%;
     overflow: visible;
   }
-  .seal__l,
-  .seal__r {
-    transition: transform 500ms var(--ease-drop);
-    transform-box: fill-box;
-  }
   .seal__crack {
-    opacity: 0;
+    stroke-dasharray: 140;
+    stroke-dashoffset: 140;
+    transition: stroke-dashoffset 380ms var(--ease-drop);
   }
   .envelope.is-open .seal__crack {
-    opacity: 1;
-  }
-  .envelope.is-open .seal__l {
-    transform: translate(-30px, 60px) rotate(-30deg);
-  }
-  .envelope.is-open .seal__r {
-    transform: translate(30px, 70px) rotate(25deg);
+    stroke-dashoffset: 0;
   }
   .envelope.is-open .envelope__seal {
     pointer-events: none;
-    opacity: 0;
-    transition: opacity 300ms 500ms;
   }
   .envelope__hint {
     position: absolute;
@@ -270,13 +279,15 @@ const action = endpoint || `mailto:${site.email}`;
   }
 
   /* ---- the letter (form) ---- */
+  /* the torn sheet is the letter paper; extra padding keeps text off the ragged edges */
   .letter {
     position: relative;
     z-index: 2;
     width: min(100%, 34rem);
-    margin-top: -40%;
-    padding: var(--space-4) var(--space-4) var(--space-3);
-    box-shadow: 10px 14px 0 rgb(5 3 4 / 0.5);
+    margin-top: -55%;
+    padding: 13% 9% 10%;
+    background: var(--paper) center / 100% 100% no-repeat;
+    filter: drop-shadow(10px 14px 0 rgb(5 3 4 / 0.5));
     transform: rotate(1deg);
   }
   :global(html.js) .letter {

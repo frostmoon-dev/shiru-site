@@ -1,6 +1,6 @@
 # Shiru
 
-Shiru's personal site and portfolio. A dark case file you uncover chapter by chapter:
+Shiru's personal site and portfolio. A dark case file you uncover chapter by chapter, by the light of your cursor:
 ERP developer (Dynamics 365 F&O, X++) by day, English–Malay translator by night.
 
 Astro 7 (static) · React 19 islands · GSAP 3 + ScrollTrigger · Lenis · three.js + React Three Fiber · TypeScript.
@@ -68,16 +68,24 @@ scripts/                 test + asset scripts (below)
 
 ## Fonts
 
+Two families, nothing else:
+
 | Role | Face | Licence |
 | --- | --- | --- |
-| Hero name only | American Horror Story (KELGE, 2018), supplied by Shiru | ⚠️ **No licence file shipped with it.** Copyright KELGE; it also imitates the show's logo lettering. Confirm usage rights with the author before launch. |
-| Chapter titles (≥ 32px) | Alice in Wonderland (Marco T.L., 2010), supplied by Shiru | ⚠️ **Free for personal, non-commercial use only**; do not rename; do not distribute edited versions. Served byte-for-byte (no subsetting) with its readme at `/fonts/alice-in-wonderland/README-Shhhst.txt`. A portfolio that brings in paid work may count as commercial use. |
-| Everything you read | Atkinson Hyperlegible Next (Braille Institute, 2025) | SIL OFL 1.1 |
-| Labels, stamps, nav | Special Elite | Apache 2.0 |
+| Every heading (≥ 32px) | American Horror Story (KELGE, 2018), supplied by Shiru | ⚠️ **No licence file shipped with it.** Copyright KELGE; it imitates the show's logo lettering. Confirm usage rights with the author before launch. Served unmodified. |
+| Everything else: reading text, labels, nav | Atkinson Hyperlegible Next (Braille Institute, 2025) | SIL OFL 1.1 |
 
-All fonts are self-hosted through the Astro Fonts API with `font-display: swap` and generated
-fallback metrics (`size-adjust`, `ascent-override`, …). Only the first screen's fonts are preloaded.
-To swap a face, change one entry in `astro.config.mjs`; the CSS variable names stay the same.
+Both are self-hosted through the Astro Fonts API with `font-display: swap` and generated fallback
+metrics (`size-adjust`, `ascent-override`, …). To swap a face, change one entry in `astro.config.mjs`.
+
+## Images and media supplied by Shiru
+
+| What | Where | Note |
+| --- | --- | --- |
+| Hooded girl illustration (hero portrait) | `src/assets/portrait/shiru.jpg` | ⚠️ Confirm you own it or have the artist's permission to publish it. |
+| Cut-outs: eye, hand, halftone hat (menu), moth, keyhole, envelope, torn letter paper | `src/assets/collage/` | Cut from the Canva sheets she supplied. The torn-page and heart pieces with lorem-ipsum text weren't used. |
+| Moon through branches (Tea at midnight) | `public/media/moon.mp4` | Re-encoded silent, 960 px, 126 kB; poster frame in `src/assets/collage/moon-poster.jpg`. |
+| Red/cream gingham | CSS / SVG pattern | Redrawn from her reference image as a pattern, so no image file is needed. |
 
 ## Checks you can run
 
