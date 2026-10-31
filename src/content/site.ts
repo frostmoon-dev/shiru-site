@@ -17,12 +17,12 @@ export const site = {
   ogImageAlt: 'The name TEHA in pale lettering on black, under the line Case No. 0, Subject: unknown.',
 } as const;
 
-export type ChapterId = 'rabbit-hole' | 'archives' | 'grimoire' | 'tea';
+export type ChapterId = 'rabbit-hole' | 'record' | 'grimoire' | 'tea';
 
 export const chapters: { id: ChapterId; numeral: string; label: string; title: string }[] = [
   { id: 'rabbit-hole', numeral: 'I', label: 'About', title: 'Down the rabbit hole' },
-  { id: 'archives', numeral: 'II', label: 'Work', title: 'The archives' },
-  { id: 'grimoire', numeral: 'III', label: 'Writing', title: 'The grimoire' },
+  { id: 'record', numeral: 'II', label: 'Résumé', title: 'on the record' },
+  { id: 'grimoire', numeral: 'III', label: 'Career', title: 'The grimoire' },
   { id: 'tea', numeral: 'IV', label: 'Contact', title: 'Tea at midnight' },
 ];
 
@@ -88,134 +88,61 @@ export const about = {
   warning: 'Careful. Looks can deceive.',
 };
 
-export type CaseFile = {
-  slug: string;
-  number: string;
-  title: string;
-  stamp: string;
-  summary: string;
-  photo: 'moonpaper' | 'napyru' | 'moona' | 'bond-garden';
-  photoAlt: string;
-  /** Where the square polaroid crop of the (wide) screenshot centres: a CSS object-position. */
-  focus?: string;
-  rotation: number;
-  details: { heading: string; body: string }[];
-  evidence: string[];
-  link?: { href: string; label: string };
-};
-
-export const caseFiles = {
-  title: 'The archives',
-  intro: 'Four open investigations. None of them are closed.',
-  hint: 'Pick a file. They don’t bite. Mostly.',
-  swipeHint: 'Swipe through the files',
-  /** Written from the screenshots: check the wording, and add a link to any file you want public. */
-  files: [
-    {
-      slug: 'moonpaper',
-      number: 'No. 1',
-      title: 'MoonPaper',
-      stamp: 'Project',
-      summary: 'My own AI roleplay client: bots, personas, prompts and lore, wired to whichever model I connect.',
-      photo: 'moonpaper',
-      photoAlt: 'MoonPaper: a chat with BB, a purple-haired character, her reply set over a moonlit illustration.',
-      focus: '56% 40%',
-      rotation: -2,
-      details: [
-        {
-          heading: 'What it is',
-          body: 'A chat client for writing stories with AI characters. Each bot keeps its own chats; I write as one of my personas, and choose the model per chat.',
-        },
-        {
-          heading: 'Inside',
-          body: 'Editors for bots, personas, prompts and lore; connection settings for the model; chat memory, scene and character panels; artwork behind the conversation; and the model’s reasoning folded away above each reply.',
-        },
-      ],
-      evidence: ['AI chat', 'Roleplay', 'Personas', 'Lore', 'Memory'],
-    },
-    {
-      slug: 'napyru',
-      number: 'No. 2',
-      title: 'Napyru',
-      stamp: 'Project',
-      summary: 'A private messenger for two, with plans, a map, shared memories and a bond rank of its own.',
-      photo: 'napyru',
-      photoAlt: 'Napyru: a two-person chat over a black-and-white drawing, with a sidebar for chat, plans, map, memories and bond.',
-      focus: '45% 50%',
-      rotation: 1.5,
-      details: [
-        {
-          heading: 'What it is',
-          body: 'A messenger built for exactly two people: messages, photos and stickers, seen receipts, a status, and a clock that knows when it is late at night.',
-        },
-        {
-          heading: 'Inside',
-          body: 'Beyond the chat: plans, a map, a memories page, and a bond rank that grows over time.',
-        },
-      ],
-      evidence: ['Messenger', 'For two', 'Plans', 'Map', 'Memories'],
-    },
-    {
-      slug: 'moona',
-      number: 'No. 3',
-      title: 'Moona',
-      stamp: 'Project',
-      summary: 'A quiet place for the month: money, tasks, calories and budgets, counted in ringgit.',
-      photo: 'moona',
-      photoAlt: 'Moona: a home screen greeting “Good evening” beside an illustrated character, with the month’s income, spending and balance below.',
-      focus: '62% 30%',
-      rotation: -1.5,
-      details: [
-        {
-          heading: 'What it is',
-          body: 'A personal tracker for the month. The home page shows it at a glance: net, income, spent and balance, top spending, recent entries and a quick add.',
-        },
-        {
-          heading: 'Inside',
-          body: 'Pages for activity, calories, tasks and budgets, and recurring entries for things like a monthly salary.',
-        },
-      ],
-      evidence: ['Personal finance', 'Budgets', 'Tasks', 'Calories', 'Ringgit'],
-    },
-    {
-      slug: 'bond-garden',
-      number: 'No. 4',
-      title: 'Bond Garden',
-      stamp: 'Project',
-      summary: 'Fate/Grand Order servants to talk to, with bond levels that grow and interludes that unlock.',
-      photo: 'bond-garden',
-      photoAlt: 'Bond Garden: a grid of character cards (BB, Castoria, Charlemagne, Ereshkigal) with bond levels and Start buttons.',
-      focus: '42% 50%',
-      rotation: 2,
-      details: [
-        {
-          heading: 'What it is',
-          body: 'A place to start stories with Fate/Grand Order servants. Pick a character (and a form, for those with several ascensions), or write your own opening scene and choose who is in it.',
-        },
-        {
-          heading: 'Inside',
-          body: 'Bond levels that rise as you talk, interludes that unlock along the way, saved moments, backgrounds, a lorebook and personas.',
-        },
-      ],
-      evidence: ['Fate/Grand Order', 'Character chat', 'Bond levels', 'Interludes', 'Lorebook'],
-    },
-  ] satisfies CaseFile[],
-  closeLabel: 'Close the file',
-  evidenceLabel: 'Evidence',
+/**
+ * Chapter II: the résumé. Roles and dates follow LinkedIn (newer than the PDF); the PDF is
+ * public/media/Nurfatihah-Muhammad-CV.pdf.
+ */
+export const record = {
+  // lowercase o on purpose: in the AHS face a capital O is the dotted one
+  title: 'on the record',
+  lead: 'A Microsoft Dynamics 365 Finance & Operations and Business Central technical developer with over four years of experience. X++, SSRS reports and extensions; requirements in, working solutions out.',
+  facts: [
+    { term: 'Now', detail: 'D365 F&O Associate Developer, LOGISTEED Solutions Asia-Pacific Sdn. Bhd. (Feb 2026 – present)' },
+    { term: 'Before', detail: 'COMM-iT Group: Software Developer (Feb 2023 – Apr 2026), Junior Consultant (Feb 2022 – Feb 2023)' },
+    { term: 'Certified', detail: 'Microsoft Certified: Dynamics 365 Finance and Operations Apps Developer Associate (June 2023)' },
+    { term: 'Studied', detail: 'Bachelor of Electronic Engineering (Computer) with Honours, Universiti Malaysia Sabah (2016 – 2020)' },
+    { term: 'Based in', detail: 'Selangor, Malaysia' },
+  ],
+  skillsLabel: 'Skills',
+  skills: [
+    'X++',
+    'SSRS reports',
+    'Forms & data entities',
+    'Extensions',
+    'Business Central',
+    'AL',
+    'SQL Server',
+    'E-invoicing',
+    'Security roles',
+    'Solution design',
+    'Debugging & code review',
+  ],
+  pdf: {
+    href: '/media/Nurfatihah-Muhammad-CV.pdf',
+    filename: 'Nurfatihah-Muhammad-CV.pdf',
+    size: 'PDF, 1 page, 2.7 MB',
+  },
+  download: 'Download the résumé',
+  view: 'Or read it in the browser',
+  previewAlt: 'The first page of the résumé: Nurfatihah Muhammad, professional summary, skills, experience and education.',
+  more: 'The long version is in the grimoire',
 };
 
 export type GrimoireEntry = {
   slug: string;
   numeral: string;
   title: string;
-  date: string;
+  /** Shown as written, e.g. "2022 – present". */
+  when: string;
+  /** Machine-readable start (for <time datetime>), when known. */
+  date?: string;
   excerpt: string;
   body: string[];
 };
 
 export const grimoire = {
   title: 'The grimoire',
-  intro: 'Notes, essays and lore. Bound in something that might be leather.',
+  intro: 'Where I have worked, what I built there, and what it taught me. Bound in something that might be leather.',
   open: 'Open the grimoire',
   close: 'Close the grimoire',
   prev: 'Previous page',
@@ -224,61 +151,111 @@ export const grimoire = {
   binding: 'Binding the pages…',
   readEntry: 'Read this chapter',
   pageOf: (a: number, b: number) => `Pages ${a} of ${b}`,
-  /** TODO: real entries. Each becomes /grimoire/<slug>. */
+  /** The career, in the order it happened. Each becomes /grimoire/<slug>. Facts come from the CV and LinkedIn. */
   entries: [
     {
-      slug: 'the-ledger-ghost',
+      slug: 'the-engineering-years',
       numeral: 'I',
-      title: 'The ledger ghost',
-      date: '2026-09-12',
-      excerpt: 'A batch job that ran at 3 a.m. and posted to an account nobody had opened.',
+      title: 'The engineering years',
+      when: '2016 – 2020',
+      date: '2016',
+      excerpt: 'Electronic Engineering at UMS, and a robot that listened for screams.',
       body: [
-        'TODO: placeholder essay. A batch job ran at 3 a.m. and posted to an account nobody had opened in years.',
-        'It turned out to be a misconfigured posting profile. It is always a posting profile.',
+        'Bachelor of Electronic Engineering (Computer) with Honours, Universiti Malaysia Sabah, 2016 to 2020.',
+        'My research project was an IoT-based home surveillance robotic vehicle with cry and scream detection: a small machine that roams the house and listens for the sounds nobody wants to hear.',
       ],
     },
     {
-      slug: 'words-without-a-twin',
+      slug: 'the-apprenticeship',
       numeral: 'II',
-      title: 'Words without a twin',
-      date: '2026-08-02',
-      excerpt: 'Some Malay words have no English twin. You learn to walk around them.',
+      title: 'The apprenticeship',
+      when: 'October 2019',
+      date: '2019-10',
+      excerpt: 'Maintenance engineer for a month, and a storage server built from loose parts.',
       body: [
-        'TODO: placeholder essay about untranslatable words.',
-        'Rindu is not quite longing. Malu is not quite shame. You learn to walk around them politely.',
+        'Maintenance Engineer (apprenticeship) at Advanced Air Traffic Systems (M) Sdn. Bhd., Kota Kinabalu, October 2019.',
+        'I built a Network Attached Storage (NAS) system from the ground up, and learned hardware assembly, network configuration, and what it takes to bring separate components together into one working machine.',
       ],
     },
     {
-      slug: 'a-servant-index',
+      slug: 'the-junior-consultant',
       numeral: 'III',
-      title: 'An index of servants',
-      date: '2026-06-21',
-      excerpt: 'How the lore archive is organised, and why it has so many cross-references.',
-      body: ['TODO: placeholder essay about how the archive is organised.'],
+      title: 'The junior consultant',
+      when: 'Feb 2022 – Feb 2023',
+      date: '2022-02',
+      excerpt: 'COMM-iT Group: first X++, and a company website rebuilt from the ground up.',
+      body: [
+        'Junior Consultant at COMM-iT Group, Petaling Jaya, February 2022 to February 2023.',
+        'Alongside my first X++ work, I led the redesign of the company website in WordPress, reshaping its visual identity with more cohesive branding, more thoughtful presentation and a refreshed digital experience.',
+      ],
     },
     {
-      slug: 'extensions-only',
+      slug: 'the-developer',
       numeral: 'IV',
-      title: 'Extensions only',
-      date: '2026-05-10',
-      excerpt: 'Why I never overlayer, and what Chain of Command taught me about patience.',
-      body: ['TODO: placeholder essay about upgrade-safe D365 development.'],
+      title: 'The developer',
+      when: 'Feb 2023 – Apr 2026',
+      date: '2023-02',
+      excerpt: 'Software Developer at COMM-iT Group. X++ by day, for three years.',
+      body: [
+        'Software Developer at COMM-iT Group, February 2023 to April 2026.',
+        'I developed custom X++ solutions for Dynamics 365 Finance & Operations implementations; designed and customised SSRS reports, forms and data entities; configured and maintained security roles; and worked with analysts to turn requirements into technical solutions. And AL, for Business Central.',
+      ],
     },
     {
-      slug: 'editing-at-midnight',
+      slug: 'the-certificate',
       numeral: 'V',
-      title: 'Editing at midnight',
-      date: '2026-03-30',
-      excerpt: 'The commas look different after dark. Usually they are right.',
-      body: ['TODO: placeholder essay about editing.'],
+      title: 'The certificate',
+      when: 'June 2023',
+      date: '2023-06',
+      excerpt: 'Microsoft Certified: Dynamics 365 Finance and Operations Apps Developer Associate.',
+      body: ['Microsoft Certified: Dynamics 365 Finance and Operations Apps Developer Associate, June 2023.'],
     },
     {
-      slug: 'the-tea-went-cold',
+      slug: 'the-migration',
       numeral: 'VI',
-      title: 'The tea went cold',
-      date: '2026-01-14',
-      excerpt: 'Short notes from a long winter. Mostly about tea.',
-      body: ['TODO: placeholder notes.'],
+      title: 'The migration',
+      when: '2023 – 2024',
+      date: '2023',
+      excerpt: 'Goldbell Group, Singapore: old AX 2012 code brought into D365, without overlayering.',
+      body: [
+        'Dynamics 365 Finance & Operations migration and implementation for Goldbell Group (Singapore), 2023 to 2024, at COMM-iT.',
+        'I migrated AX 2012 legacy code into D365 F&O and optimised its performance, replaced overlayering with extensions so it stays maintainable, built custom modules for inventory management and financial reconciliation, and developed operational and financial SSRS reports.',
+      ],
+    },
+    {
+      slug: 'the-expansion',
+      numeral: 'VII',
+      title: 'The expansion',
+      when: 'From 2024',
+      date: '2024',
+      excerpt: 'Goldbell Group, Malaysia: the Singapore build, taught local rules.',
+      body: [
+        'Dynamics 365 Finance & Operations regional expansion for Goldbell Group (Malaysia), from 2024, at COMM-iT.',
+        'I adapted the Singapore implementation for Malaysia, adding localised compliance features, and customised SSRS reports and e-invoices for local regulations.',
+      ],
+    },
+    {
+      slug: 'business-central',
+      numeral: 'VIII',
+      title: 'Business Central',
+      when: 'At COMM-iT',
+      excerpt: 'JG Containers: a new system, new training, custom reports.',
+      body: [
+        'Dynamics 365 Business Central implementation for JG Containers (M) Sdn. Bhd., at COMM-iT.',
+        'I completed Business Central technical development training, delivered custom reports and enhanced report layouts to client-specific requirements, keeping every deliverable aligned with how the business actually works.',
+      ],
+    },
+    {
+      slug: 'the-next-door',
+      numeral: 'IX',
+      title: 'The next door',
+      when: 'Feb 2026 – present',
+      date: '2026-02',
+      excerpt: 'D365 F&O Associate Developer at LOGISTEED. X++ and SSRS, still after dark.',
+      body: [
+        'D365 F&O Associate Developer at LOGISTEED Solutions Asia-Pacific Sdn. Bhd., Bandar Baru Bangi, since February 2026 (hybrid).',
+        'X++ and SQL Server Reporting Services: the same craft, a new house.',
+      ],
     },
   ] satisfies GrimoireEntry[],
 };

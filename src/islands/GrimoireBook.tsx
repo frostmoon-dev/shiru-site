@@ -5,7 +5,7 @@ import './grimoire.css';
 
 const GrimoireScene = lazy(() => import('./GrimoireScene'));
 
-export type BookEntry = { slug: string; numeral: string; title: string; date: string; excerpt: string };
+export type BookEntry = { slug: string; numeral: string; title: string; when: string; date?: string; excerpt: string };
 export type BookLabels = {
   title: string;
   open: string;
@@ -35,7 +35,6 @@ function sfx(name: 'page' | 'creak') {
   void import('../lib/sfx').then((m) => m.sfx(name));
 }
 
-const fmt = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 
 export default function GrimoireBook({ entries, labels }: Props) {
   const [mode, setMode] = useState<Mode>('pending');
@@ -44,6 +43,8 @@ export default function GrimoireBook({ entries, labels }: Props) {
   const [spread, setSpread] = useState(0);
   const [turn, setTurn] = useState<Turn>(null);
   const [turning, setTurning] = useState(false);
+  // after the first turn, new pages ink in at once (the long delay is only for the cover swinging open)
+  const [turned, setTurned] = useState(false);
   const [sceneReady, setSceneReady] = useState(false);
   const [aspect, setAspect] = useState(1.6);
   const [status, setStatus] = useState('');
@@ -105,6 +106,7 @@ export default function GrimoireBook({ entries, labels }: Props) {
     setStatus(`${labels.title} opened. ${describe(spread)}`);
     window.shiruOverlay?.open(OVERLAY_ID, () => {
       setOpen(false);
+      setTurned(false);
       setStatus(`${labels.title} closed.`);
       window.setTimeout(() => openBtn.current?.focus(), 0);
     });
@@ -136,6 +138,7 @@ export default function GrimoireBook({ entries, labels }: Props) {
       if (target < 0 || target >= spreads) return;
       sfx('page');
       setTurning(true);
+      setTurned(true);
       setTurn({ dir, id: ++turnId.current });
       window.setTimeout(() => {
         setSpread(target);
@@ -185,7 +188,7 @@ export default function GrimoireBook({ entries, labels }: Props) {
   const loading = mode === '3d' && !sceneReady;
 
   return (
-    <div className={`book book--${mode}${open ? ' is-open' : ''}${turning ? ' is-turning' : ''}`} data-reduced={reduced}>
+    <div className={`book book--${mode}${open ? ' is-open' : ''}${turning ? ' is-turning' : ''}${turned ? ' has-turned' : ''}`} data-reduced={reduced}>
       <div
         className="book__stage"
         ref={stageRef}
@@ -242,7 +245,7 @@ export default function GrimoireBook({ entries, labels }: Props) {
                   {entry.title}
                 </h3>
                 <p className="book__date label">
-                  <time dateTime={entry.date}>{fmt.format(new Date(entry.date))}</time>
+                  {entry.date ? <time dateTime={entry.date}>{entry.when}</time> : entry.when}
                 </p>
                 <p className="book__excerpt">{entry.excerpt}</p>
                 <a className="book__read" href={`/grimoire/${entry.slug}/`}>

@@ -44,6 +44,9 @@
 .book--3d.is-open .book__page {
   animation-delay: 900ms;
 }
+.book--3d.is-open.has-turned .book__page {
+  animation-delay: 60ms;
+}
 .book.is-turning .book__page {
   animation: page-ink-out 260ms var(--ease-ink) both;
 }

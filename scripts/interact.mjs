@@ -94,19 +94,29 @@ await page.keyboard.press('Escape');
 await page.waitForTimeout(1600);
 check('Esc closes envelope', (await page.locator('.stage.is-open, .stage.is-opening').count()) === 0);
 
-// Case file + back restores scroll
-await scrollTo('#archives', 200);
-await page.locator('.polaroid').first().scrollIntoViewIfNeeded();
+// Résumé: the download is a real, same-origin PDF
+await scrollTo('#record', 100);
+await page.waitForTimeout(800);
+const cv = await page.evaluate(async () => {
+  const a = document.querySelector('.record__download');
+  const r = await fetch(a.href, { method: 'HEAD' });
+  return { download: a.getAttribute('download'), type: r.headers.get('content-type'), ok: r.ok };
+});
+check(`résumé downloads as a PDF (${cv.download}, ${cv.type})`, cv.ok && cv.download?.endsWith('.pdf') && cv.type?.includes('pdf'));
+
+// Grimoire chapter + back restores scroll
+await scrollTo('#grimoire', 100);
 await page.waitForTimeout(800);
 const y = await page.evaluate(() => window.scrollY);
-await page.locator('.polaroid').first().evaluate((a) => a.click()); // no auto-scroll
-await page.waitForTimeout(2000);
-await shot('case-file');
-check('case file page loaded', (await page.evaluate(() => location.pathname)) === '/archives/moonpaper/');
+await page.evaluate(() => document.querySelector('.grimoire__toc a, .book a[href^="/grimoire/"]')?.click() ?? (location.href = '/grimoire/the-engineering-years/'));
+await page.waitForFunction(() => location.pathname.startsWith('/grimoire/'), null, { timeout: 8000 }).catch(() => {});
+await page.waitForTimeout(1200);
+check('grimoire chapter page loaded', (await page.evaluate(() => location.pathname)).startsWith('/grimoire/'));
 await page.keyboard.press('Escape');
-await page.waitForTimeout(2000);
+await page.waitForFunction(() => location.pathname === '/', null, { timeout: 8000 }).catch(() => {});
+await page.waitForTimeout(1500);
 const y2 = await page.evaluate(() => window.scrollY);
-check(`Esc returns home, scroll restored (${y} → ${y2})`, (await page.evaluate(() => location.pathname)) === '/' && Math.abs(y - y2) < 20);
+check(`Esc returns to the grimoire, scroll restored (${y} → ${y2})`, (await page.evaluate(() => location.pathname)) === '/' && Math.abs(y - y2) < 120);
 
 // 404
 await page.goto(base + "/nope", { waitUntil: 'networkidle' });

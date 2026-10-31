@@ -1,0 +1,172 @@
+---
+import { Image } from 'astro:assets';
+import { chapters, record, ui } from '../content/site';
+import { collage } from '../content/photos';
+import cvPage from '../assets/cv/cv-page.png';
+import SectionHead from '../components/SectionHead.astro';
+import Icon from '../components/Icon.astro';
+
+const ch = chapters.find((c) => c.id === 'record')!;
+---
+
+<section id={ch.id} class="section record" data-tone="void" aria-labelledby="record-title">
+  <div class="container">
+    <SectionHead id="record-title" kicker={ui.caseNo(ch.numeral, ch.label)} title={record.title} lead={record.lead} />
+
+    <div class="record__grid">
+      <!-- the CV itself, pinned to the file like evidence; the whole sheet is the download link -->
+      <a
+        class="record__sheet"
+        href={record.pdf.href}
+        download={record.pdf.filename}
+        data-effect="reveal"
+        data-effect-options='{"type":"settle"}'
+        aria-label={`${record.download} (${record.pdf.size})`}
+      >
+        <Image class="record__page" src={cvPage} alt={record.previewAlt} widths={[320, 480, 720]} sizes="(max-width: 959px) 80vw, 26rem" loading="lazy" decoding="async" />
+        <Image class="record__clip" src={collage.paperclip} alt="" width={44} loading="lazy" decoding="async" aria-hidden="true" />
+      </a>
+
+      <div class="record__text">
+        <dl class="facts" data-effect="reveal" data-effect-options='{"type":"rise","targets":".facts__row","stagger":0.08}'>
+          {
+            record.facts.map((f) => (
+              <div class="facts__row">
+                <dt>{f.term}</dt>
+                <dd>{f.detail}</dd>
+              </div>
+            ))
+          }
+          <div class="facts__row">
+            <dt>{record.skillsLabel}</dt>
+            <dd>
+              <ul class="record__skills">
+                {record.skills.map((k) => <li>{k}</li>)}
+              </ul>
+            </dd>
+          </div>
+        </dl>
+
+        <div class="record__actions">
+          <a class="btn btn--solid record__download" href={record.pdf.href} download={record.pdf.filename}>
+            <Icon name="download" size={18} />
+            <span>{record.download}</span>
+          </a>
+          <p class="record__meta">{record.pdf.size}</p>
+        </div>
+        <p class="record__links">
+          <a href={record.pdf.href} target="_blank" rel="noopener">{record.view}<span class="visually-hidden"> (opens in a new tab)</span></a>
+          <span aria-hidden="true"> · </span>
+          <a href="#grimoire">{record.more} <span aria-hidden="true">↓</span></a>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .record__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-7);
+  }
+
+  /* ---- the sheet ---- */
+  .record__sheet {
+    position: relative;
+    justify-self: start;
+    display: block;
+    width: min(100%, 26rem);
+    padding: var(--space-1);
+    background: #efe6d3;
+    rotate: -2deg;
+    box-shadow: 0 22px 44px rgb(0 0 0 / 0.6);
+    transition:
+      rotate var(--dur-base) var(--ease-out),
+      translate var(--dur-base) var(--ease-out);
+  }
+  .record__sheet:hover,
+  .record__sheet:focus-visible {
+    rotate: 0deg;
+    translate: 0 -6px;
+  }
+  .record__sheet:focus-visible {
+    outline: 2px solid var(--bone);
+    outline-offset: 6px;
+  }
+  .record__page {
+    display: block;
+    width: 100%;
+    height: auto;
+    /* aged a little, so a white page doesn't glare out of the dark */
+    filter: sepia(0.35) brightness(0.86) contrast(1.05);
+    transition: filter var(--dur-slow) var(--ease-out);
+  }
+  .record__sheet:hover .record__page,
+  .record__sheet:focus-visible .record__page {
+    filter: sepia(0.15) brightness(0.95);
+  }
+  .record__clip {
+    position: absolute;
+    top: -18px;
+    right: 18%;
+    width: 44px;
+    height: auto;
+    rotate: 4deg;
+    pointer-events: none;
+  }
+
+  /* ---- the text ---- */
+  .record__skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .record__skills li {
+    padding: var(--space-half) var(--space-1);
+    border: 1px solid var(--line);
+    font-size: var(--text-small);
+    color: var(--bone);
+  }
+  .record__actions {
+    margin-top: var(--space-6);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2) var(--space-3);
+  }
+  .record__meta {
+    font-size: var(--text-small);
+    color: var(--muted);
+  }
+  .record__links {
+    margin-top: var(--space-3);
+    font-size: var(--text-small);
+    color: var(--muted);
+  }
+  .record__links a {
+    color: var(--bone);
+  }
+
+  @media (min-width: 960px) {
+    .record__grid {
+      grid-template-columns: 5fr 7fr;
+      align-items: start;
+    }
+  }
+  @media (max-width: 959px) {
+    .record__sheet {
+      justify-self: center;
+      width: min(100%, 22rem);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .record__sheet,
+    .record__page {
+      transition: none;
+    }
+  }
+</style>

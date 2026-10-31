@@ -14,7 +14,6 @@ const { entry } = Astro.props;
 const i = grimoire.entries.findIndex((e) => e.slug === entry.slug);
 const prev = grimoire.entries[i - 1];
 const next = grimoire.entries[i + 1];
-const date = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(entry.date));
 ---
 
 <Base title={entry.title} description={entry.excerpt}>
@@ -22,7 +21,7 @@ const date = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'long', y
     <CloseFile href="/#grimoire" label="Back to the grimoire" flag="shiru:from-grimoire" />
     <div class="container">
       <header class="section-head">
-        <p class="kicker">Case No. III · Chapter {entry.numeral} · <time datetime={entry.date}>{date}</time></p>
+        <p class="kicker">Case No. III · Chapter {entry.numeral} · {entry.date ? <time datetime={entry.date}>{entry.when}</time> : entry.when}</p>
         <h1 id="entry-title" class="display-2" data-effect="ghost-title">{entry.title}</h1>
         <p class="lead">{entry.excerpt}</p>
       </header>
