@@ -1,0 +1,108 @@
+---
+import { Image, Picture } from 'astro:assets';
+import type { CaseFile } from '../content/site';
+import { casePhotos, collage } from '../content/photos';
+
+interface Props {
+  file: CaseFile;
+  index: number;
+}
+const { file, index } = Astro.props;
+const photo = casePhotos[file.photo];
+---
+
+<li class="polaroid-wrap" style={`--rot:${file.rotation}deg; --i:${index}; --crop:${file.focus ?? '50% 50%'}`}>
+  <a class="polaroid" href={`/archives/${file.slug}/`}>
+    <span class="polaroid__photo" transition:name={`case-photo-${file.slug}`}>
+      <Picture
+        src={photo}
+        alt={file.photoAlt}
+        formats={['avif', 'webp']}
+        widths={[280, 420, 560]}
+        sizes="(max-width: 719px) 66vw, (max-width: 959px) 40vw, 260px"
+        loading="lazy"
+        decoding="async"
+      />
+    </span>
+    <span class="polaroid__meta">
+      <span class="polaroid__no">{file.number}</span>
+      <span class="polaroid__title" transition:name={`case-title-${file.slug}`}>{file.title}</span>
+    </span>
+  </a>
+  <Image class="polaroid__clip" src={collage.paperclip} alt="" width={40} loading="lazy" decoding="async" aria-hidden="true" />
+</li>
+
+<style>
+  .polaroid-wrap {
+    position: relative;
+    list-style: none;
+  }
+  .polaroid {
+    position: relative;
+    display: block;
+    padding: var(--space-2) var(--space-2) var(--space-3);
+    background: var(--bone);
+    color: var(--ink);
+    text-decoration: none;
+    transform: rotate(var(--rot));
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+  .polaroid:hover,
+  .polaroid:focus-visible {
+    transform: rotate(0deg) translateY(-6px);
+  }
+  .polaroid:active {
+    transform: rotate(0deg) translateY(-2px) scale(0.99);
+  }
+  .polaroid:focus-visible {
+    outline-color: var(--bone);
+    outline-offset: 6px;
+    box-shadow: none;
+  }
+  .polaroid__photo {
+    display: block;
+    aspect-ratio: 1;
+    overflow: hidden;
+    background: var(--void);
+  }
+  .polaroid__photo :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: var(--crop);
+    filter: grayscale(1) contrast(1.05);
+    transition: filter var(--dur-slow) var(--ease-out);
+  }
+  .polaroid:hover .polaroid__photo :global(img),
+  .polaroid:focus-visible .polaroid__photo :global(img) {
+    filter: grayscale(0);
+  }
+  .polaroid__meta {
+    display: grid;
+    gap: var(--space-half);
+    margin-top: var(--space-2);
+  }
+  .polaroid__no {
+    font-weight: 700;
+    font-size: var(--text-label);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+  .polaroid__title {
+    font-weight: 700;
+    font-size: var(--step-0);
+    line-height: 1.2;
+    color: var(--ink);
+  }
+  /* the same clip, in the same place, on every card */
+  .polaroid__clip {
+    position: absolute;
+    top: -18px;
+    right: 22%;
+    width: 18px;
+    height: auto;
+    rotate: calc(var(--rot) * 1);
+    pointer-events: none;
+  }
+</style>

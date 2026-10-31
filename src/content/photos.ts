@@ -19,6 +19,23 @@ import intro3 from '../assets/placeholder/intro-3.jpg';
 import intro4 from '../assets/placeholder/intro-4.jpg';
 import intro5 from '../assets/placeholder/intro-5.jpg';
 
+import workBondGarden from '../assets/works/bond-garden.webp';
+import workMoonpaper from '../assets/works/moonpaper.webp';
+import workNapyru from '../assets/works/napyru.webp';
+import workMoona from '../assets/works/moona.webp';
+import workTaskBoard from '../assets/works/fo-task-board.webp';
+import workThemes from '../assets/works/colour-themes.webp';
+
+/** The archives: screenshots of Teha's projects (the task board is private: its cover is an illustration). */
+export const casePhotos = {
+  'bond-garden': workBondGarden,
+  moonpaper: workMoonpaper,
+  napyru: workNapyru,
+  moona: workMoona,
+  'fo-task-board': workTaskBoard,
+  'colour-themes': workThemes,
+} as const;
+
 export const introPhotos = { 'intro-1': intro1, 'intro-2': intro2, 'intro-3': intro3, 'intro-4': intro4, 'intro-5': intro5 } as const;
 
 /** Cut-outs supplied by Teha (Canva collage sheets), cut apart by scripts/ (see README). */

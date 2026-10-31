@@ -1,0 +1,86 @@
+---
+import { caseFiles, chapters, ui } from '../content/site';
+import Polaroid from '../components/Polaroid.astro';
+import SectionHead from '../components/SectionHead.astro';
+
+const ch = chapters.find((c) => c.id === 'archives')!;
+---
+
+<section id={ch.id} class="section archives" data-tone="void" aria-labelledby="archives-title">
+  <div class="container">
+    <SectionHead id="archives-title" kicker={ui.caseNo(ch.numeral, ch.label)} title={caseFiles.title} lead={caseFiles.intro}>
+      <p class="archives__hint" data-hint="case-files">{caseFiles.hint}</p>
+    </SectionHead>
+
+    <ol class="board" aria-label={caseFiles.title} data-effect="reveal" data-effect-options='{"type":"pin","targets":".polaroid-wrap","stagger":0.12}'>
+      {caseFiles.files.map((f, i) => <Polaroid file={f} index={i} />)}
+    </ol>
+    <p class="archives__swipe" aria-hidden="true">{caseFiles.swipeHint} →</p>
+  </div>
+</section>
+
+<style>
+  .archives__hint {
+    font-size: var(--text-small);
+    color: var(--muted);
+  }
+  .board {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-6) var(--space-7);
+    padding: var(--space-3) 0 0;
+    margin: 0;
+  }
+  .archives__swipe {
+    display: none;
+  }
+  @media (max-width: 959px) {
+    .board {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-6) var(--space-5);
+    }
+  }
+  /* phones: a swipeable row (native scroll-snap) */
+  @media (max-width: 599px) {
+    .board {
+      display: flex;
+      gap: var(--space-4);
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      overscroll-behavior-x: contain;
+      padding: var(--space-5) 17vw var(--space-4);
+      margin-inline: calc(var(--gutter) * -1);
+      scrollbar-width: none;
+    }
+    .board :global(.polaroid-wrap) {
+      flex: 0 0 66vw;
+      scroll-snap-align: center;
+    }
+    .archives__swipe {
+      display: block;
+      margin-top: var(--space-2);
+      font-weight: 700;
+      font-size: var(--text-label);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-align: center;
+    }
+  }
+</style>
+
+<script>
+  import { markHintUsed } from '../lib/hints';
+  document.addEventListener('astro:page-load', () => {
+    document.querySelectorAll<HTMLAnchorElement>('.board .polaroid').forEach((a) =>
+      a.addEventListener('click', () => {
+        markHintUsed('case-files');
+        try {
+          sessionStorage.setItem('shiru:from-board', '1');
+        } catch {
+          /* ignore */
+        }
+      }),
+    );
+  });
+</script>

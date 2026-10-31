@@ -5,20 +5,22 @@ Canva opens each one as an editable design.
 
 | File | Screen |
 | --- | --- |
-| `01-hero.pptx` | Prologue (hero), following Shiru's Canva layout |
+| `01-hero.pptx` | Prologue (hero), following Teha's Canva layout |
 | `02-down-the-rabbit-hole.pptx` | Chapter I · About |
 | `03-on-the-record.pptx` | Chapter II · On the record (résumé) |
-| `04-grimoire-closed.pptx` / `05-grimoire-open.pptx` | Chapter III · Writing, book shut and open |
-| `06-tea-at-midnight.pptx` / `07-tea-letter-open.pptx` | Chapter IV · Contact, envelope sealed and letter out |
-| `08-footer.pptx` | Come back after dark |
-| `10-grimoire-chapter-page.pptx` | A grimoire chapter |
-| `11-not-found.pptx` | The 404 page |
+| `04-archives.pptx` | Chapter III · The archives (projects) |
+| `05-grimoire-closed.pptx` / `06-grimoire-open.pptx` | Chapter IV · Career, book shut and open |
+| `07-tea-at-midnight.pptx` / `08-tea-letter-open.pptx` | Chapter V · Contact, envelope sealed and letter out |
+| `09-footer.pptx` | Come back after dark |
+| `10-archive-page.pptx` | An open archive file |
+| `11-grimoire-chapter-page.pptx` | A grimoire chapter |
+| `12-not-found.pptx` | The 404 page |
 
 ## Each design has these layers (bottom to top)
 
 1. **Background**: one flattened picture: colours, paper texture, ink drips, gingham, pinstripes,
    borders, props drawn in code (clocks, cards), the moon's still frame.
-2. **Images**: each photo and cut-out on its own (newspaper, eye, hand, moth, paperclip, keyhole, the résumé preview).
+2. **Images**: each photo and cut-out on its own (newspaper, eye, hand, moth, paperclip, keyhole, polaroids, the résumé preview).
 3. **Text**: every heading, paragraph, label and button label as a real, editable text box.
 
 ## Before you import: fonts

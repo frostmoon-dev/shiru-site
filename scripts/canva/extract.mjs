@@ -17,14 +17,16 @@ const SLIDES = [
   { name: '01-hero', path: '/', section: '#top', nav: true },
   { name: '02-down-the-rabbit-hole', path: '/', section: '#rabbit-hole' },
   { name: '03-on-the-record', path: '/', section: '#record' },
-  { name: '04-grimoire-closed', path: '/', section: '#grimoire' },
-  { name: '05-grimoire-open', path: '/', section: '#grimoire', open: '.book__controls .btn--solid' },
-  { name: '06-tea-at-midnight', path: '/', section: '#tea' },
+  { name: '04-archives', path: '/', section: '#archives' },
+  { name: '05-grimoire-closed', path: '/', section: '#grimoire' },
+  { name: '06-grimoire-open', path: '/', section: '#grimoire', open: '.book__controls .btn--solid' },
+  { name: '07-tea-at-midnight', path: '/', section: '#tea' },
   // the seal breaks, the envelope drops away and only the paper is left
-  { name: '07-tea-letter-open', path: '/', section: '#tea', open: '[data-seal]' },
-  { name: '08-footer', path: '/', section: 'footer.footer' },
-  { name: '10-grimoire-chapter-page', path: '/grimoire/the-engineering-years/', section: 'article.entry', nav: true },
-  { name: '11-not-found', path: '/404.html', section: 'main', nav: true },
+  { name: '08-tea-letter-open', path: '/', section: '#tea', open: '[data-seal]' },
+  { name: '09-footer', path: '/', section: 'footer.footer' },
+  { name: '10-archive-page', path: '/archives/bond-garden/', section: 'article.file', nav: true },
+  { name: '11-grimoire-chapter-page', path: '/grimoire/the-engineering-years/', section: 'article.entry', nav: true },
+  { name: '12-not-found', path: '/404.html', section: 'main', nav: true },
 ];
 
 const HIDE_CSS = `

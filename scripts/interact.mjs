@@ -104,6 +104,21 @@ const cv = await page.evaluate(async () => {
 });
 check(`résumé downloads as a PDF (${cv.download}, ${cv.type})`, cv.ok && cv.download?.endsWith('.pdf') && cv.type?.includes('pdf'));
 
+// Archive file + back restores scroll
+await scrollTo('#archives', 200);
+await page.locator('.polaroid').first().scrollIntoViewIfNeeded();
+await page.waitForTimeout(800);
+const ay = await page.evaluate(() => window.scrollY);
+await page.locator('.polaroid').first().evaluate((a) => a.click());
+await page.waitForFunction(() => location.pathname.startsWith('/archives/'), null, { timeout: 8000 }).catch(() => {});
+await page.waitForTimeout(1200);
+check('archive file page loaded', (await page.evaluate(() => location.pathname)) === '/archives/bond-garden/');
+await page.keyboard.press('Escape');
+await page.waitForFunction(() => location.pathname === '/', null, { timeout: 8000 }).catch(() => {});
+await page.waitForTimeout(1500);
+const ay2 = await page.evaluate(() => window.scrollY);
+check(`Esc returns to the archives, scroll restored (${ay} → ${ay2})`, (await page.evaluate(() => location.pathname)) === '/' && Math.abs(ay - ay2) < 120);
+
 // Grimoire chapter + back restores scroll
 await scrollTo('#grimoire', 100);
 await page.waitForTimeout(800);
