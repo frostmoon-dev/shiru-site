@@ -78,14 +78,15 @@ Two families, nothing else:
 Both are self-hosted through the Astro Fonts API with `font-display: swap` and generated fallback
 metrics (`size-adjust`, `ascent-override`, …). To swap a face, change one entry in `astro.config.mjs`.
 
-## Images and media supplied by Shiru
+## Images and media supplied by Teha
 
 | What | Where | Note |
 | --- | --- | --- |
 | Hooded girl illustration | `src/assets/portrait/shiru.jpg` | Not used since the hero follows the Canva design. ⚠️ If it comes back, confirm you have the artist's permission. |
 | Revised designs (Oct 2026): bow (now the favicon), hamster (no longer used), lace frame, torn black edge, brush stroke, scroll banner, pastry (no longer used), black/cream gingham, archive frame, peek photo, pocket watch | `src/assets/design/` | Cut from her revised Canva pages. Lace, torn edge and brush were vector shapes, exported at 3×. The torn newspaper and paperclip are in `src/assets/collage/`; the eye (menu button), the moth (pinned in the lace frame) and the moon video (intro, `public/media/moon.mp4`) come from her cut-out sheets and footage. |
 | Cut-outs: eye, hand, moth, keyhole, envelope, torn letter paper | `src/assets/collage/` | Cut from the Canva sheets she supplied. The torn-page and heart pieces with lorem-ipsum text weren't used. |
-| Moon through branches (Tea at midnight) | `public/media/moon.mp4` | Re-encoded silent, 960 px, 126 kB; poster frame in `src/assets/collage/moon-poster.jpg`. |
+| Moon through branches (the intro) | `public/media/moon.mp4` | Re-encoded silent, 960 px, 126 kB; poster frame in `src/assets/collage/moon-poster.jpg`. |
+| Background music: *American Horror Story* theme (full length) | `public/media/theme.mp3` | Re-encoded to 112 kbps MP3 (2.6 MB, 3:07, tags stripped). Off by default; downloaded only when a visitor switches sound on, then looped and faded in. ⚠️ This is the show's copyrighted theme. Publishing it on a public site needs a licence from the rights holder; without one, swap in a licensed or royalty-free track (same file name) before launch. |
 | Red/cream gingham | CSS / SVG pattern | Redrawn from her reference image as a pattern, so no image file is needed. |
 
 ## Checks you can run
@@ -107,6 +108,9 @@ The scripts use the machine's global Playwright; add `playwright` as a devDepend
 
 - Everything works by keyboard; overlays close with Esc, their close button, and the browser Back button.
 - `prefers-reduced-motion`: no flicker, jitter, ghosts, intro flashes or static; the envelope opens instantly.
+- Sound is off by default and never autoplays. The speaker button (top right, also on the hero) starts the
+  background music and small effects; music keeps playing across pages, pauses in a hidden tab, and fades out
+  when switched off.
 - The eye dock is the menu (it follows a mouse pointer slightly and blinks; both stop under reduced motion). On wide screens it sits in the empty right margin; where that margin is too
   narrow (below 86rem) it tucks away while you scroll down and returns when you scroll up, reach the end,
   or tab to it.

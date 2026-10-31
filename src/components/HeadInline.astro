@@ -16,6 +16,11 @@ const { intro = false } = Astro.props;
   (function () {
     var root = document.documentElement;
     root.classList.add('js');
+    // Client-side navigations copy <html>'s attributes from the new page, which never ran this
+    // script: carry the class over, or JS-only styles (sound toggle, letter, book) fall back.
+    document.addEventListener('astro:before-swap', function (e) {
+      e.newDocument.documentElement.classList.add('js');
+    });
     // home page starts at the hero: set the hero layout before first paint (no jump later)
     if (intro && !location.hash) root.classList.add('at-hero');
     try {

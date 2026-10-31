@@ -1,7 +1,9 @@
 /**
- * Optional sound, OFF by default, never autoplays. Everything is synthesised with Web Audio,
- * so there are no audio files to download until real recordings replace these
- * (see public/assets/placeholder/README.md).
+ * Optional sound, OFF by default, never autoplays. Switching it on starts the background music
+ * (public/media/theme.mp3, looped, faded in) and the small synthesised effects (page turns, the
+ * seal, the book's creak). The music file is only downloaded the first time sound is switched on.
+ * It keeps playing across page navigations, pauses while the tab is hidden, and fades out when
+ * switched off (resuming from the same point next time).
  *
  * Components call `sfx('page')`; nothing plays unless the visitor switched sound on.
  */
@@ -9,7 +11,12 @@ export type Sfx = 'page' | 'creak' | 'seal' | 'hat';
 
 let ctx: AudioContext | undefined;
 let master: GainNode | undefined;
-let hum: { stop(): void } | undefined;
+let music: HTMLAudioElement | undefined;
+let musicGain: GainNode | undefined;
+let pauseTimer = 0;
+
+const MUSIC_SRC = '/media/theme.mp3';
+const MUSIC_LEVEL = 0.55;
 
 // Deliberately not persisted: every visit starts silent.
 let enabled = false;
@@ -35,40 +42,46 @@ function noiseBuffer(c: AudioContext, seconds: number): AudioBuffer {
   return buf;
 }
 
-function startHum() {
+function startMusic() {
   const c = ensureCtx();
-  const out = c.createGain();
-  out.gain.value = 0;
-  out.gain.linearRampToValueAtTime(0.09, c.currentTime + 4); // creeps in late, never sudden
-  const filter = c.createBiquadFilter();
-  filter.type = 'lowpass';
-  filter.frequency.value = 180;
-  const oscs = [55, 55.4, 82.6].map((f) => {
-    const o = c.createOscillator();
-    o.type = 'sawtooth';
-    o.frequency.value = f;
-    o.connect(filter);
-    o.start();
-    return o;
-  });
-  filter.connect(out).connect(master!);
-  hum = {
-    stop() {
-      out.gain.cancelScheduledValues(c.currentTime);
-      out.gain.setTargetAtTime(0, c.currentTime, 0.4);
-      window.setTimeout(() => oscs.forEach((o) => o.stop()), 2000);
-    },
-  };
+  if (!music) {
+    music = new Audio(MUSIC_SRC);
+    music.loop = true;
+    music.preload = 'auto';
+    musicGain = c.createGain();
+    musicGain.gain.value = 0;
+    c.createMediaElementSource(music).connect(musicGain).connect(master!);
+    document.addEventListener('visibilitychange', () => {
+      if (!music || !enabled) return;
+      if (document.hidden) music.pause();
+      else void music.play().catch(() => undefined);
+    });
+  }
+  window.clearTimeout(pauseTimer);
+  const g = musicGain!.gain;
+  g.cancelScheduledValues(c.currentTime);
+  g.setValueAtTime(g.value, c.currentTime);
+  g.linearRampToValueAtTime(MUSIC_LEVEL, c.currentTime + 2.5); // creeps in, never sudden
+  void music.play().catch(() => undefined);
+}
+
+function stopMusic() {
+  if (!music || !musicGain || !ctx) return;
+  const g = musicGain.gain;
+  g.cancelScheduledValues(ctx.currentTime);
+  g.setValueAtTime(g.value, ctx.currentTime);
+  g.linearRampToValueAtTime(0, ctx.currentTime + 0.8);
+  const m = music;
+  pauseTimer = window.setTimeout(() => m.pause(), 850);
 }
 
 export function setSound(on: boolean) {
   enabled = on;
   if (on) {
     void ensureCtx().resume();
-    if (!hum) startHum();
+    startMusic();
   } else {
-    hum?.stop();
-    hum = undefined;
+    stopMusic();
   }
 }
 

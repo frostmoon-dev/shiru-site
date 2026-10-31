@@ -36,7 +36,7 @@ export const ui = {
   caseNo: (numeral: string, label: string) => `Case No. ${numeral} · ${label}`,
   soundOn: 'Sound on',
   soundOff: 'Sound off',
-  soundLabel: 'Ambient sound',
+  soundLabel: 'Music',
   close: 'Close',
   backToStory: 'Back to the story',
   loading: 'The ink is still wet…',

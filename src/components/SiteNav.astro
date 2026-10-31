@@ -141,10 +141,17 @@ const { home = false } = Astro.props;
       opacity var(--dur-base),
       visibility var(--dur-base);
   }
-  /* the hero shows only the chapter line (the newspaper owns that corner) */
+  /* on tablets the newspaper reaches under the "now reading" label on the hero */
+  @media (max-width: 1099px) {
+    :global(html.at-hero) .chapter-index__now {
+      visibility: hidden;
+    }
+  }
+  /* on the hero it sits over the newspaper, so it gets a dark disc to stay readable */
   :global(html.at-hero) .sound-toggle {
-    opacity: 0;
-    visibility: hidden;
+    background: rgb(5 3 4 / 0.85);
+    border: 1px solid var(--line);
+    border-radius: 50%;
   }
   .sound-toggle__off {
     display: contents;
