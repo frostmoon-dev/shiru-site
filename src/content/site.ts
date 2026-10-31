@@ -293,7 +293,7 @@ export const tea = {
   fields: {
     name: { label: 'Your name', error: 'I need something to call you.' },
     email: { label: 'Your email', error: 'That address won’t reach you. Check it?' },
-    message: { label: 'Your letter', error: 'The page is blank. Write at least a line or two.' },
+    message: { label: 'Your letter', error: 'The page is blank. Write something, even a line.' },
     honeypot: 'Leave this empty',
   },
   submit: 'Send the raven',

@@ -62,7 +62,7 @@ const gingham = await getImage({ src: design.gingham, width: 1600, format: 'webp
           </div>
           <div class="field">
             <label for="f-message">{tea.fields.message.label}</label>
-            <textarea id="f-message" name="message" rows="5" required minlength="10" aria-describedby="e-message"></textarea>
+            <textarea id="f-message" name="message" rows="5" required aria-describedby="e-message"></textarea>
             <p class="field__error" id="e-message" hidden><Icon name="warn" size={18} /><span>{tea.fields.message.error}</span></p>
           </div>
           <div class="field field--trap" aria-hidden="true">
@@ -326,6 +326,18 @@ const gingham = await getImage({ src: design.gingham, width: 1600, format: 'webp
     outline-offset: 2px;
     box-shadow: none;
   }
+  /* browser autofill paints fields pale blue: keep them on the paper instead */
+  .field input:-webkit-autofill,
+  .field input:-webkit-autofill:hover,
+  .field input:-webkit-autofill:focus {
+    -webkit-text-fill-color: var(--ink);
+    caret-color: var(--ink);
+    box-shadow: inset 0 0 0 100px #f3e8d0;
+    transition: background-color 9999s;
+  }
+  .field input:autofill {
+    background-color: rgb(255 250 235 / 0.6);
+  }
   .field [aria-invalid='true'] {
     border-bottom: 2px solid var(--error);
   }
@@ -494,7 +506,7 @@ const gingham = await getImage({ src: design.gingham, width: 1600, format: 'webp
       const bad: (keyof typeof fields)[] = [];
       if (!fields.name.value.trim()) bad.push('name');
       if (!EMAIL_RE.test(fields.email.value.trim())) bad.push('email');
-      if (fields.message.value.trim().length < 10) bad.push('message');
+      if (!fields.message.value.trim()) bad.push('message');
       (Object.keys(fields) as (keyof typeof fields)[]).forEach((k) => {
         const isBad = bad.includes(k);
         fields[k].setAttribute('aria-invalid', String(isBad));
