@@ -2,7 +2,7 @@ import type { EffectFactory } from '../types';
 import { gsap, lockScroll } from '../../lib/motion';
 
 /**
- * The intro: a candle in the dark, an AHS-style burst of photos, then the hero.
+ * The intro: the moon through the branches, TV static, an AHS-style burst of photos, then the hero.
  * ≤ 3 s, skippable (button or Esc), once per session.
  *
  * Photosensitivity (owner-approved exception): the burst cuts faster than 3/s, in AHS style.
@@ -69,9 +69,22 @@ const introEffect: EffectFactory = () => {
       const canvas = target.querySelector<HTMLCanvasElement>('.intro__frames');
       const urls: string[] = canvas ? JSON.parse(canvas.dataset.frames ?? '[]') : [];
       const g = canvas?.getContext('2d');
-      const flame = target.querySelector('.intro__flame');
       const progress = target.querySelector<HTMLElement>('[data-intro-progress]');
-      const candle = target.querySelector('.intro__candle');
+      const moon = target.querySelector<HTMLVideoElement>('.intro__moon');
+      // Start from the moment the moon clears the branches; a hair faster than life.
+      if (moon) {
+        const play = () => {
+          try {
+            moon.currentTime = 9;
+          } catch {
+            /* not seekable yet */
+          }
+          moon.playbackRate = 1.25;
+          void moon.play().catch(() => undefined);
+        };
+        if (moon.readyState >= 1) play();
+        else moon.addEventListener('loadedmetadata', play, { once: true });
+      }
 
       // TV static: a 320×180 canvas of grey snow, scaled up, with a slow rolling bar.
       const staticCanvas = target.querySelector<HTMLCanvasElement>('.intro__static');
@@ -107,10 +120,10 @@ const introEffect: EffectFactory = () => {
       };
 
       tl = gsap.timeline({ onComplete: finish });
-      tl.from([candle, target.querySelector('.intro__glow')], { opacity: 0, duration: 0.6, ease: 'power1.out' });
+      tl.from([moon, target.querySelector('.intro__glow')], { opacity: 0, duration: 0.6, ease: 'power1.out' });
 
       if (burst) {
-        // Fetch the frames now and pre-tone each one into its own bitmap during the candle beat,
+        // Fetch the frames now and pre-tone each one into its own bitmap during the moon beat,
         // so a flash is a single cheap drawImage. Frames that aren't ready in time are skipped.
         const canFilter = !!g && 'filter' in g;
         if (canFilter) canvas!.style.filter = 'none';
@@ -144,7 +157,7 @@ const introEffect: EffectFactory = () => {
           g.drawImage(img, 0, 0);
           const jx = (Math.random() - 0.5) * 24;
           gsap.set(canvas, { visibility: 'visible', x: jx, skewX: (Math.random() - 0.5) * 6, rotate: (Math.random() - 0.5) * 5 });
-          gsap.set(candle, { opacity: 0.35 });
+          gsap.set(moon, { opacity: 0.35 });
           let n = 0;
           const step = () => {
             n++;
@@ -152,7 +165,7 @@ const introEffect: EffectFactory = () => {
             if (n < 3) requestAnimationFrame(step);
             else {
               gsap.set(canvas, { visibility: 'hidden' });
-              gsap.to(candle, { opacity: 1, duration: 0.12 });
+              gsap.to(moon, { opacity: 1, duration: 0.12 });
             }
           };
           requestAnimationFrame(step);
@@ -164,16 +177,15 @@ const introEffect: EffectFactory = () => {
         });
         tl.call(staticBurst, [0.2], 1.95);
       }
-      // The candle goes out.
-      tl.to(flame, { scaleY: 0, opacity: 0, transformOrigin: '60px 88px', duration: 0.3, ease: 'power2.in' }, burst ? 2.05 : 1.1)
-        .to(target.querySelector('.intro__glow'), { opacity: 0, duration: 0.3 }, '<');
+      // A cloud passes: the moon goes dark.
+      tl.to([moon, target.querySelector('.intro__glow')], { opacity: 0, duration: 0.35, ease: 'power2.in' }, burst ? 2.05 : 1.1);
     },
     unmount() {
       tl?.kill();
       if (onKey) document.removeEventListener('keydown', onKey);
     },
     reducedMotion(target) {
-      // No flashes, no jitter: a still candle for a moment, then a plain fade.
+      // No flashes, no static, no motion: the still moon (poster frame) for a moment, then a plain fade.
       if (!start(target, false) && !document.documentElement.classList.contains('intro-pending')) return;
       window.setTimeout(finish, 1200);
     },

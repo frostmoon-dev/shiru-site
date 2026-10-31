@@ -3,8 +3,8 @@ import { gsap } from '../../lib/motion';
 
 /**
  * The hero arrives after the intro: the name sharpens out of a blur, the newspaper slides in
- * from its corner, the bow drops onto it, the hand rises from below, the tagline surfaces,
- * and the hamster (the menu) peeks up with "Navigate.". The lines type themselves
+ * from its corner, the hand rises from below, the tagline surfaces,
+ * and the eye (the menu) opens with "Navigate.". The lines type themselves
  * (typewriter effect) and "keeps me awake" glitches (CSS) on their own.
  *
  * Elements marked [data-enter] are hidden by CSS until this runs (with an 8 s CSS fail-safe).
@@ -36,13 +36,17 @@ const heroEntrance: EffectFactory = () => {
         const wipe = { clipPath: 'inset(-10% 100% -10% 0)' };
         const wiped = { clipPath: 'inset(-10% 0% -10% 0)', clearProps: 'clipPath,transform' };
         tl.fromTo(el.querySelector('.hero__kicker'), { ...wipe, y: -8 }, { ...wiped, y: 0, duration: 0.9, ease: 'power2.inOut' }, 0.2)
-          .from(el.querySelector('.hero__newspaper'), { xPercent: 35, yPercent: -35, rotate: 8, opacity: 0, duration: 1.4 }, 0.1)
-          .from(el.querySelector('.hero__bow'), { y: -120, rotate: -25, opacity: 0, duration: 1.1, ease: 'back.out(1.5)' }, 0.9)
+          .fromTo(
+            el.querySelector('.hero__newspaper'),
+            { x: 0, y: 0, xPercent: 35, yPercent: -35, rotate: 8 },
+            { xPercent: 0, yPercent: 0, rotate: 0, duration: 1.4, clearProps: 'transform' },
+            0.1,
+          )
           .from(el.querySelector('.hero__hand'), { yPercent: 60, opacity: 0, duration: 2.2, ease: 'power2.out' }, 0.6)
           .fromTo(el.querySelector('.hero__tagline'), { ...wipe, y: 10 }, { ...wiped, y: 0, duration: 1.1, ease: 'power2.inOut' }, 1.3);
         const menu = q('.dock__btn');
         if (menu && document.documentElement.classList.contains('at-hero'))
-          tl.from(menu.querySelector('.dock__pet'), { y: 40, scale: 0.7, opacity: 0, duration: 0.9, ease: 'back.out(1.8)' }, 1.6).fromTo(
+          tl.from(menu.querySelector('.dock__eye'), { scaleY: 0.05, opacity: 0, duration: 0.7, ease: 'power3.out', clearProps: 'transform,opacity' }, 1.6).fromTo(
             menu.querySelector('.dock__label'),
             { ...wipe },
             { ...wiped, duration: 0.6, ease: 'power2.inOut' },

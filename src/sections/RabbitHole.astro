@@ -1,7 +1,7 @@
 ---
 import { Image, getImage } from 'astro:assets';
 import { about, chapters, ui } from '../content/site';
-import { design } from '../content/photos';
+import { collage, design } from '../content/photos';
 import SectionHead from '../components/SectionHead.astro';
 
 const ch = chapters.find((c) => c.id === 'rabbit-hole')!;
@@ -14,7 +14,10 @@ const lace = await getImage({ src: design.lace, width: 960, format: 'webp', qual
 
     <div class="about__grid">
       <figure class="lace" style={`--lace:url(${lace.src})`} data-effect="reveal" data-effect-options='{"type":"settle"}'>
-        <Image class="lace__pastry" src={design.pastry} alt={about.sweetAlt} width={240} loading="lazy" decoding="async" />
+        <span class="lace__specimen">
+          <Image class="lace__moth" src={collage.moth} alt={about.sweetAlt} widths={[240, 480]} sizes="14rem" loading="lazy" decoding="async" />
+          <span class="lace__pin" aria-hidden="true"></span>
+        </span>
         <figcaption class="lace__caption">{about.sweet}</figcaption>
       </figure>
 
@@ -55,7 +58,7 @@ const lace = await getImage({ src: design.lace, width: 960, format: 'webp', qual
     gap: var(--space-7);
   }
 
-  /* the lace frame: a gothic doily on black, holding one sweet thing */
+  /* the lace frame: a gothic doily on black, holding one pinned specimen */
   .lace {
     position: relative;
     isolation: isolate;
@@ -63,7 +66,8 @@ const lace = await getImage({ src: design.lace, width: 960, format: 'webp', qual
     width: min(100%, 26rem);
     aspect-ratio: 960 / 1378;
     display: grid;
-    place-content: center;
+    grid-template-columns: minmax(0, 1fr);
+    align-content: center;
     justify-items: center;
     gap: var(--space-3);
     padding: 22% 20%;
@@ -78,15 +82,66 @@ const lace = await getImage({ src: design.lace, width: 960, format: 'webp', qual
     background: var(--lace) center / 100% 100% no-repeat;
     filter: brightness(5.5) sepia(0.25);
   }
-  .lace__pastry {
-    width: 62%;
-    height: auto;
-    animation: pastry-bob 5s var(--ease-ink) infinite;
+  .lace__specimen {
+    position: relative;
+    display: block;
+    width: 78%;
   }
-  @keyframes pastry-bob {
-    50% {
-      translate: 0 -4px;
-      rotate: -3deg;
+  .lace__moth {
+    display: block;
+    width: 100%;
+    height: auto;
+    filter: grayscale(0.35) contrast(1.05) drop-shadow(0 10px 12px rgb(0 0 0 / 0.6));
+    transform-origin: 50% 40%;
+    /* mostly still, as a pinned thing should be; then a wing twitch it shouldn't be able to do */
+    animation: moth-twitch 9s steps(1, end) infinite;
+  }
+  /* the pin through its body */
+  .lace__pin {
+    position: absolute;
+    left: 50%;
+    top: 22%;
+    width: 2px;
+    height: 34%;
+    translate: -50% 0;
+    background: linear-gradient(#cfc6b3, #6f685c);
+    rotate: 8deg;
+    transform-origin: 50% 0;
+  }
+  .lace__pin::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: -5px;
+    width: 9px;
+    height: 9px;
+    translate: -50% 0;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #e5434a, #6b0c11 70%);
+    box-shadow: 0 2px 3px rgb(0 0 0 / 0.6);
+  }
+  @keyframes moth-twitch {
+    0%,
+    82% {
+      scale: 1 1;
+    }
+    83% {
+      scale: 0.86 1;
+    }
+    84% {
+      scale: 1 1;
+    }
+    85.5% {
+      scale: 0.9 1;
+    }
+    86.5%,
+    100% {
+      scale: 1 1;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .lace__moth {
+      animation: none;
     }
   }
   .lace__caption {

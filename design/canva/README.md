@@ -1,4 +1,4 @@
-# Shiru: Canva files
+# Teha: Canva files
 
 One PowerPoint file per screen of the site, built from the real rendered pages (desktop, 1440 px wide).
 Canva opens each one as an editable design.
@@ -43,7 +43,7 @@ Without them Canva substitutes similar fonts, and text may wrap a little differe
 ## What doesn't come across
 
 Animation and interaction (the light cursor, film dust, typewriter, glitch, ghost titles, the
-hamster dock menu, page turns, the envelope opening, the intro static) are code. These files show each screen as a still;
+eye dock menu, page turns, the envelope opening, the intro static) are code. These files show each screen as a still;
 
 ## Making them again after the site changes
 

@@ -1,7 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import { chapters, hero, ui } from '../content/site';
-import { design } from '../content/photos';
+import { collage } from '../content/photos';
 import Icon from './Icon.astro';
 
 interface Props {
@@ -12,7 +12,7 @@ const { home = false } = Astro.props;
 
 <header class="site-nav" data-home={home ? 'true' : 'false'}>
   <nav class="chapter-index" aria-label={ui.navLabel}>
-    <a class="chapter-index__home" href="/" aria-label="Shiru, back to the beginning">Shiru</a>
+    <a class="chapter-index__home" href="/" aria-label="Teha, back to the beginning">Teha</a>
     <ol>
       {
         chapters.map((c) => (
@@ -41,8 +41,8 @@ const { home = false } = Astro.props;
 </header>
 
 <!--
-  The hamster is the navigation: same place on every page (bottom right, on the column's edge).
-  Its label says where you are; it opens the chapter list right above it.
+  The eye is the navigation: same place on every page (bottom right). It watches the cursor,
+  blinks now and then, and opens the chapter list right above it. Its label says where you are.
 -->
 <div class="dock" data-dock>
   <nav class="dock__panel" id="dock-menu" aria-label={ui.menuTitle} hidden data-dock-panel>
@@ -66,7 +66,11 @@ const { home = false } = Astro.props;
   <button class="dock__btn" type="button" aria-expanded="false" aria-controls="dock-menu" data-menu-btn data-enter>
     <span class="dock__label" data-dock-label>{home ? hero.navigate : 'Navigate.'}</span>
     <span class="visually-hidden"> {ui.menuOpen}</span>
-    <span class="dock__pet"><Image src={design.hamster} alt="" widths={[96, 192]} sizes="96px" loading="eager" decoding="async" /></span>
+    <span class="dock__eye" data-eye>
+      <Image class="dock__eyeball" src={collage.eye} alt="" widths={[96, 192]} sizes="96px" loading="eager" decoding="async" />
+      <span class="dock__lid dock__lid--top" aria-hidden="true"></span>
+      <span class="dock__lid dock__lid--bottom" aria-hidden="true"></span>
+    </span>
   </button>
 </div>
 
@@ -159,10 +163,10 @@ const { home = false } = Astro.props;
     display: none;
   }
 
-  /* ---- the hamster dock ---- */
+  /* ---- the eye dock ---- */
   /* sits in the empty right margin, centred in it, so it never covers the column's content */
   .dock {
-    --dock-w: 5.5rem;
+    --dock-w: 4.75rem;
     position: fixed;
     z-index: var(--z-nav);
     right: max(var(--space-2), calc(((100vw - var(--container)) / 2 - var(--dock-w)) / 2));
@@ -229,24 +233,60 @@ const { home = false } = Astro.props;
   .dock__btn[aria-expanded='true'] .dock__label::after {
     transform: scaleX(1);
   }
-  .dock__pet {
+  /* the socket: a round window the eyeball shifts inside; two lids close over it to blink */
+  .dock__eye {
+    position: relative;
     display: block;
     width: var(--dock-w);
-    transform-origin: 50% 90%;
-    animation: pet-breathe 3.6s var(--ease-ink) infinite;
-    transition: transform var(--dur-base) var(--ease-out);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #0b0909;
+    box-shadow:
+      0 0 0 1px var(--line),
+      0 0 24px rgb(232 220 194 / 0.08);
+    transition:
+      scale var(--dur-base) var(--ease-out),
+      box-shadow var(--dur-base) var(--ease-out);
   }
-  .dock__pet :global(img) {
-    width: 100%;
-    height: auto;
+  .dock__eye :global(.dock__eyeball) {
+    position: absolute;
+    left: -9%;
+    top: -9%;
+    width: 118%;
+    height: 118%;
+    max-width: none;
+    object-fit: cover;
+    translate: var(--look-x, 0px) var(--look-y, 0px);
+    transition: translate 0.25s var(--ease-out);
   }
-  .dock__btn:hover .dock__pet {
-    transform: rotate(-6deg) translateY(-3px);
+  .dock__lid {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 51%;
+    background: var(--void);
+    scale: 1 0;
+    transition: scale 0.09s ease-in;
   }
-  @keyframes pet-breathe {
-    50% {
-      scale: 1.02 0.985;
-    }
+  .dock__lid--top {
+    top: 0;
+    transform-origin: 50% 0;
+  }
+  .dock__lid--bottom {
+    bottom: 0;
+    transform-origin: 50% 100%;
+  }
+  .dock__eye.is-blinking .dock__lid {
+    scale: 1 1;
+  }
+  .dock__btn:hover .dock__eye,
+  .dock__btn:focus-visible .dock__eye,
+  .dock__btn[aria-expanded='true'] .dock__eye {
+    scale: 1.06;
+    box-shadow:
+      0 0 0 1px var(--bone),
+      0 0 30px rgb(232 220 194 / 0.16);
   }
 
   .dock__panel {
@@ -313,7 +353,7 @@ const { home = false } = Astro.props;
       display: none;
     }
     .dock {
-      --dock-w: 4rem;
+      --dock-w: 3.5rem;
       right: var(--space-2);
       bottom: max(var(--space-3), env(safe-area-inset-bottom));
     }
@@ -439,12 +479,58 @@ const { home = false } = Astro.props;
     };
   }
 
+  function blink(eye: HTMLElement) {
+    eye.classList.add('is-blinking');
+    window.setTimeout(() => eye.classList.remove('is-blinking'), 140);
+  }
+
+  // The eye follows the cursor a little and blinks at uneven intervals. Mouse only; still under reduced motion.
+  let eyeTimer = 0;
+  let eyeTracking = false;
+  function setupEye() {
+    window.clearTimeout(eyeTimer);
+    if (prefersReducedMotion()) return;
+    const schedule = () => {
+      eyeTimer = window.setTimeout(() => {
+        const eye = document.querySelector<HTMLElement>('[data-eye]');
+        if (eye && !document.hidden) {
+          blink(eye);
+          // now and then, a double blink
+          if (Math.random() < 0.25) window.setTimeout(() => blink(eye), 260);
+        }
+        schedule();
+      }, 2500 + Math.random() * 6000);
+    };
+    schedule();
+    if (eyeTracking || !window.matchMedia('(pointer: fine)').matches) return;
+    eyeTracking = true;
+    let raf = 0;
+    window.addEventListener(
+      'pointermove',
+      (e) => {
+        cancelAnimationFrame(raf);
+        raf = requestAnimationFrame(() => {
+          const eye = document.querySelector<HTMLElement>('[data-eye]');
+          if (!eye) return;
+          const r = eye.getBoundingClientRect();
+          const dx = e.clientX - (r.left + r.width / 2);
+          const dy = e.clientY - (r.top + r.height / 2);
+          const d = Math.hypot(dx, dy) || 1;
+          const reach = Math.min(1, d / 400) * r.width * 0.08;
+          eye.style.setProperty('--look-x', `${((dx / d) * reach).toFixed(1)}px`);
+          eye.style.setProperty('--look-y', `${((dy / d) * reach).toFixed(1)}px`);
+        });
+      },
+      { passive: true },
+    );
+  }
+
   function setupDock() {
     const btn = document.querySelector<HTMLButtonElement>('[data-menu-btn]');
     const panel = document.querySelector<HTMLElement>('[data-dock-panel]');
     if (!btn || !panel) return;
     const links = [...panel.querySelectorAll<HTMLAnchorElement>('[data-dock-link]')];
-    const pet = btn.querySelector<HTMLElement>('.dock__pet');
+    const pet = btn.querySelector<HTMLElement>('.dock__eye');
     const isOpen = () => !panel.hidden;
 
     const onOutside = (e: PointerEvent) => {
@@ -466,7 +552,7 @@ const { home = false } = Astro.props;
       document.addEventListener('pointerdown', onOutside, true);
       (links.find((l) => l.getAttribute('aria-current') === 'true') ?? links[0])?.focus({ preventScroll: true });
       if (prefersReducedMotion()) return;
-      if (pet) gsap.fromTo(pet, { y: 0 }, { y: -14, duration: 0.16, yoyo: true, repeat: 1, ease: 'power2.out' });
+      if (pet) blink(pet);
       gsap.from(panel, { y: 12, opacity: 0, duration: 0.3, ease: 'power3.out', clearProps: 'transform,opacity' });
       gsap.from(links, { y: 10, opacity: 0, duration: 0.35, stagger: 0.04, ease: 'power3.out', delay: 0.05, clearProps: 'transform,opacity' });
     };
@@ -495,6 +581,7 @@ const { home = false } = Astro.props;
     setupChapterTracking();
     setupSound();
     setupDock();
+    setupEye();
   });
   setupHeroState();
 </script>

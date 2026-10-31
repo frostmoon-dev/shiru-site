@@ -32,7 +32,7 @@ html,body{margin:0;width:1200px;height:630px;overflow:hidden}
 body{background:#050304;position:relative;font-family:'Atkinson Hyperlegible Next';font-weight:700;color:#e8dcc2}
 .light{position:absolute;right:-60px;top:-40px;width:720px;height:720px;background:radial-gradient(circle at 55% 40%,rgba(217,210,189,.16),transparent 60%)}
 .kicker{position:absolute;left:96px;top:150px;font-size:20px;letter-spacing:.16em;color:#a8916c}
-.title{position:absolute;left:90px;top:190px;font-family:Hero;font-size:190px;line-height:1;color:#e8dcc2;letter-spacing:.02em}
+.title{position:absolute;left:90px;top:190px;font-family:Hero;font-size:190px;line-height:1;color:#e8dcc2;letter-spacing:.02em;font-feature-settings:'ss04' 1,'liga' 0,'dlig' 0}
 .ghost{color:transparent;-webkit-text-stroke:0;opacity:.18;transform:translate(6px,-3px);color:#e8dcc2}
 .tag{position:absolute;left:96px;top:440px;font-size:24px;letter-spacing:.12em}
 .sub{position:absolute;left:96px;top:486px;font-size:18px;letter-spacing:.08em;color:#a8916c}
@@ -40,34 +40,39 @@ body{background:#050304;position:relative;font-family:'Atkinson Hyperlegible Nex
 .grain{position:absolute;inset:0;background:url("data:image/svg+xml,${encodeURIComponent(grain)}");mix-blend-mode:overlay;opacity:.55}
 .vig{position:absolute;inset:0;background:radial-gradient(ellipse at 40% 50%,transparent 45%,rgba(5,3,4,.85))}
 </style></head><body><div class="light"></div><div class="kicker">CASE NO. 0 · SUBJECT: UNKNOWN</div>
-<div class="title ghost">SHIRU</div><div class="title">SHIRU</div><div class="line"></div>
+<div class="title ghost">Teha</div><div class="title">Teha</div><div class="line"></div>
 <div class="tag">BUILDS LEDGERS BY DAY. TRANSLATES GHOSTS BY NIGHT.</div><div class="sub">ERP DEVELOPER · ENGLISH–MALAY TRANSLATOR · KEEPER OF A LORE ARCHIVE</div>
 <div class="grain"></div><div class="vig"></div></body></html>`;
 
-const iconHtml = (size) => `<!doctype html><html><body style="margin:0;width:${size}px;height:${size}px;background:#1a1922;display:grid;place-items:center">
-<svg width="${size * 0.86}" height="${size * 0.86}" viewBox="0 0 220 170"><path fill="#0b090d" d="M6 116c6-6 14-8 22-6 22-9 52-13 82-13s62 4 84 13c8-2 16 0 21 6-4 1-9 2-13 4-21 12-55 19-92 19s-70-7-91-19c-4-2-9-3-13-4z"/><path fill="#2a2533" d="M64 111c4-21 11-42 21-61 9-17 20-31 34-40 11-7 24-9 36-6-12 3-22 9-29 18-7 10-9 21-7 33 3 19 15 36 26 56-26 6-56 6-81 0z"/><path fill="#a3141b" d="M65 100c26 6 54 6 80 0l2 11c-27 7-57 7-84 0z"/><rect x="96" y="99" width="16" height="15" fill="none" stroke="#c9a24a" stroke-width="3"/></svg></body></html>`;
+// Icons: Teha's black velvet bow. Small sizes sit on transparency with a pale bone rim so the
+// dark ribbon still reads on dark and light browser tabs; large sizes sit in a pool of moonlight.
+const bow = readFileSync('src/assets/design/bow.png').toString('base64');
+const iconHtml = (size, solid) => `<!doctype html><html><body style="margin:0;width:${size}px;height:${size}px;background:${solid ? 'radial-gradient(circle at 50% 45%,#2a2730,#050304 70%)' : 'transparent'};display:grid;place-items:center">
+<img src="data:image/png;base64,${bow}" style="width:${solid ? 74 : 94}%;height:auto;filter:${solid ? 'brightness(1.5) drop-shadow(0 0 ' + size / 40 + 'px rgb(232 220 194 / .45))' : 'brightness(1.6) drop-shadow(0 0 .6px #e8dcc2) drop-shadow(0 0 .6px #e8dcc2)'}"></body></html>`;
 
 mkdirSync('src/assets/placeholder', { recursive: true });
 const browser = await chromium.launch();
 const page = await browser.newPage();
-async function shot(html, path, w, h, type = 'jpeg') {
+async function shot(html, path, w, h, type = 'jpeg', transparent = false) {
   await page.setViewportSize({ width: w, height: h });
   await page.setContent(html, { waitUntil: 'networkidle' });
   await page.evaluate(() => document.fonts.ready);
-  await page.screenshot({ path, type, ...(type === 'jpeg' ? { quality: 88 } : {}) });
+  await page.screenshot({ path, type, omitBackground: transparent, ...(type === 'jpeg' ? { quality: 88 } : {}) });
   console.log('wrote', path);
 }
-for (const [slug, label, motif] of [
+// `--brand` regenerates only the social card and icons, leaving the placeholder photos alone.
+const brandOnly = process.argv.includes('--brand');
+if (!brandOnly) for (const [slug, label, motif] of [
   ['moonpaper', 'MoonPaper', motifs.ledger],
   ['napyru', 'Napyru', motifs.letters],
   ['moona', 'Moona', motifs.cards],
   ['visual-themes', 'Visual themes', motifs.ledger],
 ])
   await shot(photo(label, motif), `src/assets/placeholder/archive-${slug}.jpg`, 900, 900);
-for (let i = 1; i <= 5; i++) await shot(photo('', motifs.portrait(i)), `src/assets/placeholder/intro-${i}.jpg`, 800, 1000);
+if (!brandOnly) for (let i = 1; i <= 5; i++) await shot(photo('', motifs.portrait(i)), `src/assets/placeholder/intro-${i}.jpg`, 800, 1000);
 await shot(og, 'public/og.png', 1200, 630, 'png');
-await shot(iconHtml(180), 'public/apple-touch-icon.png', 180, 180, 'png');
-await shot(iconHtml(32), 'public/favicon-32.png', 32, 32, 'png');
-await shot(iconHtml(192), 'public/icon-192.png', 192, 192, 'png');
-await shot(iconHtml(512), 'public/icon-512.png', 512, 512, 'png');
+await shot(iconHtml(180, true), 'public/apple-touch-icon.png', 180, 180, 'png');
+await shot(iconHtml(32, false), 'public/favicon-32.png', 32, 32, 'png', true);
+await shot(iconHtml(192, true), 'public/icon-192.png', 192, 192, 'png');
+await shot(iconHtml(512, true), 'public/icon-512.png', 512, 512, 'png');
 await browser.close();

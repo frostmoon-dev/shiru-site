@@ -211,9 +211,11 @@ export default function GrimoireBook({ entries, labels }: Props) {
         {mode !== '3d' && (
           <div className="book2d" aria-hidden="true">
             <div className="book2d__cover">
-              <svg viewBox="0 0 220 170" className="book2d__hat">
-                <path d="M6 116c6-6 14-8 22-6 22-9 52-13 82-13s62 4 84 13c8-2 16 0 21 6-4 1-9 2-13 4-21 12-55 19-92 19s-70-7-91-19c-4-2-9-3-13-4z" />
-                <path d="M64 111c4-21 11-42 21-61 9-17 20-31 34-40 11-7 24-9 36-6-12 3-22 9-29 18-7 10-9 21-7 33 3 19 15 36 26 56-26 6-56 6-81 0z" />
+              <svg viewBox="0 0 200 280" className="book2d__emblem">
+                <path className="book2d__rule" d="M68 20h64M68 260h64" />
+                <circle className="book2d__ring" cx="100" cy="140" r="56" />
+                <circle className="book2d__ring book2d__ring--thin" cx="100" cy="140" r="61" />
+                <path className="book2d__keyhole" d="M100 112a15 15 0 0 1 6.3 28.6L114 172H86l7.7-31.4A15 15 0 0 1 100 112z" />
               </svg>
               <span className="book2d__corner book2d__corner--tl" />
               <span className="book2d__corner book2d__corner--tr" />

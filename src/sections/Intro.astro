@@ -2,35 +2,24 @@
 import { getImage } from 'astro:assets';
 import { intro } from '../content/site';
 import { introPhotos } from '../content/photos';
+import moonPoster from '../assets/collage/moon-poster.jpg';
 
 // Frames are drawn on a <canvas> (not <img>) so a 50 ms flash never becomes the page's LCP element.
 const frameUrls = await Promise.all(
   intro.frames.map(async (f) => (await getImage({ src: introPhotos[f.src as keyof typeof introPhotos], width: 420, format: 'webp', quality: 60 })).src),
 );
+const poster = await getImage({ src: moonPoster, width: 960, format: 'webp', quality: 55 });
 ---
 
 <div class="intro" id="intro" role="dialog" aria-modal="true" aria-label="Intro" data-effect="intro" data-effect-eager data-effect-priority="high">
+  <!-- The moon through the branches (Teha's footage), muted, played from mid-rise. -->
+  <video class="intro__moon" muted playsinline preload="auto" poster={poster.src} aria-hidden="true" tabindex="-1" disablepictureinpicture>
+    <source src="/media/moon.mp4" type="video/mp4" />
+  </video>
   <div class="intro__glow" aria-hidden="true"></div>
-  <svg class="intro__candle" viewBox="0 0 120 260" aria-hidden="true" focusable="false">
-    <defs>
-      <radialGradient id="flame" cx="50%" cy="70%" r="60%">
-        <stop offset="0" stop-color="#e8dcc2"></stop>
-        <stop offset=".45" stop-color="#c9a24a"></stop>
-        <stop offset="1" stop-color="#a3141b" stop-opacity="0"></stop>
-      </radialGradient>
-    </defs>
-    <g class="intro__flame">
-      <path d="M60 30c-10 18-16 30-16 42 0 10 7 18 16 18s16-8 16-18c0-12-6-24-16-42z" fill="url(#flame)"></path>
-      <path d="M60 58c-4 8-6 12-6 17 0 4 3 7 6 7s6-3 6-7c0-5-2-9-6-17z" fill="#e8dcc2" opacity=".9"></path>
-    </g>
-    <path d="M60 88v12" stroke="#050304" stroke-width="2"></path>
-    <path d="M38 100h44v150H38z" fill="#d9c9a3"></path>
-    <path d="M38 100h44v8c-4 0-4 18-8 18s-4-12-8-12-4 26-9 26-4-22-8-22-4 10-7 10-4-20-4-20z" fill="#e8dcc2"></path>
-    <path d="M30 250h60" stroke="#c9a24a" stroke-width="6" stroke-linecap="round"></path>
-  </svg>
   <canvas class="intro__static" width="320" height="180" aria-hidden="true"></canvas>
   <canvas class="intro__frames" width="420" height="525" aria-hidden="true" data-frames={JSON.stringify(frameUrls)}></canvas>
-  <p class="intro__status label" aria-live="polite"><span>{intro.candleLabel}</span> <span data-intro-progress></span></p>
+  <p class="intro__status label" aria-live="polite"><span>{intro.moonLabel}</span> <span data-intro-progress></span></p>
   <button class="btn intro__skip" type="button" data-intro-skip>{intro.skip}</button>
 </div>
 
@@ -50,33 +39,36 @@ const frameUrls = await Promise.all(
   :global(html.intro-pending) {
     overflow: hidden;
   }
-  .intro__glow {
+  .intro__moon {
     position: absolute;
-    left: 50%;
-    top: 50%;
-    width: 70vmin;
-    height: 70vmin;
-    translate: -50% -60%;
-    background: radial-gradient(circle, rgb(201 162 74 / 0.22), rgb(163 20 27 / 0.08) 40%, transparent 65%);
-    animation: glow 2.2s var(--ease-ink) infinite alternate;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* nudged so the moon sits a little above the centre, where the photos burst */
+    object-position: 50% 62%;
+    transform-origin: 52% 48%;
+    animation: moon-drift 3s linear both;
   }
-  .intro__candle {
-    position: relative;
-    width: clamp(70px, 12vmin, 120px);
-    height: auto;
-  }
-  .intro__flame {
-    transform-origin: 60px 88px;
-    animation: flame 0.9s var(--ease-ink) infinite alternate;
-  }
-  @keyframes flame {
+  @keyframes moon-drift {
+    from {
+      scale: 1.12;
+    }
     to {
-      transform: scale(0.94, 1.06) rotate(2deg);
+      scale: 1.22;
     }
   }
-  @keyframes glow {
-    to {
-      opacity: 0.75;
+  /* cold moonlight bleeding into the dark */
+  .intro__glow {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(ellipse at 52% 46%, rgb(214 222 205 / 0.08), transparent 55%);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .intro__moon {
+      animation: none;
+      scale: 1.12;
     }
   }
   .intro__frames {

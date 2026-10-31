@@ -1,12 +1,12 @@
 ---
 import { Image } from 'astro:assets';
 import { hero } from '../content/site';
-import { collage, design } from '../content/photos';
+import { collage } from '../content/photos';
 ---
 
 <!--
-  Layout follows Shiru's revised Canva hero (1440 × 900). Nothing here that isn't in that design.
-  The hamster + "Navigate." (bottom right) is the menu button; it lives in SiteNav.
+  Layout follows Teha's revised Canva hero (1440 × 900). Nothing here that isn't in that design.
+  The eye + "Navigate." (bottom right) is the menu button; it lives in SiteNav.
 -->
 <section id="top" class="hero" data-tone="void" aria-labelledby="hero-title" data-effect="hero-entrance" data-effect-priority="high">
   <div class="hero__collage" aria-hidden="true">
@@ -19,11 +19,7 @@ import { collage, design } from '../content/photos';
       loading="eager"
       fetchpriority="high"
       decoding="async"
-      data-enter
     />
-    <span class="hero__bow-wrap" data-enter>
-      <Image class="hero__bow" src={design.bow} alt="" widths={[200, 400]} sizes="clamp(90px, 12vw, 180px)" loading="eager" decoding="async" />
-    </span>
     <span class="hero__hand-wrap" data-enter>
       <Image class="hero__hand" src={collage.hand} alt="" width={460} loading="eager" decoding="async" />
     </span>
@@ -73,26 +69,10 @@ import { collage, design } from '../content/photos';
     width: min(34.5vw, 620px);
     height: auto;
   }
-  .hero__bow-wrap {
-    position: absolute;
-    left: 84.8%;
-    top: 4.2%;
-    width: clamp(90px, 12vw, 180px);
-  }
-  .hero__bow {
-    width: 100%;
-    height: auto;
-    transform-origin: 50% 20%;
-    animation: bow-sway 7s var(--ease-ink) infinite;
-  }
-  @keyframes bow-sway {
-    0%,
-    100% {
-      rotate: -3deg;
-    }
-    50% {
-      rotate: 2.5deg;
-    }
+  /* waits half out of frame (never transparent, so it still counts as painted for LCP) */
+  :global(html.js.at-hero:not(.hero-entered)) .hero__newspaper,
+  :global(html.js.intro-pending) .hero__newspaper {
+    transform: translate(35%, -35%) rotate(8deg);
   }
   .hero__hand-wrap {
     position: absolute;
@@ -136,6 +116,8 @@ import { collage, design } from '../content/photos';
   .hero__title {
     margin-top: var(--space-5);
     max-width: none;
+    /* four letters: the name can carry real size */
+    font-size: clamp(5rem, 2rem + 10vw, 11rem);
     color: var(--bone);
     white-space: nowrap;
   }
@@ -186,7 +168,7 @@ import { collage, design } from '../content/photos';
   .glitch__layer {
     position: absolute;
     inset: 0;
-    opacity: 0;
+    clip-path: inset(0 0 100% 0);
     pointer-events: none;
     white-space: nowrap;
   }
@@ -203,52 +185,49 @@ import { collage, design } from '../content/photos';
     animation: glitch-base 4.2s steps(1, end) infinite;
   }
   /* each burst is ~250 ms out of 4.2 s: well under 3 flashes a second */
+  /* layers are shown and hidden with clip-path (never half-transparent, so contrast holds) */
   @keyframes glitch-a {
     0%,
     86% {
-      opacity: 0;
       transform: none;
-      clip-path: inset(0 0 0 0);
+      clip-path: inset(0 0 100% 0);
     }
     87% {
-      opacity: 0.85;
       transform: translate(-3px, 1px);
       clip-path: inset(10% 0 55% 0);
     }
     89% {
-      opacity: 0.85;
       transform: translate(4px, -1px);
       clip-path: inset(60% 0 8% 0);
     }
     91% {
-      opacity: 0.7;
       transform: translate(-2px, 0);
       clip-path: inset(35% 0 35% 0);
     }
     93%,
     100% {
-      opacity: 0;
+      transform: none;
+      clip-path: inset(0 0 100% 0);
     }
   }
   @keyframes glitch-b {
     0%,
     86% {
-      opacity: 0;
       transform: none;
+      clip-path: inset(0 0 100% 0);
     }
     88% {
-      opacity: 0.7;
       transform: translate(3px, 0);
       clip-path: inset(45% 0 20% 0);
     }
     90% {
-      opacity: 0.6;
       transform: translate(-4px, 1px);
       clip-path: inset(5% 0 70% 0);
     }
     92%,
     100% {
-      opacity: 0;
+      transform: none;
+      clip-path: inset(0 0 100% 0);
     }
   }
   @keyframes glitch-base {
@@ -273,14 +252,8 @@ import { collage, design } from '../content/photos';
     .hero__newspaper {
       width: 56vw;
     }
-    .hero__bow-wrap {
-      left: auto;
-      right: 6%;
-      top: 3%;
-      width: 22vw;
-    }
     .hero__title {
-      font-size: clamp(2.6rem, 12.5vw, 4.4rem);
+      font-size: clamp(5rem, 26vw, 8rem);
     }
   }
 </style>

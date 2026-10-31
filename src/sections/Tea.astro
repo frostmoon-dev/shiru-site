@@ -70,12 +70,13 @@ const gingham = await getImage({ src: design.gingham, width: 1600, format: 'webp
             <input id="f-website" name="website" type="text" tabindex="-1" autocomplete="off" />
           </div>
           <div class="letter__actions">
-            <button class="btn btn--solid" type="submit" data-submit>
+            <button class="btn btn--solid" type="submit" data-submit aria-describedby={mode === 'mailto' ? 'submit-note' : undefined}>
               <Icon name="quill" size={18} />
               <span data-submit-label>{mode === 'mailto' ? tea.submitMailto : tea.submit}</span>
             </button>
             <button class="btn letter__fold" type="button" data-fold>{tea.closeEnvelope}</button>
           </div>
+          {mode === 'mailto' && <p class="letter__note" id="submit-note">{tea.submitMailtoNote}</p>}
           <div class="letter__status" role="status" aria-live="polite" data-status></div>
         </form>
         </div>
@@ -264,8 +265,10 @@ const gingham = await getImage({ src: design.gingham, width: 1600, format: 'webp
   .letter {
     position: relative;
     z-index: 1;
-    width: min(100%, 34rem);
-    padding: 13% 9% 10%;
+    width: min(100%, 36rem);
+    /* keeps every field well inside the torn edges. The paper stretches with the form's height,
+       so the torn top and bottom grow on narrow screens: those get a fixed minimum as well. */
+    padding: max(17%, 5rem) 14% max(16%, 4.5rem);
     background: var(--paper) center / 100% 100% no-repeat;
     filter: drop-shadow(0 18px 24px rgb(0 0 0 / 0.55));
   }
@@ -276,9 +279,9 @@ const gingham = await getImage({ src: design.gingham, width: 1600, format: 'webp
     display: none;
   }
   .letter__title {
-    font-size: var(--step-1);
-    font-weight: 700;
-    margin-bottom: var(--space-3);
+    font-size: var(--step-2);
+    line-height: 1;
+    margin-bottom: var(--space-4);
     color: var(--ink);
   }
   .letter__form {
@@ -352,6 +355,18 @@ const gingham = await getImage({ src: design.gingham, width: 1600, format: 'webp
     flex-wrap: wrap;
     gap: var(--space-2);
   }
+  @media (max-width: 479px) {
+    .letter__actions :global(.btn) {
+      flex: 1 1 100%;
+      justify-content: center;
+    }
+  }
+  .letter__note {
+    margin-top: calc(-1 * var(--space-1));
+    font-size: var(--text-small);
+    font-style: italic;
+    color: #4a3828;
+  }
   :global(html:not(.js)) .letter__fold {
     display: none;
   }
@@ -421,7 +436,7 @@ const gingham = await getImage({ src: design.gingham, width: 1600, format: 'webp
 
     let tl: gsap.core.Timeline | undefined;
     const envImg = env.querySelector<HTMLElement>('.envelope__img');
-    const parts = () => letter.querySelectorAll('.letter__title, .field:not(.field--trap), .letter__actions');
+    const parts = () => letter.querySelectorAll('.letter__title, .field:not(.field--trap), .letter__actions, .letter__note');
 
     // Fold the letter back into the envelope.
     const close = () => {

@@ -1,20 +1,20 @@
 /**
  * Every word on the site lives here. Edit this file; no component needs touching.
  *
- * Anything marked `TODO` is placeholder copy written in Shiru's voice so the layout reads
+ * Anything marked `TODO` is placeholder copy written in Teha's voice so the layout reads
  * properly. Replace it before launch. Search the repo for "TODO:" to find all of them.
  */
 
 export const site = {
-  name: 'Shiru',
+  name: 'Teha',
   /** Used for the mailto fallback, the contact icons and the footer. */
   email: 'shinabaeing@gmail.com',
   locale: 'en',
-  title: 'Shiru · ERP by day, words by night',
+  title: 'Teha · ERP by day, words by night',
   description:
-    'Nurfatihah (Shiru) builds Dynamics 365 Finance & Operations systems in X++ by day and wanders into peculiar projects by night. Case No. 0: subject unknown.',
+    'Teha builds Dynamics 365 Finance & Operations systems in X++ by day and wanders into peculiar projects by night. Case No. 0: subject unknown.',
   ogImage: '/og.png',
-  ogImageAlt: 'The name SHIRU in pale lettering on black, under the line Case No. 0, Subject: unknown.',
+  ogImageAlt: 'The name TEHA in pale lettering on black, under the line Case No. 0, Subject: unknown.',
 } as const;
 
 export type ChapterId = 'rabbit-hole' | 'archives' | 'grimoire' | 'tea';
@@ -40,13 +40,13 @@ export const ui = {
   close: 'Close',
   backToStory: 'Back to the story',
   loading: 'The ink is still wet…',
-  noWebgl: 'This candle won’t light here. The pages still read fine.',
+  noWebgl: 'This book won’t open here. The pages still read fine.',
 };
 
 export const intro = {
   skip: 'Skip intro',
-  candleLabel: 'A candle is lit in the dark.',
-  loading: 'Lighting the candle',
+  moonLabel: 'The moon is up.',
+  loading: 'Waiting for the moon',
   /** Photos flash past in the intro burst. Replace with real photos (see assets README). */
   frames: [
     { src: 'intro-1', alt: '' },
@@ -58,13 +58,13 @@ export const intro = {
 };
 
 export const hero = {
-  name: 'Nurfatihah',
+  name: 'Teha',
   kicker: 'Case No. 0 · Subject: unknown',
   /** Typed out one line at a time. */
   lines: ['A dreamer.', 'An overthinker.', 'A creator.'],
   /** The last words glitch. */
   tagline: { before: 'I make a living out of things that make sense. The rest ', glitch: 'keeps me awake', after: '.' },
-  /** Label above the hamster (the menu button) on the hero. */
+  /** Label above the eye (the menu button) on the hero. */
   navigate: 'Navigate.',
 };
 
@@ -73,8 +73,8 @@ export const about = {
   /** Inside the lace frame. */
   /** Lead under the title. */
   card: 'I build and fix systems to keep everything in balance. Some things, however, refuse to be fixed. Perhaps that is the difference between the sentient and the lifeless.',
-  sweet: 'One must have something sweet between peculiarities.',
-  sweetAlt: 'A blueberry bun, split open.',
+  sweet: 'Pinned at midnight. It still moves, sometimes.',
+  sweetAlt: 'A pale moth, pinned like a specimen.',
   body: [
     'By day, I work with X++ and Microsoft Dynamics 365 Finance & Operations. I spend my time shaping business logic, extending existing systems, and bringing new functionality into existence. I have a particular fondness for starting with a requirement, following its logic, and turning an idea into something tangible. There’s a certain pleasure in creating order where there was once only possibility.',
     'By night, I tend to wander a little further into my own imagination. I have a habit of collecting interests, entertaining peculiar ideas, and turning passing thoughts into projects. Some become websites, some become experiments, and others remain little fragments of something I haven’t quite figured out yet. I enjoy the process of bringing an idea into existence, even if I occasionally leave a trail of unfinished things behind me.',
@@ -256,7 +256,9 @@ export const tea = {
     honeypot: 'Leave this empty',
   },
   submit: 'Send the raven',
-  submitMailto: 'Send the raven (opens your mail app)',
+  submitMailto: 'Send the raven',
+  /** Shown under the button when the form falls back to the visitor's mail app. */
+  submitMailtoNote: 'Opens your mail app with the letter ready.',
   sending: 'The raven is flying…',
   success: 'The raven made it. I’ll write back after dark.',
   successMailto: 'Your mail app should be open with the letter ready. Press send there and the raven will fly.',
@@ -274,7 +276,7 @@ export const footer = {
   typo: { at: 6, wrong: 'o' },
   privacy:
     'No cookies, no trackers, no analytics. Your browser remembers only whether you’ve seen the intro this session and which hints you’ve used. Nothing leaves your device unless you send me a letter.',
-  copyright: (year: number) => `© ${year} Shiru. Text and photos all rights reserved.`,
+  copyright: (year: number) => `© ${year} Teha. Text and photos all rights reserved.`,
   fontsCredit: 'Headings in American Horror Story by KELGE. Text in Atkinson Hyperlegible Next by the Braille Institute (SIL OFL).',
 };
 

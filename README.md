@@ -1,4 +1,4 @@
-# Shiru
+# Teha
 
 Shiru's personal site and portfolio. A dark case file you uncover chapter by chapter, by the light of your cursor:
 ERP developer (Dynamics 365 F&O, X++) by day, English–Malay translator by night.
@@ -61,7 +61,7 @@ src/
     _webgl/stage.ts      the one shared WebGL context
   islands/               React islands (the R3F grimoire)
   sections/              Hero, RabbitHole, CaseFiles, Grimoire, Tea, Footer, Intro
-  components/            top chapter index + hamster dock menu, section head, polaroid, close control, icons
+  components/            top chapter index + eye dock menu, section head, polaroid, close control, icons
   pages/                 index, archives/[slug], grimoire/[slug], 404, robots.txt
 scripts/                 test + asset scripts (below)
 ```
@@ -83,7 +83,7 @@ metrics (`size-adjust`, `ascent-override`, …). To swap a face, change one entr
 | What | Where | Note |
 | --- | --- | --- |
 | Hooded girl illustration | `src/assets/portrait/shiru.jpg` | Not used since the hero follows the Canva design. ⚠️ If it comes back, confirm you have the artist's permission. |
-| Revised designs (Oct 2026): bow, hamster (menu button), lace frame, torn black edge, brush stroke, scroll banner, pastry, black/cream gingham, archive frame, peek photo, pocket watch | `src/assets/design/` | Cut from her revised Canva pages. Lace, torn edge and brush were vector shapes, exported at 3×. The torn newspaper and paperclip are in `src/assets/collage/`. |
+| Revised designs (Oct 2026): bow (now the favicon), hamster (no longer used), lace frame, torn black edge, brush stroke, scroll banner, pastry (no longer used), black/cream gingham, archive frame, peek photo, pocket watch | `src/assets/design/` | Cut from her revised Canva pages. Lace, torn edge and brush were vector shapes, exported at 3×. The torn newspaper and paperclip are in `src/assets/collage/`; the eye (menu button), the moth (pinned in the lace frame) and the moon video (intro, `public/media/moon.mp4`) come from her cut-out sheets and footage. |
 | Cut-outs: eye, hand, moth, keyhole, envelope, torn letter paper | `src/assets/collage/` | Cut from the Canva sheets she supplied. The torn-page and heart pieces with lorem-ipsum text weren't used. |
 | Moon through branches (Tea at midnight) | `public/media/moon.mp4` | Re-encoded silent, 960 px, 126 kB; poster frame in `src/assets/collage/moon-poster.jpg`. |
 | Red/cream gingham | CSS / SVG pattern | Redrawn from her reference image as a pattern, so no image file is needed. |
@@ -95,7 +95,7 @@ With `npm run preview` running on port 4322 (`npx astro preview --port 4322`):
 | Script | What it checks |
 | --- | --- |
 | `node scripts/shots.mjs http://localhost:4322 / --nointro` | screenshots at 375 / 768 / 1280, console errors, horizontal overflow |
-| `node scripts/interact.mjs http://localhost:4322 1280` | hamster dock menu, book, envelope (paper only after the seal breaks) + form errors, archive file, Esc / Back / scroll restore, 404 |
+| `node scripts/interact.mjs http://localhost:4322 1280` | eye dock menu, book, envelope (paper only after the seal breaks) + form errors, archive file, Esc / Back / scroll restore, 404 |
 | `node scripts/intro-test.mjs http://localhost:4322` | intro timing, skip, once per session, reduced motion |
 | `node scripts/keyboard.mjs http://localhost:4322` | tabs through the page; every stop must show focus |
 | `node scripts/axe.mjs http://localhost:4322` | axe-core WCAG 2.2 AA on every page and open overlay |
@@ -107,7 +107,7 @@ The scripts use the machine's global Playwright; add `playwright` as a devDepend
 
 - Everything works by keyboard; overlays close with Esc, their close button, and the browser Back button.
 - `prefers-reduced-motion`: no flicker, jitter, ghosts, intro flashes or static; the envelope opens instantly.
-- The hamster dock is the menu. On wide screens it sits in the empty right margin; where that margin is too
+- The eye dock is the menu (it follows a mouse pointer slightly and blinks; both stop under reduced motion). On wide screens it sits in the empty right margin; where that margin is too
   narrow (below 86rem) it tucks away while you scroll down and returns when you scroll up, reach the end,
   or tab to it.
 - The intro burst cuts faster than 3 flashes/second by the owner's choice. Frames are toned to the same dark

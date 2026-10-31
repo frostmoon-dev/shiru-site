@@ -61,15 +61,20 @@
 }
 .book__numeral {
   font-family: var(--font-display);
+  font-feature-settings: 'ss04' 1, 'liga' 0, 'dlig' 0;
   font-size: var(--step-3);
   line-height: 1;
   color: var(--oxblood);
 }
 .book__title {
-  font-family: var(--font-body);
-  font-size: var(--step-2);
-  line-height: 1.15;
+  font-family: var(--font-display);
+  font-feature-settings: 'ss04' 1, 'liga' 0, 'dlig' 0;
+  font-weight: 400;
+  font-size: var(--step-3);
+  line-height: 1;
+  letter-spacing: 0.015em;
   color: var(--ink);
+  text-wrap: balance;
 }
 .book__title:focus {
   outline: none;
@@ -158,19 +163,23 @@
 .book2d__cover {
   position: absolute;
   inset: 0;
+  /* black book cloth with a bone-foil double frame */
   background:
-    radial-gradient(ellipse at 30% 25%, rgb(92 14 18 / 0.45), transparent 60%),
-    repeating-linear-gradient(115deg, rgb(0 0 0 / 0.08) 0 2px, transparent 2px 5px),
-    var(--leather);
-  border: 2px solid #1f0c0f;
-  outline: 1px solid rgb(201 162 74 / 0.6);
+    radial-gradient(ellipse at 50% 50%, transparent 55%, rgb(60 54 50 / 0.35)),
+    repeating-linear-gradient(115deg, rgb(255 255 255 / 0.015) 0 2px, transparent 2px 5px),
+    #0d0b0c;
+  border: 2px solid #050304;
+  outline: 1px solid rgb(232 220 194 / 0.6);
   outline-offset: -14px;
+  box-shadow:
+    inset 0 0 0 19px #0d0b0c,
+    inset 0 0 0 20px rgb(232 220 194 / 0.35),
+    10px 14px 0 rgb(0 0 0 / 0.5);
   transform-origin: 0 50%;
   transition: transform 900ms var(--ease-ink);
   backface-visibility: hidden;
   display: grid;
   place-items: center;
-  box-shadow: 10px 14px 0 rgb(42 26 18 / 0.35);
 }
 .book.is-open .book2d__cover {
   transform: rotateY(-178deg);
@@ -184,18 +193,25 @@
     transform 900ms var(--ease-ink),
     visibility 0s 900ms;
 }
-.book2d__hat {
-  width: 58%;
-  fill: rgb(201 162 74 / 0.28);
-  stroke: rgb(201 162 74 / 0.6);
-  stroke-width: 1.2;
-  filter: drop-shadow(0 1px 0 rgb(0 0 0 / 0.6));
+.book2d__emblem {
+  width: 46%;
+  fill: none;
+  stroke: rgb(232 220 194 / 0.6);
+  stroke-width: 1.4;
+}
+.book2d__ring--thin {
+  stroke-width: 0.8;
+}
+.book2d__keyhole {
+  fill: rgb(232 220 194 / 0.82);
+  stroke: none;
 }
 .book2d__corner {
   position: absolute;
   width: 34px;
   height: 34px;
-  background: linear-gradient(135deg, var(--brass-hi), var(--brass-lo));
+  /* tarnished silver */
+  background: linear-gradient(135deg, #cfc9bd, #6f6a61);
   clip-path: polygon(0 0, 100% 0, 0 100%);
 }
 .book2d__corner--tl {

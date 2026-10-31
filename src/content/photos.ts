@@ -7,10 +7,9 @@ import hand from '../assets/collage/hand.png';
 import envelope from '../assets/collage/envelope.png';
 import paper from '../assets/collage/paper.png';
 import newspaper from '../assets/collage/newspaper.png';
-import bow from '../assets/design/bow.png';
-import hamster from '../assets/design/hamster.png';
+import eye from '../assets/collage/eye.png';
+import moth from '../assets/collage/butterfly.png';
 import lace from '../assets/design/lace-frame.png';
-import pastry from '../assets/design/pastry.png';
 import gingham from '../assets/design/gingham.jpg';
 import pocketWatch from '../assets/design/pocket-watch.png';
 import paperclip from '../assets/collage/paperclip.png';
@@ -33,9 +32,8 @@ export const casePhotos = {
 
 export const introPhotos = { 'intro-1': intro1, 'intro-2': intro2, 'intro-3': intro3, 'intro-4': intro4, 'intro-5': intro5 } as const;
 
+/** Cut-outs supplied by Teha (Canva collage sheets), cut apart by scripts/ (see README). */
+export const collage = { hand, envelope, paper, newspaper, paperclip, eye, moth } as const;
 
-/** Cut-outs supplied by Shiru (Canva collage sheets), cut apart by scripts/ (see README). */
-export const collage = { hand, envelope, paper, newspaper, paperclip } as const;
-
-/** Pieces from Shiru's revised Canva designs (Oct 2026). */
-export const design = { bow, hamster, lace, pastry, gingham, pocketWatch } as const;
+/** Pieces from Teha's revised Canva designs (Oct 2026). */
+export const design = { lace, gingham, pocketWatch } as const;
