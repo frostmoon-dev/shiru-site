@@ -6,7 +6,7 @@ import type { EffectFactory } from '../types';
  * and is corrected. Screen readers get the full text at once (a visually hidden copy); the typed
  * copy is aria-hidden.
  *
- * Options: { typo?: { at, wrong }, speed?: ms per letter, waitForIntro?: boolean }
+ * Options: { typo?: { at, wrong }, speed?: ms per letter, waitForIntro?: boolean, delay?: ms before typing }
  * Markup:  add data-type-early to keep the text hidden (with JS) until typing starts.
  */
 const typewriter: EffectFactory = () => {
@@ -69,7 +69,7 @@ const typewriter: EffectFactory = () => {
           ([e]) => {
             if (e?.isIntersecting) {
               io?.disconnect();
-              run(0);
+              timer = window.setTimeout(() => run(0), typeof opts.delay === 'number' ? opts.delay : 0);
             }
           },
           { threshold: 0.6 },

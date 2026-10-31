@@ -9,10 +9,7 @@ Files that must be served as-is (social card, icons) live in `public/`.
 
 | File | Where it shows | What the real asset should be | Size / format |
 | --- | --- | --- | --- |
-| `src/assets/placeholder/case-erp.jpg` | Case file No. 365 polaroid + evidence page | A photo for the ERP work: a desk, a ledger, a screen with code (blur anything confidential) | square, ≥ 1000 px, JPG |
-| `src/assets/placeholder/case-translation.jpg` | Case file No. 2 | Translation/editing: handwritten pages, two languages side by side | square, ≥ 1000 px, JPG |
-| `src/assets/placeholder/case-lore.jpg` | Case file No. 7 | The lore archive: notebooks, index cards, string. No official game art. | square, ≥ 1000 px, JPG |
-| ~~hero portrait~~ | done: `src/assets/portrait/shiru.jpg` (her illustration) | | |
+| `src/assets/placeholder/archive-moonpaper.jpg`, `archive-napyru.jpg`, `archive-moona.jpg`, `archive-visual-themes.jpg` | The four polaroids in The Archives + each archive page | A picture for each project (screenshot, mock-up, photo) | 6:5 landscape-ish, ≥ 1000 px, JPG |
 | `src/assets/placeholder/intro-1.jpg` … `intro-5.jpg` | Intro flash burst (each shown ~50 ms, toned dark sepia automatically) | Photos of Shiru, or her hands, desk, shadows. Cropped and partly hidden works best. | 4:5 portrait, ≥ 840 px, JPG |
 | `public/og.png` | Link previews (Open Graph / Twitter) | Designed share card. Regenerate with `node scripts/make-assets.mjs` after editing it there, or replace by hand. | 1200 × 630 PNG |
 | `public/favicon.svg`, `favicon-32.png`, `apple-touch-icon.png`, `icon-192.png`, `icon-512.png` | Browser tab, home screen | The hat mark (current; could become the halftone hat) or a real monogram | as named |

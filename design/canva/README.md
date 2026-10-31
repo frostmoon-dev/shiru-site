@@ -7,11 +7,11 @@ Canva opens each one as an editable design.
 | --- | --- |
 | `01-hero.pptx` | Prologue (hero), following Shiru's Canva layout |
 | `02-down-the-rabbit-hole.pptx` | Chapter I · About |
-| `03-case-files.pptx` | Chapter II · Work (the board) |
+| `03-archives.pptx` | Chapter II · The Archives |
 | `04-grimoire-closed.pptx` / `05-grimoire-open.pptx` | Chapter III · Writing, book shut and open |
 | `06-tea-at-midnight.pptx` / `07-tea-letter-open.pptx` | Chapter IV · Contact, envelope sealed and letter out |
 | `08-footer.pptx` | Come back after dark |
-| `09-case-file-page.pptx` | An open case file |
+| `09-archive-page.pptx` | An open archive file |
 | `10-grimoire-chapter-page.pptx` | A grimoire chapter |
 | `11-not-found.pptx` | The 404 page |
 

@@ -1,15 +1,14 @@
 ---
 import { Image } from 'astro:assets';
 import { hero } from '../content/site';
-import { collage } from '../content/photos';
-import InkEdgeFallback from '../components/scene/InkEdgeFallback.astro';
+import { collage, design } from '../content/photos';
 ---
 
 <!--
-  Layout follows Shiru's Canva hero (1440 × 900 frame). Nothing here that isn't in that design.
-  The paperclip + "For whom do you weep?" (bottom right) is the menu button; it lives in SiteNav.
+  Layout follows Shiru's revised Canva hero (1440 × 900). Nothing here that isn't in that design.
+  The hamster + "Navigate." (bottom right) is the menu button; it lives in SiteNav.
 -->
-<section id="top" class="hero" data-tone="void" aria-labelledby="hero-title">
+<section id="top" class="hero" data-tone="void" aria-labelledby="hero-title" data-effect="hero-entrance" data-effect-priority="high">
   <div class="hero__collage" aria-hidden="true">
     <Image
       class="hero__newspaper"
@@ -20,27 +19,29 @@ import InkEdgeFallback from '../components/scene/InkEdgeFallback.astro';
       loading="eager"
       fetchpriority="high"
       decoding="async"
+      data-enter
     />
-    <Image class="hero__eye" src={collage.eye} alt="" widths={[180, 330]} sizes="clamp(90px, 11.2vw, 190px)" loading="eager" decoding="async" />
-    <Image class="hero__moth" src={collage.butterfly} alt="" width={280} loading="lazy" decoding="async" />
-    <Image class="hero__hand" src={collage.hand} alt="" width={460} loading="lazy" decoding="async" />
+    <span class="hero__bow-wrap" data-enter>
+      <Image class="hero__bow" src={design.bow} alt="" widths={[200, 400]} sizes="clamp(90px, 12vw, 180px)" loading="eager" decoding="async" />
+    </span>
+    <span class="hero__hand-wrap" data-enter>
+      <Image class="hero__hand" src={collage.hand} alt="" width={460} loading="eager" decoding="async" />
+    </span>
   </div>
 
-  <a class="hero__proceed label" href="#rabbit-hole">{hero.proceed}</a>
-
   <div class="hero__content">
-    <p class="hero__kicker label">{hero.kicker}</p>
+    <p class="hero__kicker label" data-enter>{hero.kicker}</p>
     <h1 id="hero-title" class="hero__title">{hero.name}</h1>
     <p
       class="hero__lines"
       data-effect="typewriter"
       data-effect-priority="high"
-      data-effect-options='{"speed":70,"waitForIntro":true}'
+      data-effect-options='{"speed":65,"waitForIntro":true,"delay":900}'
       data-type-early
     >
       {hero.lines.map((l) => <span class="hero__line">{l}</span>)}
     </p>
-    <p class="hero__tagline">
+    <p class="hero__tagline" data-enter>
       {hero.tagline.before}<em class="glitch"
         ><span class="glitch__base">{hero.tagline.glitch}</span><span class="glitch__layer glitch__layer--a" aria-hidden="true"
           >{hero.tagline.glitch}</span
@@ -50,10 +51,6 @@ import InkEdgeFallback from '../components/scene/InkEdgeFallback.astro';
   </div>
 
   <canvas class="hero__dust" aria-hidden="true" data-effect="film-dust"></canvas>
-
-  <div class="ink-edge" aria-hidden="true" data-effect="ink-edge" data-effect-options='{"rest":0.18}'>
-    <InkEdgeFallback rest={0.18} />
-  </div>
 </section>
 
 <style>
@@ -61,7 +58,7 @@ import InkEdgeFallback from '../components/scene/InkEdgeFallback.astro';
     position: relative;
     min-height: 100svh;
     background: var(--void);
-    overflow-x: clip; /* not y: the ink edge drips down into Chapter I */
+    overflow-x: clip;
   }
 
   /* ---- collage (positions measured from the 1440 × 900 Canva frame) ---- */
@@ -71,83 +68,95 @@ import InkEdgeFallback from '../components/scene/InkEdgeFallback.astro';
     z-index: var(--z-content);
     pointer-events: none;
   }
-  .hero__collage :global(img) {
-    position: absolute;
-    height: auto;
-  }
   .hero__newspaper {
+    position: absolute;
     top: 0;
     right: 0;
     width: min(34.5vw, 620px);
+    height: auto;
   }
-  .hero__eye {
-    left: 81.6%;
-    top: 33.8%;
-    width: clamp(90px, 11.2vw, 190px);
+  .hero__bow-wrap {
+    position: absolute;
+    left: 84.8%;
+    top: 4.2%;
+    width: clamp(90px, 12vw, 180px);
   }
-  .hero__moth {
-    left: 51.5%;
-    top: 68%;
-    width: clamp(80px, 9.6vw, 160px);
-    filter: grayscale(1) brightness(0.75);
+  .hero__bow {
+    width: 100%;
+    height: auto;
+    transform-origin: 50% 20%;
+    animation: bow-sway 7s var(--ease-ink) infinite;
+  }
+  @keyframes bow-sway {
+    0%,
+    100% {
+      rotate: -3deg;
+    }
+    50% {
+      rotate: 2.5deg;
+    }
+  }
+  .hero__hand-wrap {
+    position: absolute;
+    left: 0;
+    bottom: -6%;
+    width: clamp(120px, 15.5vw, 250px);
   }
   .hero__hand {
-    left: 0;
-    bottom: -9%;
-    width: clamp(120px, 15vw, 250px);
+    width: 100%;
+    height: auto;
     filter: brightness(0.42);
+    transform-origin: 10% 100%;
+    animation: hand-reach 9s var(--ease-ink) infinite;
+  }
+  /* almost moves: the hand leans in a degree or two, then thinks better of it */
+  @keyframes hand-reach {
+    0%,
+    100% {
+      rotate: 0deg;
+      translate: 0 0;
+    }
+    55% {
+      rotate: 2deg;
+      translate: 4px -6px;
+    }
   }
 
   /* ---- text ---- */
-  .hero__proceed {
-    position: absolute;
-    z-index: var(--z-content);
-    left: 4.7vw;
-    top: 13%;
-    display: inline-flex;
-    align-items: center;
-    min-height: var(--touch);
-    color: var(--muted);
-    text-decoration: none;
-  }
-  .hero__proceed:hover,
-  .hero__proceed:focus-visible {
-    color: var(--bone);
-  }
   .hero__content {
     position: absolute;
     z-index: var(--z-content);
-    left: 4.7vw;
-    top: 29.5%;
-    max-width: min(580px, 46vw);
+    left: 4.8vw;
+    top: 21.5%;
+    max-width: min(600px, 46vw);
   }
   .hero__kicker {
     color: var(--muted);
   }
   .hero__title {
-    margin-top: clamp(1rem, 4.5svh, 2.6rem);
+    margin-top: clamp(1.5rem, 7svh, 4rem);
     font-family: var(--font-display);
-    font-size: clamp(5rem, 2rem + 11vw, 14rem);
+    font-size: clamp(3.6rem, 1rem + 8.7vw, 9.4rem);
     font-weight: 400;
-    line-height: 0.85;
+    line-height: 0.9;
     letter-spacing: 0.01em;
     color: var(--bone);
+    white-space: nowrap;
   }
   .hero__lines {
-    margin-top: clamp(1rem, 3.5svh, 2.25rem);
+    margin-top: clamp(2rem, 9svh, 5.5rem);
     font-style: italic;
     font-size: var(--step-0);
-    line-height: 1.45;
+    line-height: 1.35;
     letter-spacing: 0.12em;
     color: var(--bone);
     white-space: pre-line;
-    min-height: 4.35em;
+    min-height: 4.05em;
   }
   .hero__line {
     display: block;
   }
   :global(html.js) .hero__lines[data-type-early] {
-    /* hidden until the typewriter starts, so the lines never flash in full first */
     visibility: hidden;
   }
   .hero__tagline {
@@ -155,6 +164,21 @@ import InkEdgeFallback from '../components/scene/InkEdgeFallback.astro';
     font-size: var(--step-0);
     line-height: 1.6;
     color: var(--muted);
+  }
+  .hero__tagline .glitch {
+    font-weight: 700;
+  }
+
+  /* hidden until hero-entrance animates them in; fail-safe shows them after 8 s regardless */
+  :global(html.js.at-hero:not(.hero-entered) [data-enter]),
+  :global(html.js.intro-pending [data-enter]) {
+    opacity: 0;
+    animation: enter-failsafe 0.01s 8s forwards;
+  }
+  @keyframes enter-failsafe {
+    to {
+      opacity: 1;
+    }
   }
 
   /* ---- glitch: "keeps me awake" slips out of register now and then ---- */
@@ -259,41 +283,24 @@ import InkEdgeFallback from '../components/scene/InkEdgeFallback.astro';
     mix-blend-mode: screen;
   }
 
-  .ink-edge {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: calc(100% - 8vh);
-    height: 45vh;
-    z-index: var(--z-webgl);
-    pointer-events: none;
-  }
-  .ink-edge[data-webgl='on'] :global(.ink-fallback) {
-    visibility: hidden;
-  }
-
   @media (max-width: 899px) {
     .hero__newspaper {
-      width: 52vw;
+      width: 56vw;
     }
-    .hero__proceed {
-      left: var(--gutter);
-      top: var(--space-5);
+    .hero__bow-wrap {
+      left: auto;
+      right: 6%;
+      top: 3%;
+      width: 22vw;
     }
     .hero__content {
       left: var(--gutter);
       right: var(--gutter);
-      top: 24%;
+      top: 26%;
       max-width: none;
     }
-    .hero__eye {
-      left: auto;
-      right: 6%;
-      top: 30%;
-    }
-    .hero__moth {
-      left: 10%;
-      top: 66%;
+    .hero__title {
+      font-size: clamp(2.6rem, 12vw, 4.4rem);
     }
   }
 </style>

@@ -1,12 +1,13 @@
 ---
 import Base from '../layouts/Base.astro';
-import BackwardsClock from '../components/props/BackwardsClock.astro';
+import { Image } from 'astro:assets';
+import { design } from '../content/photos';
 import { notFound } from '../content/site';
 ---
 
 <Base title={notFound.title} description={notFound.body} noindex>
   <section class="lost" data-tone="night" aria-labelledby="lost-title">
-    <div class="lost__clock" aria-hidden="true"><BackwardsClock size={160} speed={3} /></div>
+    <div class="lost__clock" aria-hidden="true"><Image src={design.pocketWatch} alt="" width={240} loading="eager" decoding="async" /></div>
     <p class="label lost__label">{notFound.label}</p>
     <h1 id="lost-title" class="lost__title" data-effect="ghost-title">{notFound.title}</h1>
     <p class="flavour lost__body">{notFound.body}</p>
@@ -26,8 +27,24 @@ import { notFound } from '../content/site';
     margin-inline: auto;
   }
   .lost__clock {
-    transform: rotate(-12deg);
+    width: clamp(110px, 12vw, 170px);
     margin-bottom: var(--space-3);
+    transform-origin: 62% 0;
+    animation: watch-swing 4.8s var(--ease-ink) infinite;
+  }
+  .lost__clock :global(img) {
+    width: 100%;
+    height: auto;
+  }
+  /* the watch hangs from its chain and swings, slowly, the wrong way round */
+  @keyframes watch-swing {
+    0%,
+    100% {
+      rotate: -7deg;
+    }
+    50% {
+      rotate: 6deg;
+    }
   }
   .lost__label {
     color: var(--muted);

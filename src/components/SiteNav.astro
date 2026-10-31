@@ -2,7 +2,7 @@
 import { chapters, hero, ui } from '../content/site';
 import Icon from './Icon.astro';
 import { Image } from 'astro:assets';
-import { collage } from '../content/photos';
+import { design } from '../content/photos';
 
 interface Props {
   home?: boolean;
@@ -42,19 +42,20 @@ const { home = false } = Astro.props;
   </div>
 </header>
 
-<!-- The menu: a paperclip. On the hero it waits bottom right under its question; once you
-     scroll it docks in the corner. -->
+<!-- The menu: a hamster holding a rose. On the hero it sits bottom right under "Navigate.";
+     once you scroll it docks small in the corner. -->
 <button
-  class="clip-btn"
+  class="menu-btn"
   type="button"
   aria-haspopup="dialog"
   aria-expanded="false"
   aria-controls="spell-menu"
   data-menu-btn
+  data-enter
 >
-  <span class="clip-btn__whisper">{hero.whisper}</span>
+  <span class="menu-btn__label">{hero.navigate}</span>
   <span class="visually-hidden"> {ui.menuOpen}</span>
-  <span class="clip-btn__clip"><Image src={collage.paperclip} alt="" width={44} loading="eager" decoding="async" /></span>
+  <span class="menu-btn__pet"><Image src={design.hamster} alt="" widths={[96, 260]} sizes="130px" loading="eager" decoding="async" /></span>
 </button>
 
 <dialog id="spell-menu" class="spell-menu" aria-label={ui.menuTitle} data-spell-menu>
@@ -99,7 +100,7 @@ const { home = false } = Astro.props;
     align-items: center;
     flex-wrap: wrap;
     gap: var(--space-1) var(--space-2);
-    background: color-mix(in oklch, var(--void) 72%, transparent);
+    background: color-mix(in oklch, var(--void) 90%, transparent);
     padding: 0 var(--space-2);
     border: 1px solid color-mix(in oklch, var(--bone) 18%, transparent);
   }
@@ -135,7 +136,7 @@ const { home = false } = Astro.props;
   .site-nav__tools {
     display: flex;
     gap: var(--space-1);
-    background: color-mix(in oklch, var(--void) 72%, transparent);
+    background: color-mix(in oklch, var(--void) 90%, transparent);
     border: 1px solid color-mix(in oklch, var(--bone) 18%, transparent);
   }
   .sound-toggle__off {
@@ -151,62 +152,86 @@ const { home = false } = Astro.props;
     display: none;
   }
   :global(html:not(.js)) .sound-toggle,
-  :global(html:not(.js)) .clip-btn {
+  :global(html:not(.js)) .menu-btn {
     display: none;
   }
 
-  /* ---- The paperclip menu button ---- */
-  .clip-btn {
+  /* ---- The hamster menu button ---- */
+  .menu-btn {
     position: fixed;
     z-index: var(--z-nav);
     right: var(--gutter);
     top: calc(var(--space-2) + var(--touch) + var(--space-1));
     display: grid;
     justify-items: center;
-    gap: var(--space-3);
+    gap: var(--space-2);
     min-width: var(--touch);
     min-height: var(--touch);
-    padding: var(--space-1);
+    padding: var(--space-half);
     border: 0;
     background: transparent;
     color: var(--muted);
     font-weight: 700;
-    font-size: var(--text-small);
+    font-size: var(--step-0);
     letter-spacing: 0.06em;
   }
-  .clip-btn__whisper {
+  .menu-btn__label {
     display: none;
     white-space: nowrap;
+    position: relative;
   }
-  .clip-btn__clip {
-    display: block;
-    width: 18px;
-    transform-origin: 50% 8%;
+  /* "Navigate." underline draws on hover/focus */
+  .menu-btn__label::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -4px;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
     transition: transform var(--dur-base) var(--ease-out);
   }
-  .clip-btn__clip :global(img) {
+  .menu-btn:hover .menu-btn__label::after,
+  .menu-btn:focus-visible .menu-btn__label::after {
+    transform: scaleX(1);
+  }
+  .menu-btn__pet {
+    display: block;
+    width: 44px;
+    transform-origin: 50% 90%;
+    transition: transform var(--dur-base) var(--ease-out);
+    animation: pet-breathe 3.6s var(--ease-ink) infinite;
+  }
+  .menu-btn__pet :global(img) {
     width: 100%;
     height: auto;
   }
-  .clip-btn:hover .clip-btn__clip {
-    transform: rotate(-9deg);
+  .menu-btn:hover .menu-btn__pet {
+    transform: rotate(-6deg) translateY(-3px);
   }
-  .clip-btn:hover,
-  .clip-btn:focus-visible {
+  .menu-btn:hover,
+  .menu-btn:focus-visible {
     color: var(--bone);
   }
-  /* on the hero: bottom right, under "For whom do you weep?" (as in the Canva design) */
-  :global(html.at-hero) .clip-btn {
-    top: 79.4svh;
+  @keyframes pet-breathe {
+    50% {
+      scale: 1.02 0.985;
+    }
+  }
+  /* on the hero: bottom right, under "Navigate." (as in the Canva design) */
+  :global(html.at-hero) .menu-btn {
+    top: 66.5svh;
     right: auto;
-    left: 89.4vw;
+    left: 89.7vw;
     transform: translateX(-50%);
   }
-  :global(html.at-hero) .clip-btn__whisper {
+  :global(html.at-hero) .menu-btn__label {
     display: block;
   }
-  :global(html.at-hero) .clip-btn__clip {
-    width: clamp(14px, 1.4vw, 22px);
+  :global(html.at-hero) .menu-btn__pet {
+    width: clamp(84px, 9vw, 130px);
   }
   /* the hero shows only the plain chapter line: no boxes, no sound button */
   .chapter-index,
@@ -319,12 +344,12 @@ const { home = false } = Astro.props;
     .chapter-index__now {
       display: none;
     }
-    .clip-btn {
+    .menu-btn {
       top: auto;
       bottom: calc(var(--touch) + var(--space-3) + env(safe-area-inset-bottom));
       right: var(--space-2);
     }
-    :global(html.at-hero) .clip-btn {
+    :global(html.at-hero) .menu-btn {
       top: auto;
       left: auto;
       right: var(--gutter);
@@ -421,7 +446,7 @@ const { home = false } = Astro.props;
     const dialog = document.querySelector<HTMLDialogElement>('[data-spell-menu]');
     if (!hat || !dialog) return;
     const links = [...dialog.querySelectorAll<HTMLAnchorElement>('[data-spell-link]')];
-    const float = hat.querySelector<HTMLElement>('.clip-btn__clip');
+    const float = hat.querySelector<HTMLElement>('.menu-btn__pet');
 
     const closeNow = () => {
       if (!dialog.open) return;
@@ -455,7 +480,7 @@ const { home = false } = Astro.props;
           gsap.set(links, { opacity: 1, x: 0, y: 0, rotate: 0, scale: 1 });
           return;
         }
-        // The links spill out from the paperclip, as if it had been holding them together.
+        // The links spill out from the hamster's paws, one after another.
         links.forEach((l, i) => {
           const r = l.getBoundingClientRect();
           const dx = hr.left + hr.width / 2 - (r.left + r.width / 2);
@@ -480,9 +505,9 @@ const { home = false } = Astro.props;
       else
         gsap
           .timeline({ onComplete: show })
-          // the clip swings open on its top bend
-          .to(float, { rotate: -28, duration: 0.14, ease: 'power2.out' })
-          .to(float, { rotate: 160, y: 6, duration: 0.34, ease: 'power3.in' });
+          // the hamster hops, and the links tumble out of its paws
+          .to(float, { y: -18, rotate: -8, duration: 0.18, ease: 'power2.out' })
+          .to(float, { y: 0, rotate: 0, duration: 0.3, ease: 'bounce.out' });
     };
 
     hat.onclick = open;

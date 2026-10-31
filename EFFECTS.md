@@ -139,5 +139,7 @@ The interface doesn't care what's inside `mount()`:
 | `fall-parallax` | rabbit-hole drift, tumbling props, zoom-in, tilting floor | props at rest |
 | `section-wipe` | `tear`, `burn`, `pinstripe`, `ink-rise` chapter transitions | the static edge |
 | `typewriter` | types text letter by letter, keeping line breaks; optional one-letter typo that corrects itself; `waitForIntro` and `data-type-early` (stay hidden until typing) | full text |
+| `reveal` | entrance animations played once on scroll: `rise`, `settle`, `pin` (polaroids), `pop`, `unfurl` (the scroll), `paint` (brush strokes, gingham), `slide`; options `targets`, `stagger`, `delay`, `start` | everything simply there |
+| `hero-entrance` | after the intro: the name sharpens out of a blur, newspaper slides in, bow drops, hand rises, tagline surfaces, hamster peeks up with "Navigate." ([data-enter] elements, 8 s CSS fail-safe) | everything simply there |
 | `film-dust` | old-film specks, hairs and scratches redrawn ~12×/s on a canvas (the hero) | one still frame of dust |
 | `intro` | candle → photo burst → hero, ≤ 3 s, once per session | still candle, then fade |

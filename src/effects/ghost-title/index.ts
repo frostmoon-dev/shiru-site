@@ -53,7 +53,8 @@ const ghostTitle: EffectFactory = () => {
       echo = document.createElement('span');
       echo.className = 'ghost-title__echo';
       echo.setAttribute('aria-hidden', 'true');
-      echo.textContent = target.textContent?.trim() ?? '';
+      // a copy of the heading's own markup, so line breaks line up
+      echo.append(...[...target.childNodes].map((n) => n.cloneNode(true)));
       target.appendChild(echo);
 
       const r = target.getBoundingClientRect();

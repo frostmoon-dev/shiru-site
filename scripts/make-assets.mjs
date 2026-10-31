@@ -57,9 +57,13 @@ async function shot(html, path, w, h, type = 'jpeg') {
   await page.screenshot({ path, type, ...(type === 'jpeg' ? { quality: 88 } : {}) });
   console.log('wrote', path);
 }
-await shot(photo('No. 365', motifs.ledger), 'src/assets/placeholder/case-erp.jpg', 900, 900);
-await shot(photo('No. 2', motifs.letters), 'src/assets/placeholder/case-translation.jpg', 900, 900);
-await shot(photo('No. 7', motifs.cards), 'src/assets/placeholder/case-lore.jpg', 900, 900);
+for (const [slug, label, motif] of [
+  ['moonpaper', 'MoonPaper', motifs.ledger],
+  ['napyru', 'Napyru', motifs.letters],
+  ['moona', 'Moona', motifs.cards],
+  ['visual-themes', 'Visual themes', motifs.ledger],
+])
+  await shot(photo(label, motif), `src/assets/placeholder/archive-${slug}.jpg`, 900, 900);
 for (let i = 1; i <= 5; i++) await shot(photo('', motifs.portrait(i)), `src/assets/placeholder/intro-${i}.jpg`, 800, 1000);
 await shot(og, 'public/og.png', 1200, 630, 'png');
 await shot(iconHtml(180), 'public/apple-touch-icon.png', 180, 180, 'png');

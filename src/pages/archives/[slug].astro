@@ -18,7 +18,7 @@ const next = caseFiles.files[(idx + 1) % caseFiles.files.length]!;
 
 <Base title={file.title} description={file.summary}>
   <article class="folder-page" data-tone="void" aria-labelledby="file-title">
-    <CloseFile href="/#case-files" label={caseFiles.closeLabel} flag="shiru:from-board" />
+    <CloseFile href="/#archives" label={caseFiles.closeLabel} flag="shiru:from-board" />
     <div class="folder">
       <div class="folder__tab label" aria-hidden="true">{file.number} · {file.stamp}</div>
       <div class="folder__sheet" data-tone="sepia">
@@ -54,7 +54,7 @@ const next = caseFiles.files[(idx + 1) % caseFiles.files.length]!;
             )
           }
           <p class="folder__next">
-            <a href={`/case-files/${next.slug}/`}>Next file: {next.title}</a>
+            <a href={`/archives/${next.slug}/`}>Next file: {next.title}</a>
           </p>
         </div>
         <p class="folder__stamp label" aria-hidden="true">Open</p>

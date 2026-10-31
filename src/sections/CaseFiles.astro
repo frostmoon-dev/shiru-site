@@ -1,40 +1,51 @@
 ---
+import { Image, getImage } from 'astro:assets';
 import { caseFiles, chapters } from '../content/site';
-import ChapterHeading from '../components/ChapterHeading.astro';
+import { collage, design } from '../content/photos';
 import Polaroid from '../components/Polaroid.astro';
 
-const ch = chapters.find((c) => c.id === 'case-files')!;
+const ch = chapters.find((c) => c.id === 'archives')!;
+const frame = await getImage({ src: design.archiveFrame, width: 1800, format: 'webp', quality: 72 });
 ---
 
-<section id={ch.id} class="cases" data-tone="void" aria-labelledby="cases-title">
-  <div class="cases__inner">
-    <div class="cases__lead">
-      <ChapterHeading id="cases-title" label={caseFiles.label} title={caseFiles.title} />
-      <p class="cases__intro flavour">{caseFiles.intro}</p>
-      <p class="cases__hint caption" data-hint="case-files">{caseFiles.hint}</p>
+<!-- Layout follows Shiru's revised Canva "The Archives" (1440 × 779). -->
+<section id={ch.id} class="archives" style={`--frame:url(${frame.src})`} aria-labelledby="archives-title">
+  <div class="archives__inner">
+    <div class="archives__lead">
+      <h2 id="archives-title" class="archives__title" data-effect="ghost-title">The<br />Archives</h2>
+      <div data-effect="reveal" data-effect-options='{"type":"rise","targets":"p","stagger":0.18,"delay":0.3}'>
+        <p class="archives__intro">{caseFiles.intro}</p>
+        <p class="archives__hint" data-hint="case-files">{caseFiles.hint}</p>
+      </div>
     </div>
 
-    <div class="board">
-      <svg class="board__string" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-        <path d="M18 8 C 40 30, 55 18, 82 22 M82 22 C 70 50, 50 60, 30 72" fill="none" stroke="#a3141b" stroke-width=".35" vector-effect="non-scaling-stroke"></path>
-      </svg>
-      <ol class="board__files" aria-label="Case files">
-        {caseFiles.files.map((f, i) => <Polaroid file={f} index={i} />)}
-      </ol>
-      <p class="board__swipe label" aria-hidden="true">{caseFiles.swipeHint} →</p>
-    </div>
+    <ol class="board" aria-label="The archives" data-effect="reveal" data-effect-options='{"type":"pin","targets":".polaroid-wrap","stagger":0.16}'>
+      {
+        caseFiles.files.map((f, i) =>
+          i === 0 ? (
+            <Polaroid file={f} index={i}>
+              <Image slot="behind" class="board__peek" src={design.peek} alt="" width={260} loading="lazy" decoding="async" aria-hidden="true" />
+              <Image slot="front" class="board__clip" src={collage.paperclip} alt="" width={40} loading="lazy" decoding="async" aria-hidden="true" />
+            </Polaroid>
+          ) : (
+            <Polaroid file={f} index={i} />
+          ),
+        )
+      }
+    </ol>
+    <p class="archives__swipe label" aria-hidden="true">{caseFiles.swipeHint} →</p>
   </div>
 </section>
 
 <style>
-  .cases {
+  .archives {
     position: relative;
-    padding: calc(var(--space-8) + 40px) var(--gutter) var(--space-8);
-    background-image:
-      repeating-linear-gradient(90deg, rgb(217 210 189 / 0.025) 0 2px, transparent 2px 46px),
-      radial-gradient(ellipse at 70% 40%, rgb(43 18 21 / 0.55), transparent 70%);
+    padding: clamp(4rem, 9vw, 8rem) var(--gutter);
+    background: var(--frame) center / 100% 100% no-repeat, #e6dbc1;
+    color: var(--ink);
+    overflow-x: clip;
   }
-  .cases__inner {
+  .archives__inner {
     position: relative;
     z-index: var(--z-content);
     max-width: 76rem;
@@ -43,79 +54,112 @@ const ch = chapters.find((c) => c.id === 'case-files')!;
     grid-template-columns: minmax(0, 1fr);
     gap: var(--space-6);
   }
-  .cases__inner > * {
+  .archives__inner > * {
     min-width: 0;
   }
-  .cases__intro {
+  .archives__title {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 2rem + 3.4vw, 5.4rem);
+    line-height: 0.95;
+    color: var(--ink);
+  }
+  .archives__intro {
     margin-top: var(--space-4);
-    max-width: 28ch;
+    font-style: italic;
+    font-size: var(--step-0);
+    max-width: 26ch;
   }
-  .cases__hint {
-    margin-top: var(--space-2);
+  .archives__hint {
+    margin-top: var(--space-3);
+    font-size: 0.9rem;
+    color: var(--ink-muted);
   }
+
+  /* ---- the board: four polaroids scattered as in the design ---- */
   .board {
     position: relative;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-5) var(--space-6);
   }
-  .board__string {
+  .board :global(.polaroid-wrap) {
+    width: min(100%, 290px);
+  }
+  .board :global(.polaroid-wrap:nth-child(2)) {
+    justify-self: end;
+    margin-top: -2rem;
+  }
+  .board :global(.polaroid-wrap:nth-child(3)) {
+    margin-top: -1rem;
+  }
+  .board :global(.polaroid-wrap:nth-child(4)) {
+    justify-self: end;
+    width: min(100%, 260px);
+  }
+  .board :global(.board__peek) {
     position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
+    top: 4%;
+    right: -16%;
+    width: 52%;
+    height: auto;
+    rotate: 7deg;
+    box-shadow: 4px 6px 10px rgb(42 26 18 / 0.25);
+  }
+  .board :global(.board__clip) {
+    position: absolute;
+    top: -9%;
+    left: 74%;
+    width: clamp(16px, 1.6vw, 24px);
+    height: auto;
+    rotate: 4deg;
+    z-index: 1;
     pointer-events: none;
   }
-  .board__files {
-    position: relative;
-    padding: 0;
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: var(--space-5);
-    align-items: start;
-  }
-  .board__files > :global(li:nth-child(2)) {
-    margin-top: var(--space-7);
-  }
-  .board__files > :global(li:nth-child(3)) {
-    margin-top: var(--space-3);
-    margin-left: calc(var(--space-4) * -1);
-  }
-  .board__swipe {
+  .archives__swipe {
     display: none;
   }
 
-  @media (min-width: 1000px) {
-    .cases__inner {
-      grid-template-columns: 4fr 8fr;
+  @media (min-width: 960px) {
+    .archives__inner {
+      grid-template-columns: 4fr 7fr;
       align-items: start;
     }
-    .cases__lead {
-      position: sticky;
-      top: 20vh;
+    .archives__lead {
+      padding-top: var(--space-5);
     }
   }
 
-  /* Small screens: a swipeable stack (native scroll-snap, works with touch, keyboard and SR). */
+  /* phones: a swipeable stack */
   @media (max-width: 719px) {
-    .board__string {
-      display: none;
+    .archives {
+      /* keep the frame's top and bottom bands; push its side margins off-screen */
+      background-size: 240% 100%, auto;
+      background-position: center, center;
     }
-    .board__files {
+    .board {
       display: flex;
-      gap: var(--space-3);
+      gap: var(--space-4);
       overflow-x: auto;
       scroll-snap-type: x mandatory;
       overscroll-behavior-x: contain;
-      padding: var(--space-3) 15vw var(--space-5);
+      padding: var(--space-5) 15vw var(--space-5);
       margin-inline: calc(var(--gutter) * -1);
       scrollbar-width: none;
     }
-    .board__files > :global(li) {
-      flex: 0 0 70vw;
+    .board :global(.polaroid-wrap) {
+      flex: 0 0 66vw;
       scroll-snap-align: center;
       margin: 0 !important;
+      justify-self: auto;
     }
-    .board__swipe {
+    .board :global(.board__peek) {
+      display: none;
+    }
+    .archives__swipe {
       display: block;
-      color: var(--muted);
+      color: var(--ink-muted);
       text-align: center;
     }
   }

@@ -7,21 +7,21 @@
 
 export const site = {
   name: 'Shiru',
-  /** TODO: real address. Used for the mailto fallback and the footer. */
-  email: 'hello@shiru.example',
+  /** Used for the mailto fallback, the contact icons and the footer. */
+  email: 'shinabaeing@gmail.com',
   locale: 'en',
   title: 'Shiru · ERP by day, words by night',
   description:
-    'Shiru builds Dynamics 365 Finance & Operations systems in X++ by day and translates English and Malay by night. Case No. 0: subject unknown.',
+    'Nurfatihah (Shiru) builds Dynamics 365 Finance & Operations systems in X++ by day and wanders into peculiar projects by night. Case No. 0: subject unknown.',
   ogImage: '/og.png',
   ogImageAlt: 'The name SHIRU in pale lettering on black, under the line Case No. 0, Subject: unknown.',
 } as const;
 
-export type ChapterId = 'rabbit-hole' | 'case-files' | 'grimoire' | 'tea';
+export type ChapterId = 'rabbit-hole' | 'archives' | 'grimoire' | 'tea';
 
 export const chapters: { id: ChapterId; numeral: string; label: string; title: string }[] = [
   { id: 'rabbit-hole', numeral: 'I', label: 'About', title: 'Down the rabbit hole' },
-  { id: 'case-files', numeral: 'II', label: 'Work', title: 'The case files' },
+  { id: 'archives', numeral: 'II', label: 'Work', title: 'The archives' },
   { id: 'grimoire', numeral: 'III', label: 'Writing', title: 'The grimoire' },
   { id: 'tea', numeral: 'IV', label: 'Contact', title: 'Tea at midnight' },
 ];
@@ -56,33 +56,34 @@ export const intro = {
 };
 
 export const hero = {
-  name: 'Shiru',
-  /** The scroll cue under the nav (links to Chapter I). */
-  proceed: 'Proceed at your own discretion',
+  name: 'Nurfatihah',
   kicker: 'Case No. 0 · Subject: unknown',
   /** Typed out one line at a time. */
   lines: ['A dreamer.', 'An overthinker.', 'A creator.'],
   /** The last words glitch. */
   tagline: { before: 'I make a living out of things that make sense. The rest ', glitch: 'keeps me awake', after: '.' },
-  whisper: 'For whom do you weep?',
+  /** Label above the hamster (the menu button) on the hero. */
+  navigate: 'Navigate.',
 };
 
 export const about = {
-  label: 'Chapter I · About',
   title: 'Down the rabbit hole',
-  intro: 'I fell in years ago and never found the bottom. It’s comfortable down here.',
-  /** TODO: Shiru's real about text. */
+  /** Inside the lace frame. */
+  card: 'I build and fix systems to keep everything in balance. Some things, however, refuse to be fixed. Perhaps that is the difference between the sentient and the lifeless.',
+  sweet: 'One must have something sweet between peculiarities.',
+  sweetAlt: 'A blueberry bun, split open.',
   body: [
-    'By day I write X++ for Microsoft Dynamics 365 Finance & Operations. Ledgers, batch jobs, the quiet plumbing that keeps a company’s money where it should be. I like it when numbers agree with each other.',
-    'By night I translate and edit between English and Malay. Some words cross over easily. Others need coaxing, and a few refuse to come at all.',
-    'In between, I keep an archive of Fate/Grand Order lore. Mostly so I stop forgetting which servant said what, and to whom.',
+    'By day, I work with X++ and Microsoft Dynamics 365 Finance & Operations. I spend my time shaping business logic, extending existing systems, and bringing new functionality into existence. I have a particular fondness for starting with a requirement, following its logic, and turning an idea into something tangible. There’s a certain pleasure in creating order where there was once only possibility.',
+    'By night, I tend to wander a little further into my own imagination. I have a habit of collecting interests, entertaining peculiar ideas, and turning passing thoughts into projects. Some become websites, some become experiments, and others remain little fragments of something I haven’t quite figured out yet. I enjoy the process of bringing an idea into existence, even if I occasionally leave a trail of unfinished things behind me.',
   ],
+  /** On the black scroll. */
   facts: [
     { term: 'Hours', detail: 'Mostly after dark' },
-    { term: 'Languages', detail: 'English, Malay, X++' },
-    { term: 'Tea', detail: 'Strong. Usually cold by the time I remember it' },
-  ],
-  clockCaption: 'The clocks here run the other way. Nobody minds.',
+    { term: 'Curiosities', detail: 'An unreasonable number' },
+    /** TODO: your real LinkedIn URL. */
+    { term: 'LinkedIn', detail: 'The professional record', href: 'https://www.linkedin.com/' },
+  ] as { term: string; detail: string; href?: string }[],
+  warning: 'Careful. Looks can deceive.',
 };
 
 export type CaseFile = {
@@ -91,7 +92,7 @@ export type CaseFile = {
   title: string;
   stamp: string;
   summary: string;
-  photo: 'case-erp' | 'case-translation' | 'case-lore';
+  photo: 'archive-moonpaper' | 'archive-napyru' | 'archive-moona' | 'archive-visual-themes';
   photoAlt: string;
   rotation: number;
   details: { heading: string; body: string }[];
@@ -100,76 +101,59 @@ export type CaseFile = {
 };
 
 export const caseFiles = {
-  label: 'Chapter II · Work',
-  title: 'The case files',
-  intro: 'Three open investigations. None of them are closed.',
+  title: 'The Archives',
+  intro: 'Four open investigations. None of them are closed.',
   hint: 'Pick a file. They don’t bite. Mostly.',
   swipeHint: 'Swipe through the files',
+  /** TODO: everything below each title is placeholder: what each project is, and a real photo. */
   files: [
     {
-      slug: 'erp',
-      number: 'No. 365',
-      title: 'The ledger that balanced itself',
-      stamp: 'ERP development',
-      summary: 'Dynamics 365 Finance & Operations. X++, extensions, integrations, batch jobs that run while everyone sleeps.',
-      photo: 'case-erp',
-      photoAlt: 'Placeholder photograph of a ledger page under a desk lamp.',
-      rotation: -4,
-      details: [
-        {
-          heading: 'What I do',
-          body: 'I build and maintain customisations for D365 F&O. Extensions only: Chain of Command, event handlers, data entities. Nothing that breaks on the next update.',
-        },
-        {
-          heading: 'What I like',
-          body: 'Upgrade-safe code, clean data migrations, and reports that finance actually trusts. TODO: replace with real projects you can talk about.',
-        },
-      ],
-      evidence: ['X++', 'Dynamics 365 F&O', 'SysOperation batch', 'Data entities & OData', 'SSRS / Electronic Reporting'],
-    },
-    {
-      slug: 'translation',
-      number: 'No. 2',
-      title: 'Words that changed sides',
-      stamp: 'Translation · editing',
-      summary: 'English ↔ Malay. Translation, editing and proofreading for people who care how a sentence lands.',
-      photo: 'case-translation',
-      photoAlt: 'Placeholder photograph of two handwritten letters, one in English and one in Malay.',
-      rotation: 3,
-      details: [
-        {
-          heading: 'What I do',
-          body: 'Translate, edit and proofread between English and Malay. Fiction, documentation, subtitles, the occasional cursed instruction manual.',
-        },
-        {
-          heading: 'How I work',
-          body: 'Meaning first, then voice, then the commas. TODO: add sample work, rates or a testimonial.',
-        },
-      ],
-      evidence: ['English → Malay', 'Malay → English', 'Editing', 'Proofreading', 'Subtitles'],
-    },
-    {
-      slug: 'lore',
-      number: 'No. 7',
-      title: 'The archive under the stairs',
-      stamp: 'FGO lore site',
-      summary: 'A personal archive of Fate/Grand Order lore. Indexed, cross-referenced, slightly obsessive.',
-      photo: 'case-lore',
-      photoAlt: 'Placeholder photograph of a stack of index cards tied with string.',
+      slug: 'moonpaper',
+      number: 'No. 1',
+      title: 'MoonPaper',
+      stamp: 'Project',
+      summary: 'TODO: one or two lines on what MoonPaper is.',
+      photo: 'archive-moonpaper',
+      photoAlt: 'Placeholder image for MoonPaper.',
       rotation: -2,
-      details: [
-        {
-          heading: 'What it is',
-          body: 'A fan archive of story notes, character threads and timelines. Unofficial, not affiliated with anyone who owns the game.',
-        },
-        {
-          heading: 'Why',
-          body: 'Because I kept forgetting things I had already read twice. TODO: link the real site.',
-        },
-      ],
-      evidence: ['Lore notes', 'Timelines', 'Cross-references'],
-      /** TODO: real URL of the lore site. */
-      link: { href: 'https://lore.shiru.example', label: 'Visit the archive (TODO: real link)' },
+      details: [{ heading: 'What it is', body: 'TODO: describe MoonPaper.' }],
+      evidence: ['TODO'],
+    },
+    {
+      slug: 'napyru',
+      number: 'No. 2',
+      title: 'Napyru',
+      stamp: 'Project',
+      summary: 'TODO: one or two lines on what Napyru is.',
+      photo: 'archive-napyru',
+      photoAlt: 'Placeholder image for Napyru.',
+      rotation: 14,
+      details: [{ heading: 'What it is', body: 'TODO: describe Napyru.' }],
+      evidence: ['TODO'],
+    },
+    {
+      slug: 'moona',
+      number: 'No. 3',
+      title: 'Moona',
+      stamp: 'Project',
+      summary: 'TODO: one or two lines on what Moona is.',
+      photo: 'archive-moona',
+      photoAlt: 'Placeholder image for Moona.',
+      rotation: -14,
+      details: [{ heading: 'What it is', body: 'TODO: describe Moona.' }],
+      evidence: ['TODO'],
+    },
+    {
+      slug: 'visual-themes',
+      number: 'No. 4',
+      title: 'Visual themes',
+      stamp: 'Project',
+      summary: 'TODO: one or two lines on the visual themes.',
+      photo: 'archive-visual-themes',
+      photoAlt: 'Placeholder image for Visual themes.',
+      rotation: 5,
+      details: [{ heading: 'What they are', body: 'TODO: describe the visual themes.' }],
+      evidence: ['TODO'],
     },
   ] satisfies CaseFile[],
   closeLabel: 'Close the file',
@@ -186,7 +170,6 @@ export type GrimoireEntry = {
 };
 
 export const grimoire = {
-  label: 'Chapter III · Writing',
   title: 'The grimoire',
   intro: 'Notes, essays and lore. Bound in something that might be leather.',
   open: 'Open the grimoire',
@@ -257,7 +240,6 @@ export const grimoire = {
 };
 
 export const tea = {
-  label: 'Chapter IV · Contact',
   title: 'Tea at midnight',
   intro: 'There’s a seat at the table. The tea is still warm, probably.',
   sealHint: 'Click the seal',
@@ -276,13 +258,12 @@ export const tea = {
   success: 'The raven made it. I’ll write back after dark.',
   successMailto: 'Your mail app should be open with the letter ready. Press send there and the raven will fly.',
   error: (email: string) => `The raven got lost. Try again, or email me directly at ${email}.`,
-  elsewhere: 'Or find me elsewhere',
-  /** TODO: real profiles. Remove any you don't use. */
+  /** Shown as icons. TODO: real LinkedIn and GitHub URLs. */
   links: [
-    { label: 'Email', href: 'mailto:hello@shiru.example' },
-    { label: 'LinkedIn (TODO)', href: 'https://www.linkedin.com/' },
-    { label: 'GitHub (TODO)', href: 'https://github.com/' },
-  ],
+    { label: 'Email', icon: 'mail', href: 'mailto:shinabaeing@gmail.com' },
+    { label: 'LinkedIn', icon: 'linkedin', href: 'https://www.linkedin.com/' },
+    { label: 'GitHub', icon: 'github', href: 'https://github.com/' },
+  ] as { label: string; icon: 'mail' | 'linkedin' | 'github'; href: string }[],
 };
 
 export const footer = {
@@ -297,6 +278,7 @@ export const footer = {
 export const notFound = {
   title: 'This page fell down the wrong hole',
   label: 'Chapter ? · Missing',
+  watchAlt: '',
   body: 'Whatever was here has been torn out. It happens to old books.',
   back: 'Climb back to the story',
 };

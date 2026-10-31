@@ -315,14 +315,8 @@ html.at-hero .atmosphere__vignette {
     scroll-behavior: auto !important;
   }
 }
-html:focus-within {
-  scroll-behavior: smooth;
-}
-@media (prefers-reduced-motion: reduce) {
-  html:focus-within {
-    scroll-behavior: auto;
-  }
-}
+/* No CSS scroll-behavior: smooth here. Lenis does the smoothing; a native smooth scroll fights
+   it and ScrollTrigger's measuring, and sends anchor jumps to the wrong place. */
 
 /* ---------- Ghost titles (effects/ghost-title) ---------- */
 [data-effect='ghost-title'] {

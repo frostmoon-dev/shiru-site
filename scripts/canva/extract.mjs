@@ -16,14 +16,14 @@ const SLIDES = [
   // darkness: the lantern's mask becomes its own editable layer (move or delete it in Canva)
   { name: '01-hero', path: '/', section: '#top', nav: true },
   { name: '02-down-the-rabbit-hole', path: '/', section: '#rabbit-hole' },
-  { name: '03-case-files', path: '/', section: '#case-files' },
+  { name: '03-archives', path: '/', section: '#archives' },
   { name: '04-grimoire-closed', path: '/', section: '#grimoire' },
   { name: '05-grimoire-open', path: '/', section: '#grimoire', open: '.book__controls .btn--solid' },
   { name: '06-tea-at-midnight', path: '/', section: '#tea' },
   // bake: leave these images in the background (the envelope sits under the letter)
   { name: '07-tea-letter-open', path: '/', section: '#tea', open: '[data-seal]', bake: ['.envelope__img'] },
   { name: '08-footer', path: '/', section: 'footer.footer' },
-  { name: '09-case-file-page', path: '/case-files/erp/', section: 'article.folder-page', nav: true },
+  { name: '09-archive-page', path: '/archives/moonpaper/', section: 'article.folder-page', nav: true },
   { name: '10-grimoire-chapter-page', path: '/grimoire/the-ledger-ghost/', section: 'article.entry', nav: true },
   { name: '11-not-found', path: '/404.html', section: 'main', nav: true },
 ];

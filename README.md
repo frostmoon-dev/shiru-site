@@ -83,7 +83,7 @@ metrics (`size-adjust`, `ascent-override`, …). To swap a face, change one entr
 | What | Where | Note |
 | --- | --- | --- |
 | Hooded girl illustration | `src/assets/portrait/shiru.jpg` | Not used since the hero follows the Canva design. ⚠️ If it comes back, confirm you have the artist's permission. |
-| Hero layout, torn newspaper, paperclip | `src/assets/collage/newspaper.png`, `paperclip.png` | From her Canva hero (`01-hero`). The paperclip is the menu button. |
+| Revised designs (Oct 2026): bow, hamster (menu button), lace frame, torn black edge, brush stroke, scroll banner, pastry, black/cream gingham, archive frame, peek photo, pocket watch | `src/assets/design/` | Cut from her revised Canva pages. Lace, torn edge and brush were vector shapes, exported at 3×. The torn newspaper and paperclip are in `src/assets/collage/`. |
 | Cut-outs: eye, hand, moth, keyhole, envelope, torn letter paper | `src/assets/collage/` | Cut from the Canva sheets she supplied. The torn-page and heart pieces with lorem-ipsum text weren't used. |
 | Moon through branches (Tea at midnight) | `public/media/moon.mp4` | Re-encoded silent, 960 px, 126 kB; poster frame in `src/assets/collage/moon-poster.jpg`. |
 | Red/cream gingham | CSS / SVG pattern | Redrawn from her reference image as a pattern, so no image file is needed. |

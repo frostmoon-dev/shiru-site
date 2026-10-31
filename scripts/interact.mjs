@@ -49,6 +49,14 @@ await page.goBack();
 await page.waitForTimeout(800);
 check('Back closes menu (stays on page)', await page.evaluate(() => !document.querySelector('[data-spell-menu]').open && location.pathname === '/'));
 
+// Menu link lands on its chapter
+await page.click('[data-menu-btn]');
+await page.waitForTimeout(1300);
+await page.locator('[data-spell-link][href="/#tea"]').click();
+await page.waitForTimeout(2200);
+const teaTop = await page.evaluate(() => Math.round(document.querySelector('#tea').getBoundingClientRect().top));
+check(`menu link lands on Tea at midnight (top ${teaTop}px)`, Math.abs(teaTop) < 90);
+
 // Grimoire
 await scrollTo('#grimoire', 100);
 await page.waitForTimeout(2500);
@@ -81,14 +89,14 @@ await page.waitForTimeout(600);
 check('Esc closes envelope', (await page.locator('.envelope.is-open').count()) === 0);
 
 // Case file + back restores scroll
-await scrollTo('#case-files', 200);
+await scrollTo('#archives', 200);
 await page.locator('.polaroid').first().scrollIntoViewIfNeeded();
 await page.waitForTimeout(800);
 const y = await page.evaluate(() => window.scrollY);
 await page.locator('.polaroid').first().evaluate((a) => a.click()); // no auto-scroll
 await page.waitForTimeout(2000);
 await shot('case-file');
-check('case file page loaded', (await page.evaluate(() => location.pathname)) === '/case-files/erp/');
+check('case file page loaded', (await page.evaluate(() => location.pathname)) === '/archives/moonpaper/');
 await page.keyboard.press('Escape');
 await page.waitForTimeout(2000);
 const y2 = await page.evaluate(() => window.scrollY);

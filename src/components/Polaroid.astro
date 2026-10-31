@@ -12,9 +12,9 @@ const photo = casePhotos[file.photo];
 ---
 
 <li class="polaroid-wrap" style={`--rot:${file.rotation}deg; --i:${index}`}>
-  <a class="polaroid" href={`/case-files/${file.slug}/`}>
-    <span class="polaroid__pin" aria-hidden="true"></span>
-    <span class="polaroid__photo" transition:name={`case-photo-${file.slug}`} data-effect="flicker-jitter" data-effect-options='{"every":[6,18]}'>
+  <slot name="behind" />
+  <a class="polaroid" href={`/archives/${file.slug}/`}>
+    <span class="polaroid__photo" transition:name={`case-photo-${file.slug}`}>
       <Picture
         src={photo}
         alt={file.photoAlt}
@@ -25,62 +25,48 @@ const photo = casePhotos[file.photo];
         decoding="async"
       />
     </span>
-    <span class="polaroid__caption">
-      <span class="polaroid__no label">{file.number}</span>
-      <span class="polaroid__title" transition:name={`case-title-${file.slug}`}>{file.title}</span>
-      <span class="polaroid__stamp label">{file.stamp}</span>
-    </span>
+    <span class="polaroid__title" transition:name={`case-title-${file.slug}`}>{file.title}</span>
   </a>
+  <slot name="front" />
 </li>
 
 <style>
   .polaroid-wrap {
+    position: relative;
     list-style: none;
   }
   .polaroid {
     position: relative;
     display: block;
     width: 100%;
-    padding: var(--space-2) var(--space-2) var(--space-3);
-    background: var(--bone);
+    padding: 6% 6% 4%;
+    background: #f4f1ea;
     color: var(--ink);
     text-decoration: none;
     transform: rotate(var(--rot));
     box-shadow:
-      0 1px 0 rgb(255 250 235 / 0.4) inset,
-      8px 14px 0 rgb(5 3 4 / 0.55);
+      0 1px 0 rgb(255 255 255 / 0.6) inset,
+      6px 10px 18px rgb(42 26 18 / 0.28);
     transition:
       transform var(--dur-base) var(--ease-out),
       box-shadow var(--dur-base) var(--ease-out);
   }
   .polaroid:hover,
   .polaroid:focus-visible {
-    transform: rotate(calc(var(--rot) * 0.3)) translateY(-6px) scale(1.02);
+    transform: rotate(calc(var(--rot) * 0.4)) translateY(-8px) scale(1.03);
     box-shadow:
-      0 1px 0 rgb(255 250 235 / 0.4) inset,
-      14px 22px 0 rgb(5 3 4 / 0.6);
+      0 1px 0 rgb(255 255 255 / 0.6) inset,
+      12px 20px 26px rgb(42 26 18 / 0.32);
   }
   .polaroid:active {
     transform: rotate(0deg) scale(0.99);
   }
   .polaroid:focus-visible {
-    outline-color: var(--bone);
-    box-shadow: 0 0 0 6px var(--void);
-  }
-  .polaroid__pin {
-    position: absolute;
-    top: -9px;
-    left: 50%;
-    width: 18px;
-    height: 18px;
-    margin-left: -9px;
-    border-radius: 50%;
-    background: radial-gradient(circle at 35% 35%, var(--brass-hi), var(--brass-lo) 70%);
-    box-shadow: 2px 3px 0 rgb(5 3 4 / 0.6);
+    outline-color: var(--ink);
   }
   .polaroid__photo {
     display: block;
-    aspect-ratio: 1;
+    aspect-ratio: 1.2;
     overflow: hidden;
     background: var(--leather);
   }
@@ -88,27 +74,18 @@ const photo = casePhotos[file.photo];
     width: 100%;
     height: 100%;
     object-fit: cover;
-    filter: sepia(0.35) contrast(1.05);
+    filter: sepia(0.2);
+    transition: filter var(--dur-slow) var(--ease-out);
   }
-  .polaroid__caption {
-    display: grid;
-    gap: var(--space-half);
-    margin-top: var(--space-2);
-  }
-  .polaroid__no {
-    color: var(--ink-muted);
+  .polaroid:hover .polaroid__photo :global(img) {
+    filter: sepia(0) brightness(1.05);
   }
   .polaroid__title {
-    font-family: var(--font-body);
-    font-size: var(--step-1);
-    line-height: 1.2;
-  }
-  .polaroid__stamp {
-    justify-self: start;
-    margin-top: var(--space-1);
-    padding: 0.15em 0.6em;
-    border: 2px solid var(--blood);
-    color: var(--blood);
-    transform: rotate(-3deg);
+    display: block;
+    margin-top: 5%;
+    font-family: var(--font-display);
+    font-size: clamp(1.2rem, 0.9rem + 0.7vw, 1.65rem);
+    line-height: 1;
+    color: var(--ink);
   }
 </style>

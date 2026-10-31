@@ -17,14 +17,14 @@ async function audit(page, label) {
   const v = res.violations.filter((x) => ['serious', 'critical', 'moderate'].includes(x.impact));
   total += v.length;
   console.log(`${v.length ? 'FAIL' : 'PASS'}  ${label}  (${res.passes.length} rules passed, ${v.length} violations)`);
-  v.forEach((x) => console.log(`   - [${x.impact}] ${x.id}: ${x.help}\n     ${x.nodes.slice(0, 3).map((n) => n.target.join(' ')).join('\n     ')}`));
+  v.forEach((x) => console.log(`   - [${x.impact}] ${x.id}: ${x.help}\n     ${x.nodes.slice(0, 3).map((n) => n.target.join(' ') + ' :: ' + (n.failureSummary || '').split('\n').slice(1, 2).join('')).join('\n     ')}`));
 }
 
 for (const width of [1280, 375]) {
   const ctx = await browser.newContext({ viewport: { width, height: 800 } });
   await ctx.addInitScript(() => sessionStorage.setItem('shiru:intro-seen', '1'));
   const page = await ctx.newPage();
-  for (const path of ['/', '/case-files/erp/', '/grimoire/the-ledger-ghost/', '/404.html']) {
+  for (const path of ['/', '/archives/moonpaper/', '/grimoire/the-ledger-ghost/', '/404.html']) {
     await page.goto(base + path, { waitUntil: 'networkidle' });
     // scroll through so lazy effects mount, then back to top
     await page.evaluate(async () => {
