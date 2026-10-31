@@ -1,7 +1,7 @@
 /**
  * Optional sound, OFF by default, never autoplays. Switching it on starts the background music
- * (public/media/theme.mp3, looped, faded in) and the small synthesised effects (page turns, the
- * seal, the book's creak). The music file is only downloaded the first time sound is switched on.
+ * ("The Tea Party That Never Ended", public/media/theme.mp3, looped, faded in) and the small
+ * synthesised effects (page turns, the seal, the book's creak). The music file is only downloaded the first time sound is switched on.
  * It keeps playing across page navigations, pauses while the tab is hidden, and fades out when
  * switched off (resuming from the same point next time).
  *
