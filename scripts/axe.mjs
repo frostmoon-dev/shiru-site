@@ -35,6 +35,9 @@ for (const width of [1280, 375]) {
       window.scrollTo(0, 0);
     });
     await page.waitForTimeout(1500);
+    // the hero fades its parts in; audit the settled state, not a frame of the fade
+    await page.waitForFunction(() => !document.documentElement.classList.contains('at-hero') || document.documentElement.classList.contains('hero-entered'), null, { timeout: 10000 });
+    await page.waitForTimeout(1200);
     await audit(page, `${width}px ${path}`);
   }
   await page.goto(base + '/', { waitUntil: 'networkidle' });
@@ -51,7 +54,7 @@ for (const width of [1280, 375]) {
   await page.evaluate(() => document.querySelector('#grimoire').scrollIntoView());
   await page.waitForTimeout(2500);
   await page.getByRole('button', { name: 'Open the grimoire' }).click();
-  await page.waitForTimeout(2000);
+  await page.waitForTimeout(3200);
   await audit(page, `${width}px grimoire open`);
   await ctx.close();
 }

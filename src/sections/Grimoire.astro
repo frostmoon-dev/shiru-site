@@ -1,7 +1,6 @@
 ---
 import { chapters, grimoire, ui } from '../content/site';
-import { Image } from 'astro:assets';
-import { design } from '../content/photos';
+import SectionHead from '../components/SectionHead.astro';
 import GrimoireBook from '../islands/GrimoireBook';
 
 const ch = chapters.find((c) => c.id === 'grimoire')!;
@@ -19,12 +18,11 @@ const labels = {
 };
 ---
 
-<section id={ch.id} class="grimoire" data-tone="sepia" aria-labelledby="grimoire-title">
-  <div class="grimoire__inner">
-    <h2 id="grimoire-title" class="grimoire__title" data-effect="ghost-title">{grimoire.title}</h2>
-    <Image class="grimoire__brush" src={design.brush} alt="" width={530} loading="lazy" decoding="async" aria-hidden="true" data-effect="reveal" data-effect-options='{"type":"paint"}' />
-    <p class="grimoire__intro" data-effect="reveal">{grimoire.intro}</p>
-    <p class="grimoire__hint caption" data-hint="grimoire">Open it. It won’t mind.</p>
+<section id={ch.id} class="section grimoire" data-tone="void" aria-labelledby="grimoire-title">
+  <div class="container">
+    <SectionHead id="grimoire-title" kicker={ui.caseNo(ch.numeral, ch.label)} title={grimoire.title} lead={grimoire.intro}>
+      <p class="grimoire__hint" data-hint="grimoire">Open it. It won’t mind.</p>
+    </SectionHead>
 
     <div class="grimoire__book">
       <GrimoireBook client:visible entries={entries} labels={labels} />
@@ -35,9 +33,9 @@ const labels = {
       {
         grimoire.entries.map((e) => (
           <li>
-            <span class="label">{e.numeral}</span>
+            <span class="kicker">{e.numeral}</span>
             <a href={`/grimoire/${e.slug}/`}>{e.title}</a>
-            <span class="caption">{e.excerpt}</span>
+            <span>{e.excerpt}</span>
           </li>
         ))
       }
@@ -47,57 +45,29 @@ const labels = {
 
 <style>
   .grimoire {
-    position: relative;
     overflow-x: clip;
-    padding: var(--space-8) var(--gutter) var(--space-8);
-  }
-  .grimoire__inner {
-    position: relative;
-    z-index: var(--z-content);
-    max-width: 76rem;
-    margin-inline: auto;
-  }
-  .grimoire {
-    background-color: #e6dbc1;
-    background-image: none;
-  }
-  .grimoire__title {
-    font-family: var(--font-display);
-    font-size: clamp(3rem, 2rem + 3.4vw, 5.4rem);
-    line-height: 0.95;
-    color: var(--ink);
-  }
-  .grimoire__brush {
-    width: clamp(160px, 18vw, 280px);
-    height: auto;
-    margin-top: var(--space-2);
-  }
-  .grimoire__intro {
-    margin-top: var(--space-3);
-    max-width: 34ch;
-    font-style: italic;
   }
   .grimoire__hint {
-    margin-top: var(--space-1);
-  }
-  .grimoire__book {
-    margin-top: var(--space-5);
+    font-size: var(--text-small);
+    color: var(--muted);
   }
   .grimoire__toc {
     margin-top: var(--space-5);
     padding: 0;
     list-style: none;
-    display: grid;
-    gap: var(--space-2);
+    border-top: 1px solid var(--line);
     max-width: var(--measure);
   }
   .grimoire__toc li {
     display: grid;
     grid-template-columns: 3rem 1fr;
     column-gap: var(--space-2);
+    padding-block: var(--space-2);
+    border-bottom: 1px solid var(--line);
   }
-  .grimoire__toc .caption {
+  .grimoire__toc li > span:last-child {
     grid-column: 2;
+    color: var(--text-body);
   }
   /* JS visitors get the book; the plain list is for no-JS (avoids a layout jump on hydrate). */
   :global(html.js) .grimoire__toc {
@@ -106,5 +76,4 @@ const labels = {
   :global(html:not(.js)) .grimoire__book {
     display: none;
   }
-
 </style>

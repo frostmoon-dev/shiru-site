@@ -61,8 +61,8 @@ src/
     _webgl/stage.ts      the one shared WebGL context
   islands/               React islands (the R3F grimoire)
   sections/              Hero, RabbitHole, CaseFiles, Grimoire, Tea, Footer, Intro
-  components/            nav + hat menu, chapter heading, polaroid, close control, props, icons
-  pages/                 index, case-files/[slug], grimoire/[slug], 404, robots.txt
+  components/            top chapter index + hamster dock menu, section head, polaroid, close control, icons
+  pages/                 index, archives/[slug], grimoire/[slug], 404, robots.txt
 scripts/                 test + asset scripts (below)
 ```
 
@@ -95,7 +95,7 @@ With `npm run preview` running on port 4322 (`npx astro preview --port 4322`):
 | Script | What it checks |
 | --- | --- |
 | `node scripts/shots.mjs http://localhost:4322 / --nointro` | screenshots at 375 / 768 / 1280, console errors, horizontal overflow |
-| `node scripts/interact.mjs http://localhost:4322 1280` | hat menu, book, envelope + form errors, case file, Esc / Back / scroll restore, 404 |
+| `node scripts/interact.mjs http://localhost:4322 1280` | hamster dock menu, book, envelope (paper only after the seal breaks) + form errors, archive file, Esc / Back / scroll restore, 404 |
 | `node scripts/intro-test.mjs http://localhost:4322` | intro timing, skip, once per session, reduced motion |
 | `node scripts/keyboard.mjs http://localhost:4322` | tabs through the page; every stop must show focus |
 | `node scripts/axe.mjs http://localhost:4322` | axe-core WCAG 2.2 AA on every page and open overlay |
@@ -106,9 +106,12 @@ The scripts use the machine's global Playwright; add `playwright` as a devDepend
 ## Accessibility and motion notes
 
 - Everything works by keyboard; overlays close with Esc, their close button, and the browser Back button.
-- `prefers-reduced-motion`: no flicker, jitter, ghosts or intro flashes; drips and the lantern stay still.
+- `prefers-reduced-motion`: no flicker, jitter, ghosts, intro flashes or static; the envelope opens instantly.
+- The hamster dock is the menu. On wide screens it sits in the empty right margin; where that margin is too
+  narrow (below 86rem) it tucks away while you scroll down and returns when you scroll up, reach the end,
+  or tab to it.
 - The intro burst cuts faster than 3 flashes/second by the owner's choice. Frames are toned to the same dark
-  sepia (no bright frames), it is skippable, plays once per session, and is replaced by a calm fade under
+  sepia (no bright frames), the TV static is grey at 32% opacity, it is skippable, plays once per session, and is replaced by a calm fade under
   reduced motion or save-data. Deep links (`/#tea`) skip it.
 - Without JavaScript all text, links and the case files are readable; the grimoire is a plain list and the
   form posts to `mailto:`.

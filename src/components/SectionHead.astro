@@ -1,0 +1,23 @@
+---
+/**
+ * Every case opens the same way (the hero's pattern): kicker → title → lead.
+ * Spacing comes from .section-head in global.css; nothing here sets its own margins.
+ */
+interface Props {
+  id: string;
+  kicker: string;
+  title: string;
+  lead?: string;
+  level?: 'h1' | 'h2';
+  class?: string;
+}
+const { id, kicker, title, lead, level = 'h2', class: cls } = Astro.props;
+const Tag = level;
+---
+
+<header class:list={['section-head', cls]}>
+  <p class="kicker">{kicker}</p>
+  <Tag id={id} class="display-2" data-effect="ghost-title">{title}</Tag>
+  {lead && <p class="lead" data-effect="reveal">{lead}</p>}
+  <slot />
+</header>

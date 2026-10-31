@@ -1,8 +1,8 @@
 ---
-import { chapters, hero, ui } from '../content/site';
-import Icon from './Icon.astro';
 import { Image } from 'astro:assets';
+import { chapters, hero, ui } from '../content/site';
 import { design } from '../content/photos';
+import Icon from './Icon.astro';
 
 interface Props {
   home?: boolean;
@@ -12,85 +12,81 @@ const { home = false } = Astro.props;
 
 <header class="site-nav" data-home={home ? 'true' : 'false'}>
   <nav class="chapter-index" aria-label={ui.navLabel}>
-    <a class="chapter-index__home label" href="/" aria-label="Shiru, back to the beginning">Shiru</a>
+    <a class="chapter-index__home" href="/" aria-label="Shiru, back to the beginning">Shiru</a>
     <ol>
       {
         chapters.map((c) => (
           <li>
-            <a class="chapter-index__link label" href={`/#${c.id}`} data-chapter-link={c.id}>
+            <a class="chapter-index__link" href={`/#${c.id}`} data-chapter-link={c.id}>
               <span aria-hidden="true">{c.numeral}</span>
               <span class="visually-hidden">
-                Chapter {c.numeral}: {c.label}
+                Chapter {c.numeral}: {c.title}
               </span>
             </a>
           </li>
         ))
       }
     </ol>
-    <p class="chapter-index__now label" aria-live="polite" data-chapter-now>
+    <p class="chapter-index__now" aria-live="polite">
       <span class="visually-hidden">Now reading:</span>
       <span data-chapter-now-text>{home ? 'Prologue' : ''}</span>
     </p>
   </nav>
 
-  <div class="site-nav__tools">
-    <button class="icon-btn sound-toggle" type="button" aria-pressed="false" data-sound-toggle>
-      <span class="visually-hidden">{ui.soundLabel}</span>
-      <span class="sound-toggle__on"><Icon name="sound-on" /></span>
-      <span class="sound-toggle__off"><Icon name="sound-off" /></span>
-    </button>
-  </div>
+  <button class="icon-btn sound-toggle" type="button" aria-pressed="false" data-sound-toggle>
+    <span class="visually-hidden">{ui.soundLabel}</span>
+    <span class="sound-toggle__on"><Icon name="sound-on" /></span>
+    <span class="sound-toggle__off"><Icon name="sound-off" /></span>
+  </button>
 </header>
 
-<!-- The menu: a hamster holding a rose. On the hero it sits bottom right under "Navigate.";
-     once you scroll it docks small in the corner. -->
-<button
-  class="menu-btn"
-  type="button"
-  aria-haspopup="dialog"
-  aria-expanded="false"
-  aria-controls="spell-menu"
-  data-menu-btn
-  data-enter
->
-  <span class="menu-btn__label">{hero.navigate}</span>
-  <span class="visually-hidden"> {ui.menuOpen}</span>
-  <span class="menu-btn__pet"><Image src={design.hamster} alt="" widths={[96, 260]} sizes="130px" loading="eager" decoding="async" /></span>
-</button>
-
-<dialog id="spell-menu" class="spell-menu" aria-label={ui.menuTitle} data-spell-menu>
-  <div class="spell-menu__inner">
-    <p class="spell-menu__title flavour">{ui.menuTitle}</p>
-    <ul class="spell-menu__list">
-      <li><a href="/" data-spell-link>Prologue</a></li>
+<!--
+  The hamster is the navigation: same place on every page (bottom right, on the column's edge).
+  Its label says where you are; it opens the chapter list right above it.
+-->
+<div class="dock" data-dock>
+  <nav class="dock__panel" id="dock-menu" aria-label={ui.menuTitle} hidden data-dock-panel>
+    <p class="dock__title kicker">{ui.menuTitle}</p>
+    <ol class="dock__list">
+      <li>
+        <a href="/" data-dock-link data-chapter="top"><span class="dock__num">0</span><span class="dock__name">Prologue</span></a>
+      </li>
       {
         chapters.map((c) => (
           <li>
-            <a href={`/#${c.id}`} data-spell-link>
-              <span class="label">{c.numeral} ·</span> {c.title}
+            <a href={`/#${c.id}`} data-dock-link data-chapter={c.id}>
+              <span class="dock__num">{c.numeral}</span>
+              <span class="dock__name">{c.title}</span>
             </a>
           </li>
         ))
       }
-    </ul>
-    <button class="icon-btn spell-menu__close" type="button" data-spell-close>
-      <Icon name="close" size={28} />
-      <span class="visually-hidden">{ui.menuClose}</span>
-    </button>
-  </div>
-</dialog>
+    </ol>
+  </nav>
+  <button class="dock__btn" type="button" aria-expanded="false" aria-controls="dock-menu" data-menu-btn data-enter>
+    <span class="dock__label" data-dock-label>{home ? hero.navigate : 'Navigate.'}</span>
+    <span class="visually-hidden"> {ui.menuOpen}</span>
+    <span class="dock__pet"><Image src={design.hamster} alt="" widths={[96, 192]} sizes="96px" loading="eager" decoding="async" /></span>
+  </button>
+</div>
 
 <style>
+  /* ---- top line: the plain chapter index (always there, recognition over recall) ---- */
   .site-nav {
     position: fixed;
     inset: 0 0 auto 0;
     z-index: var(--z-nav);
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
     padding: var(--space-2) var(--gutter);
     pointer-events: none;
     color: var(--bone);
+    background: linear-gradient(to bottom, rgb(5 3 4 / 0.92), rgb(5 3 4 / 0));
+    transition: background var(--dur-base);
+  }
+  :global(html.at-hero) .site-nav {
+    background: transparent;
   }
   .site-nav > * {
     pointer-events: auto;
@@ -98,20 +94,13 @@ const { home = false } = Astro.props;
   .chapter-index {
     display: flex;
     align-items: center;
-    flex-wrap: wrap;
-    gap: var(--space-1) var(--space-2);
-    background: color-mix(in oklch, var(--void) 90%, transparent);
-    padding: 0 var(--space-2);
-    border: 1px solid color-mix(in oklch, var(--bone) 18%, transparent);
+    gap: var(--space-4);
   }
   .chapter-index ol {
     display: flex;
     list-style: none;
     padding: 0;
-    gap: 0;
-  }
-  .chapter-index li {
-    display: flex;
+    gap: var(--space-1);
   }
   .chapter-index__home,
   .chapter-index__link {
@@ -119,25 +108,39 @@ const { home = false } = Astro.props;
     place-items: center;
     min-width: var(--touch);
     min-height: var(--touch);
+    font-weight: 700;
+    font-size: var(--text-label);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
     color: var(--bone);
     text-decoration: none;
   }
+  .chapter-index__home {
+    padding-inline: var(--space-1);
+  }
   .chapter-index__link[aria-current='true'] {
-    color: var(--bone);
-    text-decoration-color: var(--blood);
     text-decoration: underline;
+    text-decoration-color: var(--blood);
     text-decoration-thickness: 2px;
-    text-underline-offset: 0.4em;
+    text-underline-offset: 0.5em;
   }
   .chapter-index__now {
+    font-weight: 700;
+    font-size: var(--text-label);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
     color: var(--muted);
-    min-width: 10ch;
   }
-  .site-nav__tools {
-    display: flex;
-    gap: var(--space-1);
-    background: color-mix(in oklch, var(--void) 90%, transparent);
-    border: 1px solid color-mix(in oklch, var(--bone) 18%, transparent);
+  .sound-toggle {
+    color: var(--bone);
+    transition:
+      opacity var(--dur-base),
+      visibility var(--dur-base);
+  }
+  /* the hero shows only the chapter line (the newspaper owns that corner) */
+  :global(html.at-hero) .sound-toggle {
+    opacity: 0;
+    visibility: hidden;
   }
   .sound-toggle__off {
     display: contents;
@@ -152,255 +155,227 @@ const { home = false } = Astro.props;
     display: none;
   }
   :global(html:not(.js)) .sound-toggle,
-  :global(html:not(.js)) .menu-btn {
+  :global(html:not(.js)) .dock {
     display: none;
   }
 
-  /* ---- The hamster menu button ---- */
-  .menu-btn {
+  /* ---- the hamster dock ---- */
+  /* sits in the empty right margin, centred in it, so it never covers the column's content */
+  .dock {
+    --dock-w: 5.5rem;
     position: fixed;
     z-index: var(--z-nav);
-    right: var(--gutter);
-    top: calc(var(--space-2) + var(--touch) + var(--space-1));
+    right: max(var(--space-2), calc(((100vw - var(--container)) / 2 - var(--dock-w)) / 2));
+    bottom: clamp(var(--space-3), 5vh, var(--space-6));
+    display: grid;
+    justify-items: end;
+    gap: var(--space-2);
+  }
+  .dock__btn {
+    position: relative;
     display: grid;
     justify-items: center;
     gap: var(--space-2);
     min-width: var(--touch);
-    min-height: var(--touch);
-    padding: var(--space-half);
+    padding: var(--space-1);
     border: 0;
     background: transparent;
     color: var(--muted);
     font-weight: 700;
-    font-size: var(--step-0);
-    letter-spacing: 0.06em;
+    font-size: var(--text-label);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
   }
-  .menu-btn__label {
-    display: none;
-    white-space: nowrap;
+  .dock__label {
     position: relative;
+    white-space: nowrap;
+    padding-bottom: 4px;
   }
-  /* "Navigate." underline draws on hover/focus */
-  .menu-btn__label::after {
+  /* away from the hero the label only appears on hover, focus or while open */
+  :global(html:not(.at-hero)) .dock__btn:not(:hover):not(:focus-visible):not([aria-expanded='true']) .dock__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  :global(html:not(.at-hero)) .dock__btn .dock__label {
+    position: absolute;
+    right: calc(100% + var(--space-1));
+    bottom: 40%;
+    padding: var(--space-1) var(--space-2);
+    background: rgb(5 3 4 / 0.95);
+    border: 1px solid var(--line);
+  }
+  .dock__label::after {
     content: '';
     position: absolute;
     left: 0;
     right: 0;
-    bottom: -4px;
+    bottom: 0;
     height: 1px;
     background: currentColor;
     transform: scaleX(0);
     transform-origin: left;
     transition: transform var(--dur-base) var(--ease-out);
   }
-  .menu-btn:hover .menu-btn__label::after,
-  .menu-btn:focus-visible .menu-btn__label::after {
+  .dock__btn:hover,
+  .dock__btn:focus-visible,
+  .dock__btn[aria-expanded='true'] {
+    color: var(--bone);
+  }
+  .dock__btn:hover .dock__label::after,
+  .dock__btn:focus-visible .dock__label::after,
+  .dock__btn[aria-expanded='true'] .dock__label::after {
     transform: scaleX(1);
   }
-  .menu-btn__pet {
+  .dock__pet {
     display: block;
-    width: 44px;
+    width: var(--dock-w);
     transform-origin: 50% 90%;
-    transition: transform var(--dur-base) var(--ease-out);
     animation: pet-breathe 3.6s var(--ease-ink) infinite;
+    transition: transform var(--dur-base) var(--ease-out);
   }
-  .menu-btn__pet :global(img) {
+  .dock__pet :global(img) {
     width: 100%;
     height: auto;
   }
-  .menu-btn:hover .menu-btn__pet {
+  .dock__btn:hover .dock__pet {
     transform: rotate(-6deg) translateY(-3px);
-  }
-  .menu-btn:hover,
-  .menu-btn:focus-visible {
-    color: var(--bone);
   }
   @keyframes pet-breathe {
     50% {
       scale: 1.02 0.985;
     }
   }
-  /* on the hero: bottom right, under "Navigate." (as in the Canva design) */
-  :global(html.at-hero) .menu-btn {
-    top: 66.5svh;
-    right: auto;
-    left: 89.7vw;
-    transform: translateX(-50%);
-  }
-  :global(html.at-hero) .menu-btn__label {
-    display: block;
-  }
-  :global(html.at-hero) .menu-btn__pet {
-    width: clamp(84px, 9vw, 130px);
-  }
-  /* the hero shows only the plain chapter line: no boxes, no sound button */
-  .chapter-index,
-  .site-nav__tools {
-    transition:
-      background-color var(--dur-base),
-      border-color var(--dur-base),
-      opacity var(--dur-base),
-      visibility var(--dur-base);
-  }
-  :global(html.at-hero) .chapter-index {
-    background-color: transparent;
-    border-color: transparent;
-  }
-  :global(html.at-hero) .site-nav__tools {
-    opacity: 0;
-    visibility: hidden;
-  }
 
-  /* ---- Spell menu ---- */
-  .spell-menu {
-    margin: 0;
-    width: 100%;
-    max-width: none;
-    height: 100%;
-    max-height: none;
-    padding: 0;
-    border: 0;
-    background: transparent;
-    color: var(--bone);
-    overflow: hidden;
+  .dock__panel {
+    min-width: 18rem;
+    padding: var(--space-3);
+    background: rgb(5 3 4 / 0.96);
+    border: 1px solid var(--line);
   }
-  .spell-menu::backdrop {
-    background: radial-gradient(ellipse at 80% 20%, rgb(26 25 34 / 0.75), rgb(5 3 4 / 0.94) 60%);
+  .dock__panel[hidden] {
+    display: none;
   }
-  .spell-menu__inner {
-    position: relative;
-    min-height: 100%;
-    display: grid;
-    align-content: center;
-    justify-items: end;
-    padding: var(--space-7) calc(var(--gutter) + var(--space-4));
+  .dock__title {
+    padding-bottom: var(--space-2);
+    border-bottom: 1px solid var(--line);
   }
-  .spell-menu__title {
-    color: var(--muted);
-    margin-bottom: var(--space-3);
-  }
-  .spell-menu__list {
+  .dock__list {
     list-style: none;
     padding: 0;
+  }
+  .dock__list a {
     display: grid;
-    gap: var(--space-1);
-    text-align: right;
-  }
-  .spell-menu__list li:nth-child(2) {
-    margin-right: var(--space-4);
-  }
-  .spell-menu__list li:nth-child(3) {
-    margin-right: var(--space-6);
-  }
-  .spell-menu__list li:nth-child(4) {
-    margin-right: var(--space-5);
-  }
-  .spell-menu__list li:nth-child(5) {
-    margin-right: var(--space-2);
-  }
-  .spell-menu__list a {
-    display: inline-block;
+    grid-template-columns: 2.5rem 1fr;
+    align-items: center;
     min-height: var(--touch);
-    padding: var(--space-half) 0;
-    font-family: var(--font-display);
-    font-size: var(--step-3);
-    line-height: 1.15;
-    color: var(--moon);
+    padding-block: var(--space-1);
+    border-bottom: 1px solid var(--line);
+    color: var(--bone);
     text-decoration: none;
   }
-  .spell-menu__list a:hover,
-  .spell-menu__list a:focus-visible {
-    color: var(--bone);
-    text-decoration: underline;
-    text-decoration-color: var(--blood);
-    text-decoration-thickness: 2px;
-    text-underline-offset: 0.18em;
+  .dock__list li:last-child a {
+    border-bottom: 0;
   }
-  .spell-menu__list .label {
+  .dock__num {
+    font-weight: 700;
     font-size: var(--text-label);
+    letter-spacing: 0.16em;
     color: var(--muted);
-    vertical-align: middle;
   }
-  .spell-menu__close {
-    position: absolute;
-    top: var(--space-2);
-    right: var(--gutter);
-    color: var(--bone);
+  .dock__name {
+    font-family: var(--font-display);
+    font-feature-settings: 'ss04' 1, 'liga' 0, 'dlig' 0;
+    font-size: 1.6rem;
+    line-height: 1.1;
+  }
+  .dock__list a:hover .dock__name,
+  .dock__list a:focus-visible .dock__name {
+    color: var(--blood-lit);
+  }
+  .dock__list a[aria-current='true'] .dock__num {
+    color: var(--blood-lit);
   }
 
   @media (max-width: 719px) {
     .site-nav {
-      inset: auto 0 0 0;
-      padding: var(--space-1);
-      padding-bottom: max(var(--space-1), env(safe-area-inset-bottom));
-      align-items: flex-end;
-      gap: var(--space-1);
+      padding: var(--space-1) var(--space-2);
     }
     .chapter-index {
-      flex: 1;
-      padding: 0 var(--space-1);
-      justify-content: space-between;
+      gap: var(--space-1);
+    }
+    .chapter-index ol {
+      gap: 0;
     }
     .chapter-index__now {
       display: none;
     }
-    .menu-btn {
-      top: auto;
-      bottom: calc(var(--touch) + var(--space-3) + env(safe-area-inset-bottom));
+    .dock {
+      --dock-w: 4rem;
       right: var(--space-2);
+      bottom: max(var(--space-3), env(safe-area-inset-bottom));
     }
-    :global(html.at-hero) .menu-btn {
-      top: auto;
-      left: auto;
-      right: var(--gutter);
-      bottom: calc(var(--touch) + var(--space-4) + env(safe-area-inset-bottom));
-      transform: none;
+    .dock__panel {
+      min-width: min(18rem, calc(100vw - 2 * var(--space-2)));
     }
-    .spell-menu__inner {
-      justify-items: start;
-      padding-inline: var(--space-4);
+  }
+  /* no side margin wide enough to hold the dock: it tucks away while reading downwards */
+  @media (max-width: 86rem) {
+    .dock {
+      transition: translate 0.35s var(--ease-ink), opacity 0.35s var(--ease-ink);
     }
-    .spell-menu__list {
-      text-align: left;
+    :global(html.dock-tucked) .dock {
+      translate: 0 calc(100% + var(--space-4));
+      opacity: 0;
+      pointer-events: none;
     }
-    .spell-menu__list li {
-      margin-right: 0 !important;
-    }
-    .spell-menu__list li:nth-child(even) {
-      margin-left: var(--space-3);
+  }
+  @media (max-width: 86rem) and (prefers-reduced-motion: reduce) {
+    .dock {
+      transition: none;
     }
   }
 </style>
 
 <script>
-  import { chapters } from '../content/site';
+  import { chapters, hero } from '../content/site';
   import { setSound, soundEnabled, sfx } from '../lib/sfx';
-  import { gsap, lockScroll } from '../lib/motion';
+  import { gsap } from '../lib/motion';
   import { prefersReducedMotion } from '../lib/env';
   import { navigate } from 'astro:transitions/client';
 
   let chapterIO: IntersectionObserver | undefined;
+  let current: string | null = null;
+
+  function labelFor(id: string | null) {
+    const ch = chapters.find((c) => c.id === id);
+    return ch ? `${ch.numeral} · ${ch.title}` : null;
+  }
+
+  function setCurrent(id: string | null) {
+    current = id;
+    document.querySelectorAll<HTMLAnchorElement>('[data-chapter-link]').forEach((l) => {
+      if (l.dataset.chapterLink === id) l.setAttribute('aria-current', 'true');
+      else l.removeAttribute('aria-current');
+    });
+    document.querySelectorAll<HTMLAnchorElement>('[data-dock-link]').forEach((l) => {
+      if ((l.dataset.chapter === 'top' && !id) || l.dataset.chapter === id) l.setAttribute('aria-current', 'true');
+      else l.removeAttribute('aria-current');
+    });
+    const isHome = document.querySelector('.site-nav')?.getAttribute('data-home') === 'true';
+    const now = document.querySelector<HTMLElement>('[data-chapter-now-text]');
+    if (now) now.textContent = labelFor(id) ?? (isHome ? 'Prologue' : '');
+    const dockLabel = document.querySelector<HTMLElement>('[data-dock-label]');
+    if (dockLabel) dockLabel.textContent = labelFor(id) ?? (isHome ? hero.navigate : 'Navigate.');
+  }
 
   function setupChapterTracking() {
     chapterIO?.disconnect();
-    const nowText = document.querySelector<HTMLElement>('[data-chapter-now-text]');
-    const links = document.querySelectorAll<HTMLAnchorElement>('[data-chapter-link]');
-    const setCurrent = (id: string | null) => {
-      links.forEach((l) => {
-        if (l.dataset.chapterLink === id) l.setAttribute('aria-current', 'true');
-        else l.removeAttribute('aria-current');
-      });
-      const ch = chapters.find((c) => c.id === id);
-      if (nowText) nowText.textContent = ch ? `${ch.numeral} · ${ch.title}` : 'Prologue';
-    };
-    const sections = chapters
-      .map((c) => document.getElementById(c.id))
-      .filter((s): s is HTMLElement => !!s);
-    if (!sections.length) {
-      if (nowText) nowText.textContent = '';
-      return;
-    }
+    const sections = chapters.map((c) => document.getElementById(c.id)).filter((s): s is HTMLElement => !!s);
     setCurrent(null);
+    if (!sections.length) return;
     const visible = new Map<string, number>();
     chapterIO = new IntersectionObserver(
       (entries) => {
@@ -413,6 +388,9 @@ const { home = false } = Astro.props;
             best = id;
           }
         });
+        // past the last chapter (in the footer) the reader is still in that chapter, not the prologue
+        const last = sections[sections.length - 1];
+        if (!best && last && last.getBoundingClientRect().bottom < window.innerHeight * 0.55) best = last.id;
         setCurrent(best);
       },
       { rootMargin: '-45% 0px -45% 0px', threshold: [0, 0.01] },
@@ -427,12 +405,32 @@ const { home = false } = Astro.props;
     };
     update();
     window.addEventListener('scroll', update, { passive: true });
+    document.addEventListener('astro:after-swap', update);
+
+    // Below ~86rem there is no side margin wide enough for the dock, so it tucks away while you read downwards
+    // and comes back the moment you scroll up, stop near the end, or the menu is open.
+    let lastY = window.scrollY;
+    const narrow = window.matchMedia('(max-width: 86rem)');
+    const tuck = () => {
+      const y = window.scrollY;
+      const root = document.documentElement;
+      const nearEnd = y + window.innerHeight > root.scrollHeight - 160;
+      const menuOpen = document.querySelector('[data-menu-btn]')?.getAttribute('aria-expanded') === 'true';
+      const down = y > lastY + 4;
+      const up = y < lastY - 4;
+      if (!narrow.matches || menuOpen || nearEnd || root.classList.contains('at-hero') || up) root.classList.remove('dock-tucked');
+      else if (down) root.classList.add('dock-tucked');
+      if (down || up) lastY = y;
+    };
+    window.addEventListener('scroll', tuck, { passive: true });
+    document.addEventListener('focusin', (e) => {
+      if ((e.target as Element).closest?.('.dock')) document.documentElement.classList.remove('dock-tucked');
+    });
   }
 
   function setupSound() {
     const btn = document.querySelector<HTMLButtonElement>('[data-sound-toggle]');
     if (!btn) return;
-    // Sound is off until clicked; the state survives page transitions but not a reload.
     btn.setAttribute('aria-pressed', String(soundEnabled()));
     btn.onclick = () => {
       const on = !soundEnabled();
@@ -441,84 +439,47 @@ const { home = false } = Astro.props;
     };
   }
 
-  function setupMenu() {
-    const hat = document.querySelector<HTMLButtonElement>('[data-menu-btn]');
-    const dialog = document.querySelector<HTMLDialogElement>('[data-spell-menu]');
-    if (!hat || !dialog) return;
-    const links = [...dialog.querySelectorAll<HTMLAnchorElement>('[data-spell-link]')];
-    const float = hat.querySelector<HTMLElement>('.menu-btn__pet');
+  function setupDock() {
+    const btn = document.querySelector<HTMLButtonElement>('[data-menu-btn]');
+    const panel = document.querySelector<HTMLElement>('[data-dock-panel]');
+    if (!btn || !panel) return;
+    const links = [...panel.querySelectorAll<HTMLAnchorElement>('[data-dock-link]')];
+    const pet = btn.querySelector<HTMLElement>('.dock__pet');
+    const isOpen = () => !panel.hidden;
 
+    const onOutside = (e: PointerEvent) => {
+      if (!panel.contains(e.target as Node) && !btn.contains(e.target as Node)) window.shiruOverlay.close('menu');
+    };
     const closeNow = () => {
-      if (!dialog.open) return;
-      const reduce = prefersReducedMotion();
-      gsap.to(links, {
-        opacity: 0,
-        y: -10,
-        duration: reduce ? 0 : 0.18,
-        stagger: reduce ? 0 : 0.03,
-        onComplete: () => {
-          dialog.close();
-          lockScroll(false);
-          hat.setAttribute('aria-expanded', 'false');
-          if (float) gsap.to(float, { rotate: 0, x: 0, y: 0, duration: reduce ? 0 : 0.5, ease: 'back.out(2)', clearProps: 'transform' });
-          hat.focus();
-        },
-      });
+      if (!isOpen()) return;
+      panel.hidden = true;
+      btn.setAttribute('aria-expanded', 'false');
+      document.removeEventListener('pointerdown', onOutside, true);
+      if (!document.activeElement || document.activeElement === document.body || panel.contains(document.activeElement)) btn.focus();
     };
-
     const open = () => {
-      if (dialog.open) return;
-            sfx('hat');
-      const reduce = prefersReducedMotion();
-      const hr = hat.getBoundingClientRect();
-      hat.setAttribute('aria-expanded', 'true');
-      const show = () => {
-        dialog.showModal();
-        lockScroll(true);
-        window.shiruOverlay.open('menu', closeNow);
-        if (reduce) {
-          gsap.set(links, { opacity: 1, x: 0, y: 0, rotate: 0, scale: 1 });
-          return;
-        }
-        // The links spill out from the hamster's paws, one after another.
-        links.forEach((l, i) => {
-          const r = l.getBoundingClientRect();
-          const dx = hr.left + hr.width / 2 - (r.left + r.width / 2);
-          const dy = hr.top + hr.height * 0.6 - (r.top + r.height / 2);
-          gsap.fromTo(
-            l,
-            { x: dx, y: dy, scale: 0.15, rotate: -40 + i * 12, opacity: 0 },
-            {
-              x: 0,
-              y: 0,
-              scale: 1,
-              rotate: 0,
-              opacity: 1,
-              duration: 0.75,
-              delay: 0.05 + i * 0.07,
-              ease: 'back.out(1.4)',
-            },
-          );
-        });
-      };
-      if (reduce || !float) show();
-      else
-        gsap
-          .timeline({ onComplete: show })
-          // the hamster hops, and the links tumble out of its paws
-          .to(float, { y: -18, rotate: -8, duration: 0.18, ease: 'power2.out' })
-          .to(float, { y: 0, rotate: 0, duration: 0.3, ease: 'bounce.out' });
+      if (isOpen()) return;
+      sfx('hat');
+      panel.hidden = false;
+      btn.setAttribute('aria-expanded', 'true');
+      window.shiruOverlay.open('menu', closeNow);
+      document.addEventListener('pointerdown', onOutside, true);
+      (links.find((l) => l.getAttribute('aria-current') === 'true') ?? links[0])?.focus({ preventScroll: true });
+      if (prefersReducedMotion()) return;
+      if (pet) gsap.fromTo(pet, { y: 0 }, { y: -14, duration: 0.16, yoyo: true, repeat: 1, ease: 'power2.out' });
+      gsap.from(panel, { y: 12, opacity: 0, duration: 0.3, ease: 'power3.out', clearProps: 'transform,opacity' });
+      gsap.from(links, { y: 10, opacity: 0, duration: 0.35, stagger: 0.04, ease: 'power3.out', delay: 0.05, clearProps: 'transform,opacity' });
     };
 
-    hat.onclick = open;
-    dialog.querySelector<HTMLButtonElement>('[data-spell-close]')!.onclick = () => window.shiruOverlay.close('menu');
-    dialog.addEventListener('cancel', (e) => {
-      e.preventDefault();
-      window.shiruOverlay.close('menu');
-    });
-    dialog.addEventListener('click', (e) => {
-      if (e.target === dialog || (e.target as HTMLElement).classList.contains('spell-menu__inner'))
+    btn.onclick = () => (isOpen() ? window.shiruOverlay.close('menu') : open());
+    panel.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
         window.shiruOverlay.close('menu');
+      }
+    });
+    btn.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && isOpen()) window.shiruOverlay.close('menu');
     });
     links.forEach((l) => {
       l.onclick = (e) => {
@@ -527,13 +488,13 @@ const { home = false } = Astro.props;
         window.shiruOverlay.close('menu', () => void navigate(href));
       };
     });
+    setCurrent(current);
   }
 
   document.addEventListener('astro:page-load', () => {
     setupChapterTracking();
     setupSound();
-    setupMenu();
+    setupDock();
   });
   setupHeroState();
-  document.addEventListener('astro:after-swap', () => window.dispatchEvent(new Event('scroll')));
 </script>

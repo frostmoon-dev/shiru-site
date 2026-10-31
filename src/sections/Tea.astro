@@ -1,54 +1,54 @@
 ---
-import { chapters, site, tea } from '../content/site';
-import Icon from '../components/Icon.astro';
 import { Image, getImage } from 'astro:assets';
+import { chapters, site, tea, ui } from '../content/site';
 import { collage, design } from '../content/photos';
-
+import Icon from '../components/Icon.astro';
 import TeaIcon from '../components/TeaIcon.astro';
+import SectionHead from '../components/SectionHead.astro';
+
 const ch = chapters.find((c) => c.id === 'tea')!;
 const endpoint = import.meta.env.PUBLIC_CONTACT_ENDPOINT?.trim() || '';
 const mode = endpoint ? 'endpoint' : 'mailto';
 const action = endpoint || `mailto:${site.email}`;
 const paper = await getImage({ src: collage.paper, width: 900, format: 'webp', quality: 72 });
-const gingham = await getImage({ src: design.gingham, width: 1800, format: 'webp', quality: 70 });
+const gingham = await getImage({ src: design.gingham, width: 1600, format: 'webp', quality: 60 });
 ---
 
-<!-- Layout follows Shiru's revised Canva "Tea at midnight" (gingham, icons, envelope). -->
-<section id={ch.id} class="tea" data-tone="night" aria-labelledby="tea-title" style={`--gingham:url(${gingham.src})`}>
-  <div class="tea__inner">
-    <div class="tea__lead" data-effect="reveal" data-effect-options='{"type":"rise","targets":".tea__intro, .tea__links li","stagger":0.12,"delay":0.4}'>
-      <h2 id="tea-title" class="tea__title" data-effect="ghost-title">{tea.title}</h2>
-      <p class="tea__intro">{tea.intro}</p>
-      <ul class="tea__links">
+<section id={ch.id} class="section tea" data-tone="void" aria-labelledby="tea-title" style={`--gingham:url(${gingham.src})`}>
+  <div class="container">
+    <SectionHead id="tea-title" kicker={ui.caseNo(ch.numeral, ch.label)} title={tea.title} lead={tea.intro} />
+
+    <div class="tea__grid">
+      <ul class="contact" data-effect="reveal" data-effect-options='{"type":"rise","targets":"li","stagger":0.08}'>
         {
           tea.links.map((l) => (
             <li>
               <a href={l.href} rel={l.href.startsWith('http') ? 'me noopener' : undefined} target={l.href.startsWith('http') ? '_blank' : undefined}>
                 <TeaIcon name={l.icon} />
-                <span class="visually-hidden">{l.label}{l.href.startsWith('http') ? ' (opens in a new tab)' : ''}</span>
+                <span class="contact__label">{l.label}</span>
+                <span class="contact__detail">{l.detail}</span>
+                {l.href.startsWith('http') && <span class="visually-hidden"> (opens in a new tab)</span>}
               </a>
             </li>
           ))
         }
       </ul>
-    </div>
 
-    <div class="tea__table" data-effect="reveal" data-effect-options='{"type":"settle","targets":".envelope","start":"top 75%"}'>
-      <div class="envelope" data-envelope data-mode={mode}>
-        <Image class="envelope__img" src={collage.envelope} alt="" width={640} loading="lazy" decoding="async" />
-        <button class="envelope__seal" type="button" data-seal aria-expanded="false" aria-controls="letter">
-          <span class="visually-hidden">{tea.sealLabel}</span>
-          <!-- the wax seal is in the watercolour; this draws the crack when it breaks -->
-          <svg viewBox="0 0 100 100" aria-hidden="true" focusable="false">
-            <path class="seal__crack" d="M46 4l4 20-6 12 7 14-5 16 6 14-3 16" fill="none" stroke="#2b1215" stroke-width="3" stroke-linecap="round"></path>
-            <path class="seal__crack" d="M50 50l18-6 14 4M48 66l-20 8" fill="none" stroke="#2b1215" stroke-width="2.4" stroke-linecap="round"></path>
-          </svg>
-        </button>
-        <p class="envelope__hint label" data-hint="seal"><span aria-hidden="true">↑ </span>{tea.sealHint}</p>
-      </div>
+      <div class="stage" data-stage>
+        <div class="envelope" data-envelope data-mode={mode} data-effect="reveal" data-effect-options='{"type":"settle"}'>
+          <Image class="envelope__img" src={collage.envelope} alt="" width={640} loading="lazy" decoding="async" />
+          <button class="envelope__seal" type="button" data-seal aria-expanded="false" aria-controls="letter">
+            <span class="visually-hidden">{tea.sealLabel}</span>
+            <svg viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+              <path class="seal__crack" d="M46 4l4 20-6 12 7 14-5 16 6 14-3 16" fill="none" stroke="#2b1215" stroke-width="3" stroke-linecap="round"></path>
+              <path class="seal__crack" d="M50 50l18-6 14 4M48 66l-20 8" fill="none" stroke="#2b1215" stroke-width="2.4" stroke-linecap="round"></path>
+            </svg>
+          </button>
+          <p class="envelope__hint" data-hint="seal"><span aria-hidden="true">↑ </span>{tea.sealHint}</p>
+        </div>
 
-      <div class="letter" id="letter" data-tone="bone" data-letter style={`--paper:url(${paper.src})`}>
-        <h3 class="letter__title" data-effect="wet-ink">{tea.formTitle}</h3>
+        <div class="letter" id="letter" data-tone="bone" data-letter style={`--paper:url(${paper.src})`}>
+          <h3 class="letter__title">{tea.formTitle}</h3>
         <form class="letter__form" action={action} method="post" enctype={mode === 'mailto' ? 'text/plain' : undefined} novalidate data-form>
           <div class="field">
             <label for="f-name">{tea.fields.name.label}</label>
@@ -78,9 +78,9 @@ const gingham = await getImage({ src: design.gingham, width: 1800, format: 'webp
           </div>
           <div class="letter__status" role="status" aria-live="polite" data-status></div>
         </form>
+        </div>
       </div>
     </div>
-
   </div>
 </section>
 
@@ -101,102 +101,97 @@ const gingham = await getImage({ src: design.gingham, width: 1800, format: 'webp
 
 <style>
   .tea {
-    position: relative;
-    padding: clamp(5rem, 9vw, 7.5rem) var(--gutter) clamp(5rem, 9vw, 8rem);
-    background: var(--gingham) center / cover no-repeat, #1b1a1c;
-    color: var(--bone);
     overflow-x: clip;
+    isolation: auto;
   }
-  .tea__inner {
+  /* the tablecloth: gingham, drained of colour and nearly lost in the dark */
+  .tea::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--gingham) center / 34rem auto repeat;
+    filter: grayscale(1);
+    opacity: 0.07;
+    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 70% 60%, #000, transparent 75%);
+    mask-image: radial-gradient(ellipse 70% 60% at 70% 60%, #000, transparent 75%);
+    pointer-events: none;
+  }
+  .tea .container {
     position: relative;
     z-index: var(--z-content);
-    max-width: 72rem;
-    margin-inline: auto;
+  }
+  .tea__grid {
     display: grid;
-    gap: var(--space-6);
-  }
-  .tea__title {
-    font-family: var(--font-display);
-    font-size: clamp(3rem, 2rem + 3.6vw, 5.6rem);
-    line-height: 0.9;
-    color: #f4efe4;
-    max-width: 8ch;
-    /* the soft dark halo from the design keeps it legible on the gingham */
-    text-shadow:
-      0 0 18px rgb(5 3 4 / 0.95),
-      0 0 42px rgb(5 3 4 / 0.8);
-  }
-  .tea__intro {
-    margin-top: var(--space-4);
-    max-width: 30ch;
-    font-style: italic;
-    color: #f4efe4;
-    text-shadow:
-      0 0 6px rgb(5 3 4 / 1),
-      0 0 16px rgb(5 3 4 / 0.95),
-      0 0 30px rgb(5 3 4 / 0.8);
-  }
-  .tea__links {
-    display: flex;
-    gap: var(--space-2);
-    list-style: none;
-    padding: 0;
-    margin-top: var(--space-6);
-  }
-  .tea__links {
-    gap: var(--space-4);
-  }
-  .tea__links a {
-    display: inline-grid;
-    place-items: center;
-    width: 76px;
-    height: 76px;
-    color: #f4efe4;
-    filter: drop-shadow(0 0 6px rgb(5 3 4 / 0.95)) drop-shadow(0 0 14px rgb(5 3 4 / 0.7));
-    transition: transform var(--dur-quick) var(--ease-out);
-  }
-  .tea__links a :global(svg) {
-    width: 62px;
-    height: 62px;
-  }
-  .tea__links a:hover,
-  .tea__links a:focus-visible {
-    transform: translateY(-4px) rotate(-6deg);
-  }
-  .tea__table {
-    position: relative;
-    display: grid;
-    justify-items: center;
-    padding-bottom: var(--space-6);
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-7);
   }
 
-  /* ---- envelope (watercolour cut-out; the seal button sits on its wax seal) ---- */
+  /* ---- contact: icon + words, same height, hairlines between ---- */
+  .contact {
+    list-style: none;
+    padding: 0;
+    border-top: 1px solid var(--line);
+    align-self: start;
+  }
+  .contact a {
+    display: grid;
+    grid-template-columns: 2.5rem 1fr;
+    grid-template-rows: auto auto;
+    column-gap: var(--space-3);
+    align-items: center;
+    padding-block: var(--space-3);
+    border-bottom: 1px solid var(--line);
+    color: var(--bone);
+    text-decoration: none;
+  }
+  .contact a :global(svg) {
+    grid-row: 1 / span 2;
+    width: 2.5rem;
+    height: 2.5rem;
+    transition: transform var(--dur-quick) var(--ease-out);
+  }
+  .contact__label {
+    font-weight: 700;
+    font-size: var(--text-label);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .contact__detail {
+    color: var(--bone);
+  }
+  .contact a:hover :global(svg),
+  .contact a:focus-visible :global(svg) {
+    transform: rotate(-6deg) translateY(-2px);
+  }
+  .contact a:hover .contact__detail {
+    text-decoration: underline;
+    text-decoration-color: var(--blood);
+    text-underline-offset: 0.25em;
+  }
+
+  /* ---- the stage: envelope and letter share one spot ---- */
+  .stage {
+    display: grid;
+    justify-items: center;
+    align-items: start;
+  }
+  .stage > * {
+    grid-area: 1 / 1;
+  }
   .envelope {
     position: relative;
-    width: min(100%, 32rem);
+    z-index: 2;
+    width: min(100%, 30rem);
     aspect-ratio: 766 / 638;
-    transform: rotate(-3deg);
-    transition:
-      transform 900ms var(--ease-ink) 300ms,
-      opacity 900ms var(--ease-ink) 300ms;
+    margin-bottom: var(--space-7);
   }
   .envelope__img {
     width: 100%;
     height: 100%;
     object-fit: contain;
-    filter: drop-shadow(10px 14px 0 rgb(5 3 4 / 0.55));
-  }
-  /* opened: the envelope slips away and the letter takes its place (as in the design) */
-  .envelope.is-open {
-    position: absolute;
-    top: 0;
-    transform: rotate(-12deg) translateY(30%) scale(0.8);
-    opacity: 0;
-    visibility: hidden;
-    transition:
-      transform 700ms var(--ease-ink) 250ms,
-      opacity 500ms var(--ease-ink) 350ms,
-      visibility 0s 900ms;
+    rotate: -3deg;
+    filter: drop-shadow(0 18px 24px rgb(0 0 0 / 0.55));
   }
   .envelope__seal {
     position: absolute;
@@ -211,18 +206,20 @@ const gingham = await getImage({ src: design.gingham, width: 1800, format: 'webp
     border: 0;
     border-radius: 50%;
     background: transparent;
-    transition: transform var(--dur-quick) var(--ease-out), box-shadow var(--dur-base);
+    transition:
+      transform var(--dur-quick) var(--ease-out),
+      box-shadow var(--dur-base);
   }
   .envelope__seal:hover {
     transform: scale(1.06) rotate(-4deg);
-    box-shadow: 0 0 0 3px rgb(232 220 194 / 0.35), 0 0 28px 6px rgb(163 20 27 / 0.35);
+    box-shadow: 0 0 0 2px rgb(232 220 194 / 0.4), 0 0 32px 6px rgb(163 20 27 / 0.35);
   }
   .envelope__seal:active {
     transform: scale(0.96);
   }
   .envelope__seal:focus-visible {
     outline-color: var(--bone);
-    box-shadow: 0 0 0 6px var(--night);
+    box-shadow: 0 0 0 6px var(--void);
   }
   .envelope__seal svg {
     width: 100%;
@@ -232,26 +229,25 @@ const gingham = await getImage({ src: design.gingham, width: 1800, format: 'webp
   .seal__crack {
     stroke-dasharray: 140;
     stroke-dashoffset: 140;
-    transition: stroke-dashoffset 380ms var(--ease-drop);
+    transition: stroke-dashoffset 360ms var(--ease-drop);
   }
-  .envelope.is-open .seal__crack {
+  .envelope.is-cracked .seal__crack {
     stroke-dashoffset: 0;
   }
-  .envelope.is-open .envelope__seal {
+  .envelope.is-cracked .envelope__seal {
     pointer-events: none;
   }
   .envelope__hint {
     position: absolute;
     left: 50%;
-    top: calc(100% + var(--space-2));
+    top: calc(100% + var(--space-3));
     translate: -50% 0;
-    max-width: 9ch;
-    text-align: center;
-    color: #f4efe4;
-    font-size: 0.95rem;
-    text-shadow:
-      0 0 6px rgb(5 3 4 / 1),
-      0 0 16px rgb(5 3 4 / 0.9);
+    white-space: nowrap;
+    font-weight: 700;
+    font-size: var(--text-label);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
     animation: hint-sway 2.4s var(--ease-ink) infinite;
   }
   @keyframes hint-sway {
@@ -259,47 +255,29 @@ const gingham = await getImage({ src: design.gingham, width: 1800, format: 'webp
       translate: -50% -4px;
     }
   }
+  .stage.is-open .envelope {
+    visibility: hidden;
+    position: absolute;
+  }
 
-  /* ---- the letter (form) ---- */
-  /* the torn sheet is the letter paper; extra padding keeps text off the ragged edges */
+  /* ---- the letter (form) on the torn paper ---- */
   .letter {
     position: relative;
-    z-index: 2;
+    z-index: 1;
     width: min(100%, 34rem);
-    margin-top: -55%;
     padding: 13% 9% 10%;
     background: var(--paper) center / 100% 100% no-repeat;
-    filter: drop-shadow(10px 14px 0 rgb(5 3 4 / 0.5));
-    transform: rotate(1deg);
+    filter: drop-shadow(0 18px 24px rgb(0 0 0 / 0.55));
   }
-  :global(html.js) .letter {
+  :global(html.js) .stage:not(.is-opening):not(.is-open) .letter {
     display: none;
   }
-  :global(html.js) .envelope.is-open + .letter {
-    display: block;
-    margin-top: 0;
-    animation: letter-out 800ms var(--ease-out) 350ms both;
-  }
-  :global(html:not(.js)) .letter {
-    margin-top: var(--space-4);
-  }
-  :global(html:not(.js)) .envelope__seal,
-  :global(html:not(.js)) .envelope__hint {
+  :global(html:not(.js)) .envelope {
     display: none;
-  }
-  @keyframes letter-out {
-    from {
-      transform: translateY(30%) rotate(1deg);
-      opacity: 0;
-      clip-path: inset(0 0 60% 0);
-    }
-    to {
-      clip-path: inset(0 0 0 0);
-    }
   }
   .letter__title {
-    font-family: var(--font-body);
-    font-size: var(--step-2);
+    font-size: var(--step-1);
+    font-weight: 700;
     margin-bottom: var(--space-3);
     color: var(--ink);
   }
@@ -309,12 +287,12 @@ const gingham = await getImage({ src: design.gingham, width: 1800, format: 'webp
   }
   .field {
     display: grid;
-    gap: var(--space-half);
+    gap: var(--space-1);
   }
   .field label {
-    font-family: var(--font-label);
+    font-weight: 700;
     font-size: var(--text-label);
-    letter-spacing: var(--tracking-label);
+    letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--ink-muted);
   }
@@ -322,10 +300,10 @@ const gingham = await getImage({ src: design.gingham, width: 1800, format: 'webp
   .field textarea {
     width: 100%;
     min-height: var(--touch);
-    padding: var(--space-1) var(--space-1);
+    padding: var(--space-1);
     border: 0;
     border-bottom: 1px solid var(--ink);
-    background: rgb(255 250 235 / 0.35);
+    background: rgb(255 250 235 / 0.4);
     color: var(--ink);
     font-family: var(--font-body);
     font-size: var(--step-0);
@@ -333,12 +311,11 @@ const gingham = await getImage({ src: design.gingham, width: 1800, format: 'webp
   }
   .field textarea {
     resize: vertical;
-    background-image: repeating-linear-gradient(transparent 0 1.6em, rgb(42 26 18 / 0.15) 1.6em calc(1.6em + 1px));
     line-height: 1.6;
   }
   .field input:hover,
   .field textarea:hover {
-    background-color: rgb(255 250 235 / 0.55);
+    background-color: rgb(255 250 235 / 0.6);
   }
   .field input:focus-visible,
   .field textarea:focus-visible {
@@ -398,13 +375,10 @@ const gingham = await getImage({ src: design.gingham, width: 1800, format: 'webp
     color: var(--fg-muted);
   }
 
-  @media (min-width: 900px) {
-    .tea__inner {
-      grid-template-columns: 4fr 7fr;
+  @media (min-width: 960px) {
+    .tea__grid {
+      grid-template-columns: 5fr 7fr;
       align-items: start;
-    }
-    .tea__table {
-      grid-column: 2;
     }
   }
 </style>
@@ -412,16 +386,19 @@ const gingham = await getImage({ src: design.gingham, width: 1800, format: 'webp
 <script>
   import { markHintUsed } from '../lib/hints';
   import { sfx } from '../lib/sfx';
+  import { gsap } from '../lib/motion';
+  import { prefersReducedMotion } from '../lib/env';
 
   const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
   function bind() {
+    const stage = document.querySelector<HTMLElement>('[data-stage]');
     const env = document.querySelector<HTMLElement>('[data-envelope]');
     const seal = document.querySelector<HTMLButtonElement>('[data-seal]');
     const letter = document.querySelector<HTMLElement>('[data-letter]');
     const form = document.querySelector<HTMLFormElement>('[data-form]');
     const copyEl = document.getElementById('tea-copy');
-    if (!env || !seal || !letter || !form || !copyEl) return;
+    if (!stage || !env || !seal || !letter || !form || !copyEl) return;
     const copy = JSON.parse(copyEl.textContent ?? '{}') as {
       sending: string;
       success: string;
@@ -442,19 +419,55 @@ const gingham = await getImage({ src: design.gingham, width: 1800, format: 'webp
     let attempted = false;
     let busy = false;
 
+    let tl: gsap.core.Timeline | undefined;
+    const envImg = env.querySelector<HTMLElement>('.envelope__img');
+    const parts = () => letter.querySelectorAll('.letter__title, .field:not(.field--trap), .letter__actions');
+
+    // Fold the letter back into the envelope.
     const close = () => {
-      env.classList.remove('is-open');
-      seal.setAttribute('aria-expanded', 'false');
-      seal.focus();
+      tl?.kill();
+      const done = () => {
+        stage.classList.remove('is-opening', 'is-open');
+        env.classList.remove('is-cracked');
+        gsap.set([env, letter, envImg], { clearProps: 'transform,opacity,visibility' });
+        seal.setAttribute('aria-expanded', 'false');
+        seal.focus({ preventScroll: true });
+      };
+      if (prefersReducedMotion()) return done();
+      stage.classList.remove('is-open');
+      stage.classList.add('is-opening');
+      tl = gsap
+        .timeline({ onComplete: done })
+        .to(letter, { yPercent: 14, scale: 0.8, opacity: 0, duration: 0.45, ease: 'power2.in' }, 0)
+        .fromTo(env, { yPercent: 50, rotate: -8, opacity: 0 }, { yPercent: 0, rotate: 0, opacity: 1, duration: 0.6, ease: 'power3.out' }, 0.2);
     };
+
+    // Break the seal: the envelope opens first, then the paper slides out of it.
     const open = () => {
-      if (env.classList.contains('is-open')) return;
-      env.classList.add('is-open');
+      if (stage.classList.contains('is-opening') || stage.classList.contains('is-open')) return;
       seal.setAttribute('aria-expanded', 'true');
       markHintUsed('seal');
       sfx('seal');
       window.shiruOverlay.open('letter', close);
-      window.setTimeout(() => fields.name.focus({ preventScroll: true }), 900);
+      env.classList.add('is-cracked');
+      stage.classList.add('is-opening');
+      const settle = () => {
+        stage.classList.remove('is-opening');
+        stage.classList.add('is-open');
+        fields.name.focus({ preventScroll: true });
+      };
+      if (prefersReducedMotion()) return settle();
+      tl = gsap
+        .timeline({ onComplete: settle })
+        // the crack runs (CSS), then the envelope gives a small shudder
+        .to(envImg, { x: -4, rotate: -4, duration: 0.05, repeat: 5, yoyo: true, ease: 'none' }, 0.35)
+        // the paper rises out from behind it…
+        .fromTo(letter, { yPercent: 22, scale: 0.72, opacity: 0 }, { opacity: 1, duration: 0.25, ease: 'none' }, 0.7)
+        .to(letter, { yPercent: -10, scale: 0.8, duration: 0.7, ease: 'power2.out' }, 0.7)
+        // …the envelope falls away, and the letter comes forward
+        .to(env, { yPercent: 60, rotate: -10, opacity: 0, duration: 0.65, ease: 'power2.in' }, 1.1)
+        .to(letter, { yPercent: 0, scale: 1, duration: 0.7, ease: 'power3.out', clearProps: 'transform,opacity' }, 1.25)
+        .from(parts(), { y: 8, opacity: 0, duration: 0.35, stagger: 0.06, ease: 'power2.out', clearProps: 'transform,opacity' }, 1.6);
     };
     seal.onclick = open;
     form.querySelector<HTMLButtonElement>('[data-fold]')!.onclick = () => window.shiruOverlay.close('letter');

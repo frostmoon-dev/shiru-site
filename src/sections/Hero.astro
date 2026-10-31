@@ -29,9 +29,9 @@ import { collage, design } from '../content/photos';
     </span>
   </div>
 
-  <div class="hero__content">
-    <p class="hero__kicker label" data-enter>{hero.kicker}</p>
-    <h1 id="hero-title" class="hero__title">{hero.name}</h1>
+  <div class="hero__content container">
+    <p class="hero__kicker kicker" data-enter>{hero.kicker}</p>
+    <h1 id="hero-title" class="hero__title display-1">{hero.name}</h1>
     <p
       class="hero__lines"
       data-effect="typewriter"
@@ -49,8 +49,6 @@ import { collage, design } from '../content/photos';
       >{hero.tagline.after}
     </p>
   </div>
-
-  <canvas class="hero__dust" aria-hidden="true" data-effect="film-dust"></canvas>
 </section>
 
 <style>
@@ -122,36 +120,34 @@ import { collage, design } from '../content/photos';
     }
   }
 
-  /* ---- text ---- */
-  .hero__content {
-    position: absolute;
-    z-index: var(--z-content);
-    left: 4.8vw;
-    top: 21.5%;
-    max-width: min(600px, 46vw);
+  /* ---- text: on the same column as every section below ---- */
+  .hero {
+    display: flex;
+    align-items: center;
   }
-  .hero__kicker {
-    color: var(--muted);
+  .hero__content {
+    position: relative;
+    z-index: var(--z-content);
+    padding-block: var(--space-8) var(--space-7);
+  }
+  .hero__content > * {
+    max-width: 38rem;
   }
   .hero__title {
-    margin-top: clamp(1.5rem, 7svh, 4rem);
-    font-family: var(--font-display);
-    font-size: clamp(3.6rem, 1rem + 8.7vw, 9.4rem);
-    font-weight: 400;
-    line-height: 0.9;
-    letter-spacing: 0.01em;
+    margin-top: var(--space-5);
+    max-width: none;
     color: var(--bone);
     white-space: nowrap;
   }
   .hero__lines {
-    margin-top: clamp(2rem, 9svh, 5.5rem);
+    margin-top: var(--space-6);
     font-style: italic;
     font-size: var(--step-0);
-    line-height: 1.35;
+    line-height: 1.5;
     letter-spacing: 0.12em;
     color: var(--bone);
     white-space: pre-line;
-    min-height: 4.05em;
+    min-height: 4.5em;
   }
   .hero__line {
     display: block;
@@ -162,7 +158,7 @@ import { collage, design } from '../content/photos';
   .hero__tagline {
     margin-top: var(--space-4);
     font-size: var(--step-0);
-    line-height: 1.6;
+    line-height: 1.65;
     color: var(--muted);
   }
   .hero__tagline .glitch {
@@ -195,7 +191,7 @@ import { collage, design } from '../content/photos';
     white-space: nowrap;
   }
   .glitch__layer--a {
-    color: var(--blood-lit);
+    color: #e5434a;
     animation: glitch-a 4.2s steps(1, end) infinite;
   }
   .glitch__layer--b {
@@ -272,16 +268,6 @@ import { collage, design } from '../content/photos';
     }
   }
 
-  /* ---- film dust (effects/film-dust) ---- */
-  .hero__dust {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    z-index: var(--z-content);
-    pointer-events: none;
-    mix-blend-mode: screen;
-  }
 
   @media (max-width: 899px) {
     .hero__newspaper {
@@ -293,14 +279,8 @@ import { collage, design } from '../content/photos';
       top: 3%;
       width: 22vw;
     }
-    .hero__content {
-      left: var(--gutter);
-      right: var(--gutter);
-      top: 26%;
-      max-width: none;
-    }
     .hero__title {
-      font-size: clamp(2.6rem, 12vw, 4.4rem);
+      font-size: clamp(2.6rem, 12.5vw, 4.4rem);
     }
   }
 </style>

@@ -1,126 +1,86 @@
 ---
 import { Image, getImage } from 'astro:assets';
-import { about, chapters } from '../content/site';
+import { about, chapters, ui } from '../content/site';
 import { design } from '../content/photos';
+import SectionHead from '../components/SectionHead.astro';
 
 const ch = chapters.find((c) => c.id === 'rabbit-hole')!;
-const lace = await getImage({ src: design.lace, width: 1200, format: 'webp', quality: 80 });
-const scroll = await getImage({ src: design.scroll, width: 1400, format: 'webp', quality: 80 });
-const gingham = await getImage({ src: design.gingham, width: 1600, format: 'webp', quality: 70 });
+const lace = await getImage({ src: design.lace, width: 960, format: 'webp', quality: 80 });
 ---
 
-<!-- Layout follows Shiru's revised Canva "Down the rabbit hole" (1440 wide). -->
-<section id={ch.id} class="about" data-tone="bone" aria-labelledby="about-title">
-  <Image class="about__torn" src={design.tornEdge} alt="" widths={[800, 1440, 2304]} sizes="100vw" loading="lazy" decoding="async" aria-hidden="true" />
+<section id={ch.id} class="section about" data-tone="void" aria-labelledby="about-title">
+  <div class="container">
+    <SectionHead id="about-title" kicker={ui.caseNo(ch.numeral, ch.label)} title={about.title} lead={about.card} />
 
-  <div class="about__grid">
-    <div class="lace" style={`--lace:url(${lace.src})`} data-effect="reveal" data-effect-options='{"type":"settle"}'>
-      <div class="lace__inner" data-effect="reveal" data-effect-options='{"type":"rise","targets":".lace__inner > *","stagger":0.15,"delay":0.35}'>
-        <h2 id="about-title" class="lace__title" data-effect="ghost-title">{about.title}</h2>
-        <p class="lace__text">{about.card}</p>
-        <div class="lace__sweet">
-          <Image class="lace__pastry" src={design.pastry} alt={about.sweetAlt} width={180} loading="lazy" decoding="async" />
-          <p class="lace__sweet-text">{about.sweet}</p>
+    <div class="about__grid">
+      <figure class="lace" style={`--lace:url(${lace.src})`} data-effect="reveal" data-effect-options='{"type":"settle"}'>
+        <Image class="lace__pastry" src={design.pastry} alt={about.sweetAlt} width={240} loading="lazy" decoding="async" />
+        <figcaption class="lace__caption">{about.sweet}</figcaption>
+      </figure>
+
+      <div class="about__text">
+        <div class="body-copy" data-effect="reveal" data-effect-options='{"type":"rise","targets":"p","stagger":0.15}'>
+          {about.body.map((p) => <p>{p}</p>)}
         </div>
-      </div>
-    </div>
 
-    <div class="about__body" data-effect="reveal" data-effect-options='{"type":"rise","targets":"p","stagger":0.2}'>
-      {about.body.map((p) => <p>{p}</p>)}
-    </div>
-
-    <div class="banner" style={`--scroll:url(${scroll.src})`} data-effect="reveal" data-effect-options='{"type":"unfurl"}'>
-      <div class="banner__facts" data-effect="reveal" data-effect-options='{"type":"rise","targets":".banner__fact, .banner__warning","stagger":0.14,"delay":0.7}'>
-      <dl class="banner__list">
-        {
-          about.facts.map((f) => (
-            <div class="banner__fact">
-              <dt>{f.term}</dt>
-              <dd>
-                {f.href ? (
-                  <a href={f.href} rel="me noopener" target="_blank">
-                    {f.detail} <span aria-hidden="true">↗</span>
-                    <span class="visually-hidden"> (opens in a new tab)</span>
-                  </a>
-                ) : (
-                  f.detail
-                )}
-              </dd>
-            </div>
-          ))
-        }
-      </dl>
-      <p class="banner__warning" data-effect="flicker-jitter" data-effect-options='{"every":[5,11],"jitter":false}'>{about.warning}</p>
+        <dl class="facts about__facts" data-effect="reveal" data-effect-options='{"type":"rise","targets":".facts__row","stagger":0.1}'>
+          {
+            about.facts.map((f) => (
+              <div class="facts__row">
+                <dt>{f.term}</dt>
+                <dd>
+                  {f.href ? (
+                    <a href={f.href} rel="me noopener" target="_blank">
+                      {f.detail} <span aria-hidden="true">↗</span>
+                      <span class="visually-hidden"> (opens in a new tab)</span>
+                    </a>
+                  ) : (
+                    f.detail
+                  )}
+                </dd>
+              </div>
+            ))
+          }
+        </dl>
+        <p class="about__warning" data-effect="flicker-jitter" data-effect-options='{"every":[5,11],"jitter":false}'>{about.warning}</p>
       </div>
     </div>
   </div>
-
-  <Image class="about__brush" src={design.brush} alt="" width={530} loading="lazy" decoding="async" aria-hidden="true" data-effect="reveal" data-effect-options='{"type":"paint"}' />
-  <div class="about__gingham" style={`--gingham:url(${gingham.src})`} aria-hidden="true" data-effect="reveal" data-effect-options='{"type":"paint","start":"top 95%"}'></div>
 </section>
 
 <style>
-  .about {
-    position: relative;
-    overflow-x: clip;
-    padding: clamp(10rem, 21.5vw, 19.5rem) var(--gutter) 0;
-    background-color: #e6dbc1;
-    background-image: none;
-  }
-  .about__torn {
-    position: absolute;
-    top: -2px;
-    left: 0;
-    width: 100%;
-    height: auto;
-    pointer-events: none;
-  }
   .about__grid {
-    position: relative;
-    z-index: var(--z-content);
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    gap: var(--space-6);
-    max-width: 82rem;
-    margin-inline: auto;
+    gap: var(--space-7);
   }
 
-  /* ---- the lace card ---- */
+  /* the lace frame: a gothic doily on black, holding one sweet thing */
   .lace {
-    width: min(100%, 600px);
+    position: relative;
+    isolation: isolate;
+    justify-self: start;
+    width: min(100%, 26rem);
     aspect-ratio: 960 / 1378;
-    background: var(--lace) center / 100% 100% no-repeat;
-    padding: 17% 17% 13%;
-    color: var(--bone);
-    display: flex;
-  }
-  .lace__inner {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
-    width: 100%;
-  }
-  .lace__title {
-    font-family: var(--font-display);
-    font-size: clamp(1.9rem, 1.2rem + 1.6vw, 2.9rem);
-    line-height: 1;
-    color: var(--bone);
-  }
-  .lace__text {
-    font-size: var(--text-small);
-    line-height: 1.6;
-    color: var(--bone);
-  }
-  .lace__sweet {
-    margin-top: auto;
-    display: flex;
-    align-items: center;
+    display: grid;
+    place-content: center;
+    justify-items: center;
     gap: var(--space-3);
+    padding: 22% 20%;
+    margin: 0;
+  }
+  /* the doily, lifted from near-black to a pale grey so it reads on the dark page */
+  .lace::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--lace) center / 100% 100% no-repeat;
+    filter: brightness(5.5) sepia(0.25);
   }
   .lace__pastry {
-    width: clamp(80px, 9vw, 130px);
+    width: 62%;
     height: auto;
-    flex: none;
     animation: pastry-bob 5s var(--ease-ink) infinite;
   }
   @keyframes pastry-bob {
@@ -129,121 +89,36 @@ const gingham = await getImage({ src: design.gingham, width: 1600, format: 'webp
       rotate: -3deg;
     }
   }
-  .lace__sweet-text {
-    font-family: var(--font-display);
-    font-size: clamp(1.15rem, 0.9rem + 0.6vw, 1.5rem);
-    line-height: 1.15;
-    color: var(--bone);
-  }
-
-  /* ---- the reading column ---- */
-  .about__body {
-    color: var(--ink);
-    font-size: var(--step-0);
-    line-height: 1.75;
-    max-width: 60ch;
-  }
-  .about__body p + p {
-    margin-top: var(--space-5);
-  }
-
-  /* ---- the black scroll ---- */
-  .banner {
-    width: min(100%, 720px);
-    aspect-ratio: 1641 / 1197;
-    position: relative;
-    background: var(--scroll) center / contain no-repeat;
-    rotate: 8deg;
-    display: grid;
-    place-items: center;
-    padding: 18% 14% 14%;
-  }
-  .banner__facts,
-  .banner__list {
-    display: grid;
-    gap: var(--space-2);
-    text-align: center;
-    color: var(--bone);
-    letter-spacing: 0.08em;
-  }
-  .banner__fact dt {
-    font-weight: 700;
-    text-transform: uppercase;
-    font-size: var(--text-label);
-  }
-  .banner__fact dd {
-    font-size: var(--text-small);
-  }
-  .banner__fact a {
-    color: var(--bone);
-    display: inline-flex;
-    min-height: var(--touch);
-    align-items: center;
-  }
-  .banner__warning {
-    margin-top: var(--space-1);
+  .lace__caption {
     font-style: italic;
     font-size: var(--text-small);
+    line-height: 1.5;
+    text-align: center;
+    color: var(--bone);
+    max-width: 16ch;
   }
 
-  .about__brush {
-    position: relative;
-    display: block;
-    width: clamp(180px, 23vw, 340px);
-    height: auto;
-    margin: var(--space-6) 0 var(--space-4) clamp(0rem, 2vw, 2rem);
+  .about__facts {
+    margin-top: var(--space-6);
   }
-  .about__gingham {
-    height: clamp(64px, 8.2vw, 118px);
-    margin-inline: calc(var(--gutter) * -1);
-    background: var(--gingham) center top / max(100%, 1200px) auto repeat-x;
+  .about__facts a {
+    color: var(--bone);
+  }
+  .about__warning {
+    margin-top: var(--space-4);
+    font-style: italic;
+    color: var(--muted);
   }
 
   @media (min-width: 960px) {
     .about__grid {
-      grid-template-columns: 600px 1fr;
-      column-gap: clamp(3rem, 4.5vw, 4.5rem);
+      grid-template-columns: 5fr 7fr;
       align-items: start;
-    }
-    .lace {
-      grid-row: 1 / span 2;
-    }
-    .about__body {
-      margin-top: 4rem;
-    }
-    .banner {
-      margin-top: var(--space-4);
-      margin-left: -4.5rem;
-      justify-self: start;
-      width: min(100%, 720px);
-    }
-    .about__brush {
-      margin-top: var(--space-2);
     }
   }
   @media (max-width: 959px) {
     .lace {
       justify-self: center;
-      width: min(100%, 440px);
-    }
-    .banner {
-      rotate: 4deg;
-      justify-self: center;
-      padding: 23% 13% 16%;
-    }
-    .banner__facts,
-    .banner__list {
-      gap: 2px;
-    }
-    .banner__fact dt {
-      font-size: 0.68rem;
-    }
-    .banner__fact dd,
-    .banner__warning {
-      font-size: 0.78rem;
-    }
-    .banner__fact a {
-      min-height: 32px;
     }
   }
 </style>

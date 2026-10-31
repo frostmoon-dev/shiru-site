@@ -39,20 +39,20 @@ await page.waitForTimeout(600);
 await page.click('[data-menu-btn]');
 await page.waitForTimeout(1400);
 await shot('menu-open');
-check('menu opens as dialog', await page.evaluate(() => document.querySelector('[data-spell-menu]').open));
+check('menu opens as dialog', await page.evaluate(() => !document.querySelector('[data-dock-panel]').hidden));
 await page.keyboard.press('Escape');
 await page.waitForTimeout(800);
-check('Esc closes menu', await page.evaluate(() => !document.querySelector('[data-spell-menu]').open));
+check('Esc closes menu', await page.evaluate(() => !!document.querySelector('[data-dock-panel]').hidden));
 await page.click('[data-menu-btn]');
 await page.waitForTimeout(1200);
 await page.goBack();
 await page.waitForTimeout(800);
-check('Back closes menu (stays on page)', await page.evaluate(() => !document.querySelector('[data-spell-menu]').open && location.pathname === '/'));
+check('Back closes menu (stays on page)', await page.evaluate(() => !!document.querySelector('[data-dock-panel]').hidden && location.pathname === '/'));
 
 // Menu link lands on its chapter
 await page.click('[data-menu-btn]');
 await page.waitForTimeout(1300);
-await page.locator('[data-spell-link][href="/#tea"]').click();
+await page.locator('[data-dock-link][href="/#tea"]').click();
 await page.waitForTimeout(2200);
 const teaTop = await page.evaluate(() => Math.round(document.querySelector('#tea').getBoundingClientRect().top));
 check(`menu link lands on Tea at midnight (top ${teaTop}px)`, Math.abs(teaTop) < 90);
@@ -77,16 +77,22 @@ check('Back closes book', (await page.locator('.book.is-open').count()) === 0 &&
 
 // Envelope + form
 await scrollTo('#tea', 50);
+check('letter hidden before the seal breaks', await page.evaluate(() => getComputedStyle(document.querySelector('[data-letter]')).display === 'none'));
 await page.click('[data-seal]');
-await page.waitForTimeout(1600);
+await page.waitForTimeout(2600);
 await shot('envelope-open');
+check('paper comes out, envelope goes', await page.evaluate(() => {
+  const l = getComputedStyle(document.querySelector('[data-letter]'));
+  const e = getComputedStyle(document.querySelector('[data-envelope]'));
+  return l.display !== 'none' && l.visibility === 'visible' && Number(l.opacity) > 0.9 && (e.visibility === 'hidden' || Number(e.opacity) < 0.1);
+}));
 await page.click('[data-submit]');
 await page.waitForTimeout(300);
 await shot('form-errors');
 check('empty submit shows 3 errors', (await page.locator('.field__error:not([hidden])').count()) === 3);
 await page.keyboard.press('Escape');
-await page.waitForTimeout(600);
-check('Esc closes envelope', (await page.locator('.envelope.is-open').count()) === 0);
+await page.waitForTimeout(1600);
+check('Esc closes envelope', (await page.locator('.stage.is-open, .stage.is-opening').count()) === 0);
 
 // Case file + back restores scroll
 await scrollTo('#archives', 200);

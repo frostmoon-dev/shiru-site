@@ -1,165 +1,69 @@
 ---
-import { Image, getImage } from 'astro:assets';
-import { caseFiles, chapters } from '../content/site';
-import { collage, design } from '../content/photos';
+import { caseFiles, chapters, ui } from '../content/site';
 import Polaroid from '../components/Polaroid.astro';
+import SectionHead from '../components/SectionHead.astro';
 
 const ch = chapters.find((c) => c.id === 'archives')!;
-const frame = await getImage({ src: design.archiveFrame, width: 1800, format: 'webp', quality: 72 });
 ---
 
-<!-- Layout follows Shiru's revised Canva "The Archives" (1440 × 779). -->
-<section id={ch.id} class="archives" style={`--frame:url(${frame.src})`} aria-labelledby="archives-title">
-  <div class="archives__inner">
-    <div class="archives__lead">
-      <h2 id="archives-title" class="archives__title" data-effect="ghost-title">The<br />Archives</h2>
-      <div data-effect="reveal" data-effect-options='{"type":"rise","targets":"p","stagger":0.18,"delay":0.3}'>
-        <p class="archives__intro">{caseFiles.intro}</p>
-        <p class="archives__hint" data-hint="case-files">{caseFiles.hint}</p>
-      </div>
-    </div>
+<section id={ch.id} class="section archives" data-tone="void" aria-labelledby="archives-title">
+  <div class="container">
+    <SectionHead id="archives-title" kicker={ui.caseNo(ch.numeral, ch.label)} title={caseFiles.title} lead={caseFiles.intro}>
+      <p class="archives__hint" data-hint="case-files">{caseFiles.hint}</p>
+    </SectionHead>
 
-    <ol class="board" aria-label="The archives" data-effect="reveal" data-effect-options='{"type":"pin","targets":".polaroid-wrap","stagger":0.16}'>
-      {
-        caseFiles.files.map((f, i) =>
-          i === 0 ? (
-            <Polaroid file={f} index={i}>
-              <Image slot="behind" class="board__peek" src={design.peek} alt="" width={260} loading="lazy" decoding="async" aria-hidden="true" />
-              <Image slot="front" class="board__clip" src={collage.paperclip} alt="" width={40} loading="lazy" decoding="async" aria-hidden="true" />
-            </Polaroid>
-          ) : (
-            <Polaroid file={f} index={i} />
-          ),
-        )
-      }
+    <ol class="board" aria-label="The archives" data-effect="reveal" data-effect-options='{"type":"pin","targets":".polaroid-wrap","stagger":0.12}'>
+      {caseFiles.files.map((f, i) => <Polaroid file={f} index={i} />)}
     </ol>
-    <p class="archives__swipe label" aria-hidden="true">{caseFiles.swipeHint} →</p>
+    <p class="archives__swipe" aria-hidden="true">{caseFiles.swipeHint} →</p>
   </div>
 </section>
 
 <style>
-  .archives {
-    position: relative;
-    padding: clamp(4rem, 9vw, 8rem) var(--gutter);
-    background: var(--frame) center / 100% 100% no-repeat, #e6dbc1;
-    color: var(--ink);
-    overflow-x: clip;
-  }
-  .archives__inner {
-    position: relative;
-    z-index: var(--z-content);
-    max-width: 76rem;
-    margin-inline: auto;
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    gap: var(--space-6);
-  }
-  .archives__inner > * {
-    min-width: 0;
-  }
-  .archives__title {
-    font-family: var(--font-display);
-    font-size: clamp(3rem, 2rem + 3.4vw, 5.4rem);
-    line-height: 0.95;
-    color: var(--ink);
-  }
-  .archives__intro {
-    margin-top: var(--space-4);
-    font-style: italic;
-    font-size: var(--step-0);
-    max-width: 26ch;
-  }
   .archives__hint {
-    margin-top: var(--space-3);
-    font-size: 0.9rem;
-    color: var(--ink-muted);
+    font-size: var(--text-small);
+    color: var(--muted);
   }
-
-  /* ---- the board: four polaroids scattered as in the design ---- */
   .board {
-    position: relative;
-    padding: 0;
-    margin: 0;
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--space-5) var(--space-6);
-  }
-  .board :global(.polaroid-wrap) {
-    width: min(100%, 290px);
-  }
-  .board :global(.polaroid-wrap:nth-child(2)) {
-    justify-self: end;
-    margin-top: -2rem;
-  }
-  .board :global(.polaroid-wrap:nth-child(3)) {
-    margin-top: -1rem;
-  }
-  .board :global(.polaroid-wrap:nth-child(4)) {
-    justify-self: end;
-    width: min(100%, 260px);
-  }
-  .board :global(.board__peek) {
-    position: absolute;
-    top: 4%;
-    right: -16%;
-    width: 52%;
-    height: auto;
-    rotate: 7deg;
-    box-shadow: 4px 6px 10px rgb(42 26 18 / 0.25);
-  }
-  .board :global(.board__clip) {
-    position: absolute;
-    top: -9%;
-    left: 74%;
-    width: clamp(16px, 1.6vw, 24px);
-    height: auto;
-    rotate: 4deg;
-    z-index: 1;
-    pointer-events: none;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--space-5);
+    padding: var(--space-3) 0 0;
+    margin: 0;
   }
   .archives__swipe {
     display: none;
   }
-
-  @media (min-width: 960px) {
-    .archives__inner {
-      grid-template-columns: 4fr 7fr;
-      align-items: start;
-    }
-    .archives__lead {
-      padding-top: var(--space-5);
+  @media (max-width: 959px) {
+    .board {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-6) var(--space-5);
     }
   }
-
-  /* phones: a swipeable stack */
-  @media (max-width: 719px) {
-    .archives {
-      /* keep the frame's top and bottom bands; push its side margins off-screen */
-      background-size: 240% 100%, auto;
-      background-position: center, center;
-    }
+  /* phones: a swipeable row (native scroll-snap) */
+  @media (max-width: 599px) {
     .board {
       display: flex;
       gap: var(--space-4);
       overflow-x: auto;
       scroll-snap-type: x mandatory;
       overscroll-behavior-x: contain;
-      padding: var(--space-5) 15vw var(--space-5);
+      padding: var(--space-5) 17vw var(--space-4);
       margin-inline: calc(var(--gutter) * -1);
       scrollbar-width: none;
     }
     .board :global(.polaroid-wrap) {
       flex: 0 0 66vw;
       scroll-snap-align: center;
-      margin: 0 !important;
-      justify-self: auto;
-    }
-    .board :global(.board__peek) {
-      display: none;
     }
     .archives__swipe {
       display: block;
-      color: var(--ink-muted);
+      margin-top: var(--space-2);
+      font-weight: 700;
+      font-size: var(--text-label);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
       text-align: center;
     }
   }

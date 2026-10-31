@@ -81,6 +81,7 @@ const ogUrl = new URL(ogImage, Astro.site).href;
 
     <div class="atmosphere" aria-hidden="true" data-effect="film-grain" data-effect-eager transition:persist="atmosphere">
       <div class="atmosphere__grain"></div>
+      <canvas class="atmosphere__dust" data-effect="film-dust" data-effect-eager></canvas>
       <div class="atmosphere__vignette"></div>
     </div>
     <div class="cursor-host" aria-hidden="true" data-effect="lumos" data-effect-eager data-effect-priority="high" transition:persist="lumos"></div>

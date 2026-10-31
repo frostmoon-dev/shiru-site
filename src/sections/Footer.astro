@@ -3,48 +3,58 @@ import { footer, site } from '../content/site';
 const year = new Date().getFullYear();
 ---
 
-<footer class="footer" data-tone="void">
-  <div class="footer__inner">
-    <p class="footer__line" data-effect="typewriter" data-effect-options={JSON.stringify({ typo: footer.typo })}>{footer.line}</p>
-    <p class="footer__mail flavour"><a href={`mailto:${site.email}`}>{site.email}</a></p>
-    <p class="footer__note caption">{footer.privacy}</p>
-    <p class="footer__small caption">{footer.copyright(year)} {footer.fontsCredit}</p>
-    <p class="footer__top label"><a href="#top">Back to the first page ↑</a></p>
+<footer class="section footer" data-tone="void">
+  <div class="container">
+    <p class="kicker">Case closed · for now</p>
+    <p class="footer__line ahs" data-effect="typewriter" data-effect-options={JSON.stringify({ typo: footer.typo })}>{footer.line}</p>
+    <p class="footer__mail"><a href={`mailto:${site.email}`}>{site.email}</a></p>
+
+    <div class="footer__base">
+      <p>{footer.privacy}</p>
+      <p>{footer.copyright(year)} {footer.fontsCredit}</p>
+      <p><a class="footer__top" href="#top">Back to the first page <span aria-hidden="true">↑</span></a></p>
+    </div>
   </div>
 </footer>
 
 <style>
   .footer {
-    position: relative;
-    padding: var(--space-8) var(--gutter) calc(var(--space-6) + var(--touch));
-  }
-  .footer__inner {
-    position: relative;
-    z-index: var(--z-content);
-    max-width: 72rem;
-    margin-inline: auto;
-    display: grid;
-    gap: var(--space-3);
+    /* leaves room for the hamster dock at the bottom right */
+    padding-bottom: calc(var(--space-7) + var(--space-4));
   }
   .footer__line {
-    font-family: var(--font-display);
-    font-size: clamp(1.5rem, 1rem + 3.4vw, 3.8rem);
-    letter-spacing: 0.14em;
+    margin-top: var(--space-3);
+    font-size: var(--display-2);
+    line-height: 1;
     color: var(--bone);
-    line-height: 1.2;
+    min-height: 1em;
   }
-  .footer__note {
-    max-width: 60ch;
+  .footer__mail {
+    margin-top: var(--space-4);
+    font-size: var(--lead);
+  }
+  .footer__mail a {
+    color: var(--bone);
+  }
+  .footer__base {
+    margin-top: var(--space-7);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--line);
+    display: grid;
+    gap: var(--space-2);
+    max-width: 62ch;
+    font-size: var(--text-small);
+    line-height: 1.6;
     color: var(--muted);
   }
-  .footer__small {
-    color: var(--muted);
-    max-width: 70ch;
-  }
-  .footer__mail a,
-  .footer__top a {
+  .footer__top {
     display: inline-flex;
-    min-height: var(--touch);
     align-items: center;
+    min-height: var(--touch);
+    font-weight: 700;
+    font-size: var(--text-label);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--bone);
   }
 </style>

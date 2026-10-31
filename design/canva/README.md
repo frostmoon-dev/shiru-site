@@ -43,8 +43,7 @@ Without them Canva substitutes similar fonts, and text may wrap a little differe
 ## What doesn't come across
 
 Animation and interaction (the light cursor, film dust, typewriter, glitch, ghost titles, the
-paperclip menu, page turns, the moon video) are code. These files show each screen as a still;
-the moon is its poster frame.
+hamster dock menu, page turns, the envelope opening, the intro static) are code. These files show each screen as a still;
 
 ## Making them again after the site changes
 

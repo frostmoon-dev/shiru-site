@@ -108,7 +108,23 @@ export default function GrimoireBook({ entries, labels }: Props) {
       setStatus(`${labels.title} closed.`);
       window.setTimeout(() => openBtn.current?.focus(), 0);
     });
-    window.setTimeout(() => firstPage.current?.focus(), duration + 50);
+    window.setTimeout(() => {
+      // Focus the first page without the browser yanking it under the fixed top bar,
+      // then bring the whole book into view below that bar.
+      firstPage.current?.focus({ preventScroll: true });
+      const stage = stageRef.current;
+      if (!stage) return;
+      const navH = document.querySelector('.site-nav')?.getBoundingClientRect().height ?? 0;
+      const top = stage.getBoundingClientRect().top;
+      if (top < navH + 8 || top > window.innerHeight * 0.5) {
+        void import('../lib/motion').then(({ getLenis }) => {
+          const offset = -(navH + 16);
+          const lenis = getLenis();
+          if (lenis) lenis.scrollTo(stage, { offset, immediate: reduced });
+          else window.scrollTo({ top: window.scrollY + top + offset });
+        });
+      }
+    }, duration + 50);
     void import('../lib/hints').then((m) => m.markHintUsed('grimoire'));
   };
   const doClose = () => window.shiruOverlay?.close(OVERLAY_ID);

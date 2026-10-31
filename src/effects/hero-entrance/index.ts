@@ -31,16 +31,21 @@ const heroEntrance: EffectFactory = () => {
         tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
         const name = el.querySelector('.hero__title');
         if (name) tl.fromTo(name, { filter: 'blur(14px)', letterSpacing: '0.12em' }, { filter: 'blur(0px)', letterSpacing: '0.01em', duration: 1.8, ease: 'power2.out', clearProps: 'filter,letterSpacing' }, 0);
-        tl.from(el.querySelector('.hero__kicker'), { opacity: 0, y: -8, duration: 0.8 }, 0.2)
+        // Text is uncovered with a wipe rather than faded, so it is never half-transparent
+        // (low-contrast) at any moment: each letter is either hidden or at full strength.
+        const wipe = { clipPath: 'inset(-10% 100% -10% 0)' };
+        const wiped = { clipPath: 'inset(-10% 0% -10% 0)', clearProps: 'clipPath,transform' };
+        tl.fromTo(el.querySelector('.hero__kicker'), { ...wipe, y: -8 }, { ...wiped, y: 0, duration: 0.9, ease: 'power2.inOut' }, 0.2)
           .from(el.querySelector('.hero__newspaper'), { xPercent: 35, yPercent: -35, rotate: 8, opacity: 0, duration: 1.4 }, 0.1)
           .from(el.querySelector('.hero__bow'), { y: -120, rotate: -25, opacity: 0, duration: 1.1, ease: 'back.out(1.5)' }, 0.9)
           .from(el.querySelector('.hero__hand'), { yPercent: 60, opacity: 0, duration: 2.2, ease: 'power2.out' }, 0.6)
-          .from(el.querySelector('.hero__tagline'), { y: 14, opacity: 0, duration: 1 }, 1.3);
-        const menu = q('.menu-btn');
+          .fromTo(el.querySelector('.hero__tagline'), { ...wipe, y: 10 }, { ...wiped, y: 0, duration: 1.1, ease: 'power2.inOut' }, 1.3);
+        const menu = q('.dock__btn');
         if (menu && document.documentElement.classList.contains('at-hero'))
-          tl.from(menu.querySelector('.menu-btn__pet'), { y: 40, scale: 0.7, opacity: 0, duration: 0.9, ease: 'back.out(1.8)' }, 1.6).from(
-            menu.querySelector('.menu-btn__label'),
-            { opacity: 0, y: 6, duration: 0.6 },
+          tl.from(menu.querySelector('.dock__pet'), { y: 40, scale: 0.7, opacity: 0, duration: 0.9, ease: 'back.out(1.8)' }, 1.6).fromTo(
+            menu.querySelector('.dock__label'),
+            { ...wipe },
+            { ...wiped, duration: 0.6, ease: 'power2.inOut' },
             2,
           );
         tl.eventCallback('onComplete', () => show(el));

@@ -20,10 +20,10 @@ const SLIDES = [
   { name: '04-grimoire-closed', path: '/', section: '#grimoire' },
   { name: '05-grimoire-open', path: '/', section: '#grimoire', open: '.book__controls .btn--solid' },
   { name: '06-tea-at-midnight', path: '/', section: '#tea' },
-  // bake: leave these images in the background (the envelope sits under the letter)
-  { name: '07-tea-letter-open', path: '/', section: '#tea', open: '[data-seal]', bake: ['.envelope__img'] },
+  // the seal breaks, the envelope drops away and only the paper is left
+  { name: '07-tea-letter-open', path: '/', section: '#tea', open: '[data-seal]' },
   { name: '08-footer', path: '/', section: 'footer.footer' },
-  { name: '09-archive-page', path: '/archives/moonpaper/', section: 'article.folder-page', nav: true },
+  { name: '09-archive-page', path: '/archives/moonpaper/', section: 'article.file', nav: true },
   { name: '10-grimoire-chapter-page', path: '/grimoire/the-ledger-ghost/', section: 'article.entry', nav: true },
   { name: '11-not-found', path: '/404.html', section: 'main', nav: true },
 ];
@@ -32,7 +32,7 @@ const HIDE_CSS = `
   [data-canva-text], [data-canva-text] * { -webkit-text-fill-color: transparent !important; text-shadow: none !important; text-decoration-color: transparent !important; }
   [data-canva-img] { visibility: hidden !important; }
   .atmosphere, .cursor-host, .webgl-stage, .skip-link, .intro { display: none !important; }
-  [data-canva-nonav] .site-nav, [data-canva-nonav] .hat-btn { display: none !important; }
+  [data-canva-nonav] .site-nav, [data-canva-nonav] .dock { display: none !important; }
 `;
 
 function collect({ sectionSel, nav, darkness, bake }) {
@@ -40,7 +40,7 @@ function collect({ sectionSel, nav, darkness, bake }) {
   const sr = sec.getBoundingClientRect();
   const origin = { x: sr.left + scrollX, y: sr.top + scrollY };
   const roots = [sec];
-  if (nav) roots.push(...document.querySelectorAll('.site-nav, .hat-btn, .close-file'));
+  if (nav) roots.push(...document.querySelectorAll('.site-nav, .dock, .close-file'));
   else document.documentElement.setAttribute('data-canva-nonav', '');
 
   const angleOf = (el) => {
@@ -194,7 +194,7 @@ for (const s of SLIDES) {
   await page.waitForTimeout(1500);
   if (s.open) {
     await page.click(s.open);
-    await page.waitForTimeout(1800);
+    await page.waitForTimeout(2800);
   }
   await page.evaluate(() => Promise.all([...document.images].map((i) => (i.complete ? null : i.decode().catch(() => null)))));
   // screen-reader-only text must not end up in the design

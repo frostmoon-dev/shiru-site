@@ -22,9 +22,8 @@ const { href, label, flag } = Astro.props;
   .close-file {
     position: fixed;
     z-index: var(--z-overlay);
-    top: calc(var(--space-2) + var(--touch) + var(--space-2));
-    /* sits left of the docked hat (76px wide) so the two never overlap */
-    right: calc(var(--gutter) + 76px + var(--space-2));
+    top: calc(var(--space-2) + var(--touch) + var(--space-3));
+    right: max(var(--gutter), calc((100vw - var(--container)) / 2));
     display: inline-flex;
     align-items: center;
     gap: var(--space-1);
@@ -32,7 +31,11 @@ const { href, label, flag } = Astro.props;
     padding: 0 var(--space-2);
     background: var(--void);
     color: var(--bone);
-    border: 1px solid color-mix(in oklch, var(--bone) 35%, transparent);
+    border: 1px solid var(--line);
+    font-weight: 700;
+    font-size: var(--text-label);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
     text-decoration: none;
   }
   .close-file:hover {
@@ -42,7 +45,7 @@ const { href, label, flag } = Astro.props;
   @media (max-width: 719px) {
     /* the nav lives at the bottom on phones, so the close control takes the top corner */
     .close-file {
-      top: var(--space-2);
+      top: calc(var(--touch) + var(--space-3));
       right: var(--space-2);
     }
   }

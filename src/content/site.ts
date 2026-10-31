@@ -32,6 +32,8 @@ export const ui = {
   menuOpen: 'Open the menu.',
   menuClose: 'Close the menu',
   menuTitle: 'Where to?',
+  /** Kicker above each section title (the hero's 'Case No. 0' pattern). */
+  caseNo: (numeral: string, label: string) => `Case No. ${numeral} · ${label}`,
   soundOn: 'Sound on',
   soundOff: 'Sound off',
   soundLabel: 'Ambient sound',
@@ -69,6 +71,7 @@ export const hero = {
 export const about = {
   title: 'Down the rabbit hole',
   /** Inside the lace frame. */
+  /** Lead under the title. */
   card: 'I build and fix systems to keep everything in balance. Some things, however, refuse to be fixed. Perhaps that is the difference between the sentient and the lifeless.',
   sweet: 'One must have something sweet between peculiarities.',
   sweetAlt: 'A blueberry bun, split open.',
@@ -101,7 +104,7 @@ export type CaseFile = {
 };
 
 export const caseFiles = {
-  title: 'The Archives',
+  title: 'The archives',
   intro: 'Four open investigations. None of them are closed.',
   hint: 'Pick a file. They don’t bite. Mostly.',
   swipeHint: 'Swipe through the files',
@@ -127,7 +130,7 @@ export const caseFiles = {
       summary: 'TODO: one or two lines on what Napyru is.',
       photo: 'archive-napyru',
       photoAlt: 'Placeholder image for Napyru.',
-      rotation: 14,
+      rotation: 1.5,
       details: [{ heading: 'What it is', body: 'TODO: describe Napyru.' }],
       evidence: ['TODO'],
     },
@@ -139,7 +142,7 @@ export const caseFiles = {
       summary: 'TODO: one or two lines on what Moona is.',
       photo: 'archive-moona',
       photoAlt: 'Placeholder image for Moona.',
-      rotation: -14,
+      rotation: -1.5,
       details: [{ heading: 'What it is', body: 'TODO: describe Moona.' }],
       evidence: ['TODO'],
     },
@@ -151,7 +154,7 @@ export const caseFiles = {
       summary: 'TODO: one or two lines on the visual themes.',
       photo: 'archive-visual-themes',
       photoAlt: 'Placeholder image for Visual themes.',
-      rotation: 5,
+      rotation: 2,
       details: [{ heading: 'What they are', body: 'TODO: describe the visual themes.' }],
       evidence: ['TODO'],
     },
@@ -260,15 +263,15 @@ export const tea = {
   error: (email: string) => `The raven got lost. Try again, or email me directly at ${email}.`,
   /** Shown as icons. TODO: real LinkedIn and GitHub URLs. */
   links: [
-    { label: 'Email', icon: 'mail', href: 'mailto:shinabaeing@gmail.com' },
-    { label: 'LinkedIn', icon: 'linkedin', href: 'https://www.linkedin.com/' },
-    { label: 'GitHub', icon: 'github', href: 'https://github.com/' },
-  ] as { label: string; icon: 'mail' | 'linkedin' | 'github'; href: string }[],
+    { label: 'Email', icon: 'mail', href: 'mailto:shinabaeing@gmail.com', detail: 'shinabaeing@gmail.com' },
+    { label: 'LinkedIn', icon: 'linkedin', href: 'https://www.linkedin.com/', detail: 'The professional record' },
+    { label: 'GitHub', icon: 'github', href: 'https://github.com/', detail: 'Code, experiments, unfinished things' },
+  ] as { label: string; icon: 'mail' | 'linkedin' | 'github'; href: string; detail: string }[],
 };
 
 export const footer = {
-  line: 'COME BACK AFTER DARK',
-  typo: { at: 9, wrong: 'V' },
+  line: 'Come back after dark',
+  typo: { at: 6, wrong: 'o' },
   privacy:
     'No cookies, no trackers, no analytics. Your browser remembers only whether you’ve seen the intro this session and which hints you’ve used. Nothing leaves your device unless you send me a letter.',
   copyright: (year: number) => `© ${year} Shiru. Text and photos all rights reserved.`,

@@ -73,6 +73,39 @@ const introEffect: EffectFactory = () => {
       const progress = target.querySelector<HTMLElement>('[data-intro-progress]');
       const candle = target.querySelector('.intro__candle');
 
+      // TV static: a 320×180 canvas of grey snow, scaled up, with a slow rolling bar.
+      const staticCanvas = target.querySelector<HTMLCanvasElement>('.intro__static');
+      const sctx = staticCanvas?.getContext('2d');
+      let staticRaf = 0;
+      const snow = sctx ? sctx.createImageData(320, 180) : undefined;
+      const drawStatic = (t: number) => {
+        if (!sctx || !snow) return;
+        const d = snow.data;
+        const bar = ((t / 6) % 220) - 20;
+        for (let y = 0; y < 180; y++) {
+          const rowBoost = Math.abs(y - bar) < 8 ? 40 : 0;
+          for (let x = 0; x < 320; x++) {
+            const v = Math.min(255, (Math.random() * 170) | 0) + rowBoost;
+            const i = (y * 320 + x) * 4;
+            d[i] = d[i + 1] = d[i + 2] = v;
+            d[i + 3] = 255;
+          }
+        }
+        sctx.putImageData(snow, 0, 0);
+      };
+      const staticBurst = (seconds: number) => {
+        if (!staticCanvas) return;
+        const end = performance.now() + seconds * 1000;
+        gsap.set(staticCanvas, { opacity: 0.32 });
+        const loop = (now: number) => {
+          drawStatic(now);
+          if (now < end) staticRaf = requestAnimationFrame(loop);
+          else gsap.set(staticCanvas, { opacity: 0 });
+        };
+        cancelAnimationFrame(staticRaf);
+        staticRaf = requestAnimationFrame(loop);
+      };
+
       tl = gsap.timeline({ onComplete: finish });
       tl.from([candle, target.querySelector('.intro__glow')], { opacity: 0, duration: 0.6, ease: 'power1.out' });
 
@@ -124,7 +157,12 @@ const introEffect: EffectFactory = () => {
           };
           requestAnimationFrame(step);
         };
-        imgs.forEach((img, i) => tl!.call(flash, [img], 0.85 + i * 0.24));
+        tl.call(staticBurst, [0.28], 0.55);
+        imgs.forEach((img, i) => {
+          tl!.call(flash, [img], 0.85 + i * 0.24);
+          if (i % 2 === 1) tl!.call(staticBurst, [0.07], 0.85 + i * 0.24 + 0.12);
+        });
+        tl.call(staticBurst, [0.2], 1.95);
       }
       // The candle goes out.
       tl.to(flame, { scaleY: 0, opacity: 0, transformOrigin: '60px 88px', duration: 0.3, ease: 'power2.in' }, burst ? 2.05 : 1.1)

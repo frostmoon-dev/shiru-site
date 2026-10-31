@@ -399,3 +399,126 @@ html.at-hero .atmosphere__vignette {
     opacity: 0;
   }
 }
+
+/* =====================================================================
+   Layout + type system (Nov 2026 overhaul): one column, one rhythm.
+   Every section: kicker → 24px → title → 24px → lead → 64px → content.
+   ===================================================================== */
+:root {
+  --container: 75rem; /* 1200px */
+  --section-pad: clamp(6rem, 4rem + 7vw, 10rem);
+  --line: rgb(232 220 194 / 0.14);
+  --text-body: #d4c9b1; /* 11.6:1 on void */
+  --display-1: clamp(3.4rem, 1.2rem + 7.6vw, 8.75rem);
+  --display-2: clamp(2.6rem, 1.6rem + 3.4vw, 4.5rem);
+  --lead: clamp(1.125rem, 1.02rem + 0.35vw, 1.375rem);
+}
+.container {
+  width: min(100% - 2 * var(--gutter), var(--container));
+  margin-inline: auto;
+}
+.section {
+  position: relative;
+  padding-block: var(--section-pad);
+  background-color: var(--void);
+  color: var(--bone);
+}
+/* each case opens with a hairline across the column */
+.section > .container::before {
+  content: '';
+  display: block;
+  height: 1px;
+  background: var(--line);
+  margin-bottom: var(--space-6);
+}
+
+/* American Horror Story face: normal case + ss04 gives round O's; joins off (no "oo" ligature) */
+.ahs,
+h1,
+h2,
+.display-1,
+.display-2 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  text-transform: none;
+  font-feature-settings: 'ss04' 1, 'liga' 0, 'dlig' 0;
+  font-variant-ligatures: none;
+  letter-spacing: 0.015em;
+}
+.display-1 {
+  font-size: var(--display-1);
+  line-height: 0.9;
+}
+.display-2 {
+  font-size: var(--display-2);
+  line-height: 0.95;
+}
+.kicker {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: var(--text-label);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  line-height: 1.4;
+  color: var(--muted);
+}
+.lead {
+  font-size: var(--lead);
+  font-style: italic;
+  line-height: 1.55;
+  color: var(--bone);
+  max-width: 38ch;
+}
+.body-copy {
+  font-size: var(--step-0);
+  line-height: 1.75;
+  color: var(--text-body);
+  max-width: 62ch;
+}
+.body-copy > * + * {
+  margin-top: var(--space-4);
+}
+.section-head > * + * {
+  margin-top: var(--space-3);
+}
+.section-head + * {
+  margin-top: var(--space-7);
+}
+
+/* hairline data list (facts, evidence, contact) */
+.facts {
+  border-top: 1px solid var(--line);
+}
+.facts__row {
+  display: grid;
+  grid-template-columns: 11rem 1fr;
+  gap: var(--space-3);
+  align-items: baseline;
+  padding-block: var(--space-2);
+  border-bottom: 1px solid var(--line);
+}
+.facts__row dt {
+  font-weight: 700;
+  font-size: var(--text-label);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.facts__row dd {
+  color: var(--bone);
+}
+@media (max-width: 599px) {
+  .facts__row {
+    grid-template-columns: 1fr;
+    gap: var(--space-half);
+  }
+}
+
+/* ---------- Film dust over the whole site (effects/film-dust) ---------- */
+.atmosphere__dust {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  mix-blend-mode: screen;
+}

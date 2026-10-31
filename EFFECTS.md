@@ -133,13 +133,13 @@ The interface doesn't care what's inside `mount()`:
 | `ghost-title` | a heading surfaces out of the grain the first time you reach it, then now and then slips into a faint double exposure for a frame | plain title |
 | `lantern-reveal` | uncovers a hidden layer only where the light falls (currently unused; the hero follows Shiru's Canva design) | still pool of light |
 | `wet-ink` | text swells and smears for a moment | nothing |
-| `ink-edge` | liquid ink shader at the hero's bottom, scroll-stretched (desktop); animated SVG on phones | frozen SVG drips |
+| `ink-edge` | liquid ink shader edge, scroll-stretched (desktop); animated SVG on phones (currently unused) | frozen SVG drips |
 | `lumos` | the cursor carries a small light: a bright tip, a trailing halo, pale motes; a click flares it (mouse only, system cursor stays) | light follows exactly, no motes/flare |
 | `ambient-video` | a silent looping background video, fetched only near the viewport and dropped when far away | poster frame |
 | `fall-parallax` | rabbit-hole drift, tumbling props, zoom-in, tilting floor | props at rest |
 | `section-wipe` | `tear`, `burn`, `pinstripe`, `ink-rise` chapter transitions | the static edge |
 | `typewriter` | types text letter by letter, keeping line breaks; optional one-letter typo that corrects itself; `waitForIntro` and `data-type-early` (stay hidden until typing) | full text |
 | `reveal` | entrance animations played once on scroll: `rise`, `settle`, `pin` (polaroids), `pop`, `unfurl` (the scroll), `paint` (brush strokes, gingham), `slide`; options `targets`, `stagger`, `delay`, `start` | everything simply there |
-| `hero-entrance` | after the intro: the name sharpens out of a blur, newspaper slides in, bow drops, hand rises, tagline surfaces, hamster peeks up with "Navigate." ([data-enter] elements, 8 s CSS fail-safe) | everything simply there |
-| `film-dust` | old-film specks, hairs and scratches redrawn ~12×/s on a canvas (the hero) | one still frame of dust |
-| `intro` | candle → photo burst → hero, ≤ 3 s, once per session | still candle, then fade |
+| `hero-entrance` | after the intro: the name sharpens out of a blur, newspaper slides in, bow drops, hand rises; the kicker, tagline and "Navigate." are uncovered with a wipe (never half-transparent, so contrast holds at every frame); the hamster dock peeks up ([data-enter] elements, 8 s CSS fail-safe) | everything simply there |
+| `film-dust` | old-film specks, hairs and scratches redrawn ~12×/s on one fixed canvas over the whole site (in the atmosphere layer) | one still frame of dust |
+| `intro` | candle → TV static → photo burst cut with short static bursts → static → hero, ≤ 3 s (hard cap 2.7 s), once per session | still candle, then fade (no static) |

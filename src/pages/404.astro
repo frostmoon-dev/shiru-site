@@ -6,12 +6,16 @@ import { notFound } from '../content/site';
 ---
 
 <Base title={notFound.title} description={notFound.body} noindex>
-  <section class="lost" data-tone="night" aria-labelledby="lost-title">
-    <div class="lost__clock" aria-hidden="true"><Image src={design.pocketWatch} alt="" width={240} loading="eager" decoding="async" /></div>
-    <p class="label lost__label">{notFound.label}</p>
-    <h1 id="lost-title" class="lost__title" data-effect="ghost-title">{notFound.title}</h1>
-    <p class="flavour lost__body">{notFound.body}</p>
-    <p><a class="btn" href="/">{notFound.back}</a></p>
+  <section class="section lost" data-tone="void" aria-labelledby="lost-title">
+    <div class="container lost__grid">
+      <header class="section-head">
+        <p class="kicker">Case No. ? · Missing</p>
+        <h1 id="lost-title" class="display-2" data-effect="ghost-title">{notFound.title}</h1>
+        <p class="lead">{notFound.body}</p>
+        <p><a class="btn" href="/">{notFound.back}</a></p>
+      </header>
+      <div class="lost__watch" aria-hidden="true"><Image src={design.pocketWatch} alt="" width={320} loading="eager" decoding="async" /></div>
+    </div>
   </section>
 </Base>
 
@@ -19,24 +23,26 @@ import { notFound } from '../content/site';
   .lost {
     min-height: 100svh;
     display: grid;
-    align-content: center;
-    justify-items: start;
-    gap: var(--space-3);
-    padding: var(--space-8) var(--gutter);
-    max-width: 60rem;
-    margin-inline: auto;
+    align-items: center;
   }
-  .lost__clock {
-    width: clamp(110px, 12vw, 170px);
-    margin-bottom: var(--space-3);
+  .lost__grid {
+    display: grid;
+    gap: var(--space-6);
+  }
+  .lost__grid::before {
+    grid-column: 1 / -1;
+  }
+  .lost__watch {
+    justify-self: center;
+    width: clamp(120px, 16vw, 220px);
     transform-origin: 62% 0;
     animation: watch-swing 4.8s var(--ease-ink) infinite;
   }
-  .lost__clock :global(img) {
+  .lost__watch :global(img) {
     width: 100%;
     height: auto;
   }
-  /* the watch hangs from its chain and swings, slowly, the wrong way round */
+  /* the watch hangs from its chain and swings, slowly */
   @keyframes watch-swing {
     0%,
     100% {
@@ -46,16 +52,10 @@ import { notFound } from '../content/site';
       rotate: 6deg;
     }
   }
-  .lost__label {
-    color: var(--muted);
-  }
-  .lost__title {
-    font-size: var(--step-5);
-    color: var(--bone);
-    max-width: 16ch;
-    margin-bottom: var(--space-4);
-  }
-  .lost__body {
-    max-width: 34ch;
+  @media (min-width: 960px) {
+    .lost__grid {
+      grid-template-columns: 8fr 4fr;
+      align-items: center;
+    }
   }
 </style>
