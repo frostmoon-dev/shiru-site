@@ -196,7 +196,7 @@ const gingham = await getImage({ src: design.gingham, width: 1600, format: 'webp
   .about__gingham {
     height: clamp(64px, 8.2vw, 118px);
     margin-inline: calc(var(--gutter) * -1);
-    background: var(--gingham) center / auto 230% repeat-x;
+    background: var(--gingham) center top / max(100%, 1200px) auto repeat-x;
   }
 
   @media (min-width: 960px) {
