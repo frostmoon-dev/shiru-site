@@ -1,0 +1,496 @@
+---
+import { chapters, history, ui, type Job } from '../content/site';
+import SectionHead from '../components/SectionHead.astro';
+import { ahs } from '../lib/ahs';
+
+const ch = chapters.find((c) => c.id === 'history')!;
+
+// Dates read like LinkedIn: "Feb 2022 – Feb 2023 · 1 yr 1 mo". Months count inclusively.
+// The current job's length is worked out when the site is built.
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const parse = (ym: string) => {
+  const [y, m] = ym.split('-').map(Number) as [number, number];
+  return { y, m };
+};
+const label = (ym: string) => {
+  const { y, m } = parse(ym);
+  return `${MONTHS[m - 1]} ${y}`;
+};
+const now = new Date();
+const nowYm = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+const length = (job: Job) => {
+  const a = parse(job.start);
+  const b = parse(job.end ?? nowYm);
+  const months = (b.y - a.y) * 12 + (b.m - a.m) + 1;
+  const yrs = Math.floor(months / 12);
+  const mos = months % 12;
+  const parts = [yrs ? `${yrs} yr${yrs > 1 ? 's' : ''}` : '', mos ? `${mos} mo${mos > 1 ? 's' : ''}` : ''].filter(Boolean);
+  return parts.join(' ');
+};
+const span = (job: Job) =>
+  job.end === job.start ? label(job.start) : `${label(job.start)} – ${job.end ? label(job.end) : history.present}`;
+---
+
+<section id={ch.id} class="section history" data-tone="void" aria-labelledby="history-title">
+  <div class="container">
+    <SectionHead id="history-title" kicker={ui.caseNo(ch.numeral, ch.label)} title={history.title} lead={history.lead} />
+
+    <div class="trail" data-effect="red-thread">
+      <span class="trail__thread" aria-hidden="true"><span class="trail__fill"></span></span>
+      <ol class="trail__list">
+        {
+          history.jobs.map((job, i) => {
+            const current = !job.end;
+            return (
+              <li class:list={['job', i % 2 ? 'job--right' : 'job--left', current && 'job--current']}>
+                {/* the ghost year is drawn by CSS (content: attr), so it's decoration, not faint text */}
+                <span class="job__year" data-year={job.start.slice(0, 4)} aria-hidden="true" />
+                <span class="job__pin" aria-hidden="true" />
+                <article class="job__card" aria-labelledby={`job-${job.id}`}>
+                  <p class="job__when">
+                    {current && <span class="job__now">{history.now}</span>}
+                    <time datetime={job.start}>{span(job)}</time>
+                    <span aria-hidden="true"> · </span>
+                    <span>{length(job)}</span>
+                  </p>
+                  <h3 class="job__role" id={`job-${job.id}`}>
+                    {ahs(job.role)}
+                  </h3>
+                  <p class="job__org">{job.org}</p>
+                  <p class="job__meta">
+                    {job.kind} · {job.place}
+                  </p>
+                  <p class="job__summary">{job.summary}</p>
+
+                  <details class="job__file">
+                    <summary>
+                      <span class="job__toggle-open">{history.open}</span>
+                      <span class="job__toggle-close">{history.close}</span>
+                      <svg class="job__chev" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                        <path d="M5.5 9.2c2.3 2 4.4 4 6.5 6.3 2.2-2.4 4.3-4.4 6.6-6.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+                      </svg>
+                    </summary>
+                    <div class="job__body">
+                      <ul class="job__points">
+                        {job.points.map((p) => (
+                          <li>{p}</li>
+                        ))}
+                      </ul>
+                      {job.milestone && (
+                        <p class="job__milestone">
+                          <span class="job__milestone-when">{job.milestone.when}</span>
+                          {job.milestone.what}
+                        </p>
+                      )}
+                      {job.projects && (
+                        <>
+                          <p class="kicker job__sub">{history.projectsLabel}</p>
+                          <dl class="job__projects">
+                            {job.projects.map((p) => (
+                              <div>
+                                <dt>
+                                  {p.name} <span class="job__project-when">{p.when}</span>
+                                </dt>
+                                <dd>{p.what}</dd>
+                              </div>
+                            ))}
+                          </dl>
+                        </>
+                      )}
+                      <p class="kicker job__sub">{history.skillsLabel}</p>
+                      <ul class="job__skills">
+                        {job.skills.map((k) => (
+                          <li>{k}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </details>
+                </article>
+              </li>
+            );
+          })
+        }
+      </ol>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* ---- the red thread ---- */
+  .trail {
+    --thread-x: 1.25rem;
+    --pin: 14px;
+    position: relative;
+  }
+  .trail__thread {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: var(--thread-x);
+    width: 2px;
+    translate: -50% 0;
+    background: rgb(232 220 194 / 0.08);
+  }
+  .trail__fill {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(var(--blood), var(--blood-lit));
+    transform-origin: 50% 0;
+    box-shadow: 0 0 8px rgb(163 20 27 / 0.6);
+  }
+  .trail__list {
+    position: relative;
+    display: grid;
+    gap: var(--space-7);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  /* ---- one job ---- */
+  .job {
+    position: relative;
+    padding-left: calc(var(--thread-x) + var(--space-5));
+  }
+  /* the big year, a ghost behind the card */
+  .job__year::before {
+    content: attr(data-year);
+  }
+  .job__year {
+    display: block;
+    position: absolute;
+    top: -0.35em;
+    right: 0;
+    margin: 0;
+    font-family: var(--font-display);
+    font-feature-settings: 'ss04' 1, 'liga' 0, 'dlig' 0;
+    font-size: clamp(5rem, 3rem + 9vw, 11rem);
+    line-height: 1;
+    color: var(--bone);
+    opacity: 0.06;
+    pointer-events: none;
+    user-select: none;
+  }
+  /* the pin on the thread, and the string out to the card */
+  .job__pin {
+    position: absolute;
+    top: calc(var(--space-4) + 0.35rem);
+    left: var(--thread-x);
+    width: var(--pin);
+    height: var(--pin);
+    translate: -50% -50%;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #e5434a, #6b0c11 70%);
+    box-shadow: 0 0 0 3px var(--void), 0 0 14px rgb(229 67 74 / 0.55);
+    z-index: 1;
+  }
+  .job__pin::after {
+    /* the string from the pin to the card */
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    width: calc(var(--space-5) - var(--pin) / 2);
+    height: 1px;
+    background: var(--blood-lit);
+    transform-origin: 0 50%;
+  }
+
+  .job__card {
+    position: relative;
+    padding: var(--space-4) var(--space-4) var(--space-3);
+    background: rgb(13 11 12 / 0.92);
+    border: 1px solid var(--line);
+    transition:
+      border-color var(--dur-base) var(--ease-out),
+      translate var(--dur-base) var(--ease-out);
+  }
+  .job:hover .job__card,
+  .job:focus-within .job__card {
+    border-color: rgb(232 220 194 / 0.4);
+    translate: 0 -3px;
+  }
+  .job__when {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0 var(--space-1);
+    font-weight: 700;
+    font-size: var(--text-label);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .job__now {
+    padding: 2px var(--space-1);
+    margin-right: var(--space-half);
+    background: var(--blood);
+    color: var(--bone);
+  }
+  .job__role {
+    margin-top: var(--space-2);
+    font-size: var(--step-3);
+    line-height: 1;
+    color: var(--bone);
+  }
+  .job__org {
+    margin-top: var(--space-2);
+    font-weight: 700;
+    color: var(--bone);
+  }
+  .job__meta {
+    font-size: var(--text-small);
+    color: var(--muted);
+  }
+  .job__summary {
+    margin-top: var(--space-3);
+    max-width: 52ch;
+    color: var(--text-body);
+    line-height: 1.6;
+  }
+
+  /* ---- the file inside ---- */
+  .job__file {
+    margin-top: var(--space-3);
+    border-top: 1px solid var(--line);
+  }
+  .job__file summary {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    min-height: var(--touch);
+    padding-top: var(--space-1);
+    list-style: none;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: var(--text-label);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--bone);
+  }
+  .job__file summary::-webkit-details-marker {
+    display: none;
+  }
+  .job__file summary:hover .job__toggle-open,
+  .job__file summary:hover .job__toggle-close {
+    text-decoration: underline;
+    text-decoration-color: var(--blood-lit);
+    text-underline-offset: 4px;
+  }
+  .job__toggle-close,
+  .job__file[open] .job__toggle-open {
+    display: none;
+  }
+  .job__file[open] .job__toggle-close {
+    display: inline;
+  }
+  .job__chev {
+    transition: rotate var(--dur-base) var(--ease-out);
+  }
+  .job__file[open] .job__chev {
+    rotate: 180deg;
+  }
+  .job__body {
+    padding: var(--space-2) 0 var(--space-2);
+    animation: file-in 0.45s var(--ease-out);
+  }
+  @keyframes file-in {
+    from {
+      opacity: 0;
+      translate: 0 -6px;
+    }
+  }
+  .job__points {
+    display: grid;
+    gap: var(--space-1);
+    padding-left: 1.1em;
+    margin: 0;
+    color: var(--text-body);
+    line-height: 1.6;
+  }
+  .job__points li::marker {
+    color: var(--blood-lit);
+  }
+  .job__milestone {
+    margin-top: var(--space-3);
+    padding: var(--space-2);
+    border-left: 2px solid var(--blood-lit);
+    background: rgb(232 220 194 / 0.04);
+    color: var(--bone);
+  }
+  .job__milestone-when {
+    display: block;
+    font-weight: 700;
+    font-size: var(--text-label);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .job__sub {
+    margin-top: var(--space-4);
+  }
+  .job__projects {
+    margin: var(--space-2) 0 0;
+    border-top: 1px solid var(--line);
+  }
+  .job__projects > div {
+    padding-block: var(--space-2);
+    border-bottom: 1px solid var(--line);
+  }
+  .job__projects dt {
+    font-weight: 700;
+    color: var(--bone);
+  }
+  .job__project-when {
+    font-weight: 400;
+    font-size: var(--text-small);
+    color: var(--muted);
+  }
+  .job__projects dd {
+    margin: var(--space-half) 0 0;
+    color: var(--text-body);
+    line-height: 1.6;
+  }
+  .job__skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+    list-style: none;
+    padding: 0;
+    margin: var(--space-2) 0 0;
+  }
+  .job__skills li {
+    padding: var(--space-half) var(--space-1);
+    border: 1px solid var(--line);
+    font-size: var(--text-small);
+    color: var(--bone);
+  }
+
+  /* ---- the current job: the pin breathes ---- */
+  .job--current .job__pin::before {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    border: 1px solid var(--blood-lit);
+    animation: pin-breathe 2.8s var(--ease-ink) infinite;
+  }
+  @keyframes pin-breathe {
+    0% {
+      scale: 0.7;
+      opacity: 0.9;
+    }
+    100% {
+      scale: 1.9;
+      opacity: 0;
+    }
+  }
+
+  /* ---- lighting up as the thread arrives (only once the effect is running) ---- */
+  :global(.trail.is-armed) .job:not(.is-lit) .job__pin {
+    background: #2b2627;
+    box-shadow: 0 0 0 3px var(--void);
+  }
+  :global(.trail.is-armed) .job:not(.is-lit) .job__pin::after {
+    scale: 0 1;
+  }
+  :global(.trail.is-armed) .job:not(.is-lit) .job__card {
+    border-color: rgb(232 220 194 / 0.06);
+  }
+  .job.is-lit .job__pin {
+    animation: pin-flicker 0.7s steps(1, end);
+  }
+  .job.is-lit .job__pin::after {
+    transition: scale 0.45s var(--ease-out) 0.15s;
+  }
+  .job.is-lit .job__card {
+    animation: card-flicker 0.7s steps(1, end);
+  }
+  /* a bad bulb: two short catches, then on (well under 3 flashes a second) */
+  @keyframes pin-flicker {
+    0% {
+      filter: brightness(0.3);
+    }
+    20% {
+      filter: brightness(1.4);
+    }
+    35% {
+      filter: brightness(0.4);
+    }
+    60%,
+    100% {
+      filter: none;
+    }
+  }
+  @keyframes card-flicker {
+    0% {
+      border-color: rgb(232 220 194 / 0.06);
+    }
+    20% {
+      border-color: rgb(229 67 74 / 0.7);
+    }
+    35% {
+      border-color: rgb(232 220 194 / 0.06);
+    }
+    60%,
+    100% {
+      border-color: var(--line);
+    }
+  }
+
+  /* ---- wide screens: the thread down the middle, cards alternating ---- */
+  @media (min-width: 960px) {
+    .trail {
+      --thread-x: 50%;
+    }
+    .trail__list {
+      gap: var(--space-6);
+    }
+    .job {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      column-gap: calc(var(--space-6) * 2);
+      padding-left: 0;
+    }
+    .job--left .job__card {
+      grid-column: 1;
+    }
+    .job--right .job__card {
+      grid-column: 2;
+    }
+    .job__year {
+      top: 0;
+    }
+    .job--left .job__year {
+      left: calc(50% + var(--space-6));
+      right: auto;
+    }
+    .job--right .job__year {
+      right: calc(50% + var(--space-6));
+      left: auto;
+      text-align: right;
+    }
+    .job__pin::after {
+      width: calc(var(--space-6) - var(--pin) / 2);
+    }
+    /* left cards: the string runs leftwards from the pin */
+    .job--left .job__pin::after {
+      left: auto;
+      right: 100%;
+      transform-origin: 100% 50%;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .job.is-lit .job__pin,
+    .job.is-lit .job__card,
+    .job--current .job__pin::before,
+    .job__body {
+      animation: none;
+    }
+    .job__card,
+    .job__chev {
+      transition: none;
+    }
+  }
+</style>

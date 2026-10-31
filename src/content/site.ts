@@ -17,12 +17,12 @@ export const site = {
   ogImageAlt: 'The name TEHA in pale lettering on black, under the line Case No. 0, Subject: unknown.',
 } as const;
 
-export type ChapterId = 'rabbit-hole' | 'record' | 'archives' | 'grimoire' | 'tea';
+export type ChapterId = 'rabbit-hole' | 'record' | 'history' | 'grimoire' | 'tea';
 
 export const chapters: { id: ChapterId; numeral: string; label: string; title: string }[] = [
   { id: 'rabbit-hole', numeral: 'I', label: 'About', title: 'Down the rabbit hole' },
   { id: 'record', numeral: 'II', label: 'Résumé', title: 'On the record' },
-  { id: 'archives', numeral: 'III', label: 'Work', title: 'The archives' },
+  { id: 'history', numeral: 'III', label: 'Employment', title: 'The paper trail' },
   { id: 'grimoire', numeral: 'IV', label: 'Career', title: 'The grimoire' },
   { id: 'tea', numeral: 'V', label: 'Contact', title: 'Tea at midnight' },
 ];
@@ -128,167 +128,116 @@ export const record = {
   more: 'The long version is in the grimoire',
 };
 
-export type CaseFile = {
-  slug: string;
-  number: string;
-  title: string;
+export type Job = {
+  id: string;
+  role: string;
+  org: string;
+  /** e.g. "Full-time", "Apprenticeship". */
+  kind: string;
+  place: string;
+  /** "YYYY-MM". The end is left out while the job is current. */
+  start: string;
+  end?: string;
   summary: string;
-  photo: 'bond-garden' | 'moonpaper' | 'napyru' | 'moona' | 'fo-task-board' | 'colour-themes';
-  photoAlt: string;
-  /** Where the square polaroid crop of the (wide) screenshot centres: a CSS object-position. */
-  focus?: string;
-  rotation: number;
-  details: { heading: string; body: string }[];
-  stack: string[];
-  links?: { href: string; label: string }[];
-  /** Shown instead of links when the code isn't public. */
-  isPrivate?: boolean;
-  /** Fan-work credit line. */
-  note?: string;
+  points: string[];
+  /** Client projects inside the role. */
+  projects?: { name: string; when: string; what: string }[];
+  /** Something that happened during the role (e.g. a certification). */
+  milestone?: { when: string; what: string };
+  skills: string[];
 };
 
-const gh = (repo: string) => ({ label: 'Source on GitHub', href: `https://github.com/frostmoon-dev/${repo}` });
-
 /**
- * Chapter III: side projects. The text comes from Teha's earlier portfolio (frostmoon-dev/my-portfolio,
- * content/projects.ts), where every line was checked against each repo's README and package.json.
+ * Chapter III: employment history, oldest first. Roles, dates and places follow LinkedIn;
+ * the details follow LinkedIn and the CV. Durations are worked out from the dates at build time.
  */
-export const caseFiles = {
-  title: 'The archives',
-  intro: 'What I build after hours. Six open investigations; none of them are closed.',
-  hint: 'Pick a file. They don’t bite. Mostly.',
-  swipeHint: 'Swipe through the files',
-  files: [
+export const history = {
+  title: 'The paper trail',
+  lead: 'Every job, in the order it happened. Follow the red thread; open any file for the details.',
+  hint: 'Each card opens.',
+  open: 'Open the file',
+  close: 'Close the file',
+  present: 'present',
+  now: 'Now',
+  projectsLabel: 'Cases worked',
+  skillsLabel: 'Tools',
+  jobs: [
     {
-      slug: 'bond-garden',
-      number: 'No. 1',
-      title: 'Bond Garden',
-      summary: 'A visual-novel chat in the style of Fate/Grand Order: you write your lines, and AI characters answer with dialogue, narration and changing expressions.',
-      photo: 'bond-garden',
-      photoAlt: 'Bond Garden: a grid of character cards (BB, Castoria, Charlemagne, Ereshkigal) with bond levels and Start buttons.',
-      focus: '42% 50%',
-      rotation: -2,
-      details: [
-        {
-          heading: 'What it is',
-          body: 'A visual-novel chat in the style of Fate/Grand Order. You write your lines, and AI characters answer with dialogue, narration and sprite expression changes.',
-        },
-        {
-          heading: 'Proud of',
-          body: 'Works with any OpenAI-compatible API, streamed. The API key is stored encrypted and never reaches the browser. The reply parser, lorebook, prompt builder, summaries and SSE stream all have tests.',
-        },
+      id: 'aats',
+      role: 'Maintenance Engineer',
+      org: 'Advanced Air Traffic Systems (M) Sdn. Bhd.',
+      kind: 'Apprenticeship',
+      place: 'Kota Kinabalu, Sabah · On-site',
+      start: '2019-10',
+      end: '2019-10',
+      summary: 'A Network Attached Storage (NAS) system, built from the ground up.',
+      points: [
+        'Built a Network Attached Storage (NAS) system from the ground up.',
+        'Practical experience in hardware assembly, network configuration, and bringing individual components together into one working system.',
       ],
-      stack: ['Next.js 16', 'TypeScript', 'Prisma 7', 'Supabase Postgres', 'Tailwind 4', 'Vitest'],
-      links: [gh('fgo-bot-garden')],
-      note: 'Fan project. Fate/Grand Order © TYPE-MOON / FGO PROJECT.',
+      skills: ['Hardware assembly', 'Networking'],
     },
     {
-      slug: 'moonpaper',
-      number: 'No. 2',
-      title: 'MoonPaper',
-      summary: 'A roleplay chat site for my own characters, with a layered memory that keeps long stories cheap to continue.',
-      photo: 'moonpaper',
-      photoAlt: 'MoonPaper: a chat with BB, a purple-haired character, her reply set over a moonlit illustration.',
-      focus: '56% 40%',
-      rotation: 1.5,
-      details: [
-        {
-          heading: 'What it is',
-          body: 'A roleplay chat site for my own characters: bots, lorebooks, personas, image cropping and Character Card V2 import/export.',
-        },
-        {
-          heading: 'Proud of',
-          body: 'Layered memory (recent messages, chapters, a story so far, lasting facts and keyword recall), ordered so providers can cache most of each prompt. In a 200-message test chat it cut a reply’s input from about 7,800 to about 2,100 tokens. Everything lives in IndexedDB; no server stores your key.',
-        },
+      id: 'commit-consultant',
+      role: 'Junior Consultant',
+      org: 'COMM-iT Group',
+      kind: 'Full-time',
+      place: 'Petaling Jaya, Selangor · On-site',
+      start: '2022-02',
+      end: '2023-02',
+      summary: 'Led the redesign of the company website, with X++ alongside.',
+      points: [
+        'Led the redesign of the company website using WordPress, reshaping its visual identity through more cohesive branding, thoughtful presentation and a refreshed digital experience.',
       ],
-      stack: ['JavaScript', 'IndexedDB', 'Vercel Functions', 'PWA'],
-      links: [gh('fgo-lore-site')],
+      skills: ['X++', 'WordPress'],
     },
     {
-      slug: 'napyru',
-      number: 'No. 3',
-      title: 'Napyru',
-      summary: 'A private messenger PWA for exactly two people, calm and built around the conversation.',
-      photo: 'napyru',
-      photoAlt: 'Napyru: a two-person chat over a black-and-white drawing, with a sidebar for chat, plans, map, memories and bond.',
-      focus: '45% 50%',
-      rotation: -1.5,
-      details: [
-        { heading: 'What it is', body: 'A private messenger PWA for exactly two people, calm and built around the conversation.' },
+      id: 'commit-developer',
+      role: 'Software Developer',
+      org: 'COMM-iT Group',
+      kind: 'Full-time',
+      place: 'Petaling Jaya, Selangor · On-site',
+      start: '2023-02',
+      end: '2026-04',
+      summary: 'Custom X++ for Dynamics 365 Finance & Operations implementations, and AL for Business Central.',
+      points: [
+        'Developed custom X++ solutions to extend Dynamics 365 Finance & Operations.',
+        'Designed and customised SSRS reports, forms and data entities.',
+        'Configured and maintained security roles.',
+        'Worked with analysts to turn requirements into technical solutions.',
+      ],
+      projects: [
         {
-          heading: 'Proud of',
-          body: 'Realtime chat with honest receipts (sent, delivered, read), typing and presence, voice messages with waveforms, reactions, a WhatsApp-style photo tray and push notifications, all behind Supabase row-level security.',
+          name: 'Goldbell Group (Singapore)',
+          when: '2023 – 2024',
+          what: 'Migrated AX 2012 legacy code into D365 F&O, replaced overlayering with extensions, built custom inventory and financial reconciliation modules, and developed operational and financial SSRS reports.',
+        },
+        {
+          name: 'Goldbell Group (Malaysia)',
+          when: 'From 2024',
+          what: 'Adapted the Singapore implementation for Malaysia: localised compliance features, SSRS reports and e-invoices for local regulations.',
+        },
+        {
+          name: 'JG Containers (M) Sdn. Bhd.',
+          when: 'Business Central',
+          what: 'Completed Business Central technical development training, then delivered custom reports and enhanced layouts to client-specific requirements.',
         },
       ],
-      stack: ['Next.js 16', 'React 19', 'Supabase', 'Framer Motion', 'Playwright', 'Vitest'],
-      links: [gh('messaging-app')],
+      milestone: { when: 'June 2023', what: 'Microsoft Certified: Dynamics 365 Finance and Operations Apps Developer Associate' },
+      skills: ['X++', 'AL', 'SSRS', 'Data entities', 'Security roles', 'SQL Server'],
     },
     {
-      slug: 'moona',
-      number: 'No. 4',
-      title: 'Moona',
-      summary: 'A local-first tracker for money, food, weight and work tasks, with BB (Fate/Extra CCC) peeking in to judge every entry.',
-      photo: 'moona',
-      photoAlt: 'Moona: a home screen greeting “Good evening” beside an illustrated character, with the month’s income, spending and balance below.',
-      focus: '62% 30%',
-      rotation: 2,
-      details: [
-        { heading: 'What it is', body: 'A local-first tracker for money, food, weight and work tasks, with BB (Fate/Extra CCC) peeking in to judge every entry.' },
-        {
-          heading: 'Proud of',
-          body: 'The app calculates every number (budgets, calorie targets, pace). The AI never does. Without an API key, BB falls back to her built-in lines, so the app still works.',
-        },
-      ],
-      stack: ['Next.js', 'TypeScript', 'Vitest', 'NVIDIA / OpenRouter API'],
-      isPrivate: true,
+      id: 'logisteed',
+      role: 'D365 F&O Associate Developer',
+      org: 'LOGISTEED Solutions Asia-Pacific Sdn. Bhd.',
+      kind: 'Full-time',
+      place: 'Bandar Baru Bangi, Selangor · Hybrid',
+      start: '2026-02',
+      summary: 'X++ and SQL Server Reporting Services on Dynamics 365 Finance & Operations.',
+      points: ['X++ development and SQL Server Reporting Services (SSRS) on Dynamics 365 Finance & Operations.'],
+      skills: ['X++', 'SSRS'],
     },
-    {
-      slug: 'fo-task-board',
-      number: 'No. 5',
-      title: 'F&O Task Board',
-      summary: 'A Kanban board for my own ERP work: tickets, defects and configs by module, stage and environment.',
-      photo: 'fo-task-board',
-      photoAlt: 'An illustration of a three-column task board (backlog, testing, done) with cards marked GL, AP, AR and SCM.',
-      rotation: -1,
-      details: [
-        { heading: 'What it is', body: 'A Kanban board for my own ERP work: tickets, defects and configs by module (GL, AP, AR, SCM…), stage and environment.' },
-        {
-          heading: 'Proud of',
-          body: 'Drag-and-drop stages from backlog to testing to done, with ticket types, modules and environments you can customise, synced across devices.',
-        },
-      ],
-      stack: ['Next.js 16', 'Supabase Auth + Postgres', 'Framer Motion', 'Tailwind'],
-      isPrivate: true,
-    },
-    {
-      slug: 'colour-themes',
-      number: 'No. 6',
-      title: 'The colour themes',
-      summary: 'VS Code colour themes: four packs, over a hundred themes, most of them tuned from one character’s palette.',
-      photo: 'colour-themes',
-      photoAlt: 'VS Code with the dark Camellya theme from the Wuthering Waves pack: deep reds on near-black.',
-      focus: '30% 50%',
-      rotation: 1,
-      details: [
-        { heading: 'Genshin Impact & Honkai: Star Rail', body: '46 themes in light, dark and high-contrast, each tuned from one character’s palette.' },
-        { heading: 'Wuthering Waves', body: '58 themes, light and dark. A small Node script generates the first files from a template.' },
-        { heading: 'Columbina', body: 'A celestial theme of ethereal blues, mystical purples and moonlit tones, in light, dark and high-contrast.' },
-        { heading: 'Cupcake Maroon', body: 'A warm, cosy theme of berry wine, cherry glow and cream, with a gold focus ring. Not on the Marketplace yet.' },
-      ],
-      stack: ['VS Code', 'JSON themes', 'Node.js'],
-      links: [
-        { label: 'Genshin & HSR on the Marketplace', href: 'https://marketplace.visualstudio.com/items?itemName=frostmoon-dev.genshin-hsr-themes' },
-        { label: 'Wuthering Waves on the Marketplace', href: 'https://marketplace.visualstudio.com/items?itemName=frostmoon-dev.wuwa-themes' },
-        { label: 'Columbina on the Marketplace', href: 'https://marketplace.visualstudio.com/items?itemName=frostmoon-dev.columbina-theme' },
-        { label: 'Cupcake Maroon on GitHub', href: 'https://github.com/frostmoon-dev/cupcake-maroon' },
-      ],
-      note: 'Fan-made. Character designs © miHoYo / HoYoverse and © Kuro Games.',
-    },
-  ] satisfies CaseFile[],
-  closeLabel: 'Close the file',
-  stackLabel: 'Built with',
-  linksLabel: 'Where to find it',
-  privateLabel: 'Private repository',
+  ] satisfies Job[],
 };
 
 export type GrimoireEntry = {

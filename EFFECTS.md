@@ -139,7 +139,8 @@ The interface doesn't care what's inside `mount()`:
 | `fall-parallax` | rabbit-hole drift, tumbling props, zoom-in, tilting floor | props at rest |
 | `section-wipe` | `tear`, `burn`, `pinstripe`, `ink-rise` chapter transitions | the static edge |
 | `typewriter` | types text letter by letter, keeping line breaks; optional one-letter typo that corrects itself; `waitForIntro` and `data-type-early` (stay hidden until typing) | full text |
-| `reveal` | entrance animations played once on scroll: `rise`, `settle`, `pin` (polaroids), `pop`, `unfurl` (the scroll), `paint` (brush strokes, gingham), `slide`; options `targets`, `stagger`, `delay`, `start` | everything simply there |
+| `reveal` | entrance animations played once on scroll: `rise`, `settle`, `pop`, `unfurl` (the scroll), `paint` (brush strokes, gingham), `slide`; options `targets`, `stagger`, `delay`, `start` | everything simply there |
 | `hero-entrance` | after the intro: the name sharpens out of a blur, newspaper slides in from its corner (never transparent, so it still counts for LCP), hand rises; the kicker, tagline and "Navigate." are uncovered with a wipe (never half-transparent, so contrast holds at every frame); the eye opens ([data-enter] elements, 8 s CSS fail-safe) | everything simply there |
 | `film-dust` | old-film specks, hairs and scratches redrawn ~12×/s on one fixed canvas over the whole site (in the atmosphere layer) | one still frame of dust |
+| `red-thread` | employment history: a red thread draws down the page as you scroll; each job's pin catches like a bad bulb (two short flickers), its string runs to the card, ghost years drift slower than the page | thread complete, every pin lit |
 | `intro` | the moon through branches (muted video from 9 s, slow zoom) → TV static → photo burst cut with short static bursts → static → the moon goes dark → hero, ≤ 3 s (hard cap 2.7 s), once per session | the still moon (poster frame), then fade (no static) |

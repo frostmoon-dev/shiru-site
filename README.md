@@ -60,9 +60,9 @@ src/
   effects/               plug-in effects + runtime.ts (lazy load / unmount / reduced motion)
     _webgl/stage.ts      the one shared WebGL context
   islands/               React islands (the R3F grimoire)
-  sections/              Hero, RabbitHole, Record (résumé), CaseFiles (archives), Grimoire (career), Tea, Footer, Intro
-  components/            top chapter index + eye dock menu, section head, polaroid, close control, icons
-  pages/                 index, archives/[slug], grimoire/[slug], 404, robots.txt
+  sections/              Hero, RabbitHole, Record (résumé), History (employment), Grimoire (career), Tea, Footer, Intro
+  components/            top chapter index + eye dock menu, section head, close control, icons
+  pages/                 index, grimoire/[slug], 404, robots.txt
 scripts/                 test + asset scripts (below)
 ```
 
@@ -82,7 +82,6 @@ metrics (`size-adjust`, `ascent-override`, …). To swap a face, change one entr
 
 | What | Where | Note |
 | --- | --- | --- |
-| Project screenshots (the archives) | `src/assets/works/` | Bond Garden, MoonPaper, Napyru and Moona are her screenshots (the face of the other person in the Napyru chat is blurred); the themes shot is `assets/camellya-dark.png` from her `wuwa-themes` repo; the F&O Task Board cover is an illustration (the repo is private, so there's no screenshot). Project text comes from her earlier portfolio, `frostmoon-dev/my-portfolio`, `content/projects.ts`. |
 | Résumé | `public/media/Nurfatihah-Muhammad-CV.pdf` | Her Canva CV with the phone number removed (the contact line was re-set in Poppins, the CV's own font). Preview image: `src/assets/cv/cv-page.png`. ⚠️ The PDF predates her LOGISTEED role; the site text follows LinkedIn. Replace the PDF (same name) and re-render the preview when the CV is updated. |
 | Hooded girl illustration | `src/assets/portrait/shiru.jpg` | Not used since the hero follows the Canva design. ⚠️ If it comes back, confirm you have the artist's permission. |
 | Revised designs (Oct 2026): bow (now the favicon), hamster (no longer used), lace frame, torn black edge, brush stroke, scroll banner, pastry (no longer used), black/cream gingham, archive frame, peek photo, pocket watch | `src/assets/design/` | Cut from her revised Canva pages. Lace, torn edge and brush were vector shapes, exported at 3×. The torn newspaper and paperclip are in `src/assets/collage/`; the eye (menu button), the moth (pinned in the lace frame) and the moon video (intro, `public/media/moon.mp4`) come from her cut-out sheets and footage. |
@@ -98,7 +97,7 @@ With `npm run preview` running on port 4322 (`npx astro preview --port 4322`):
 | Script | What it checks |
 | --- | --- |
 | `node scripts/shots.mjs http://localhost:4322 / --nointro` | screenshots at 375 / 768 / 1280, console errors, horizontal overflow |
-| `node scripts/interact.mjs http://localhost:4322 1280` | eye dock menu, book, envelope (paper only after the seal breaks) + form errors, résumé PDF download, archive file and grimoire chapter + Esc / Back / scroll restore, 404 |
+| `node scripts/interact.mjs http://localhost:4322 1280` | eye dock menu, book, envelope (paper only after the seal breaks) + form errors, résumé PDF download, employment thread + job files, grimoire chapter + Esc / Back / scroll restore, 404 |
 | `node scripts/intro-test.mjs http://localhost:4322` | intro timing, skip, once per session, reduced motion |
 | `node scripts/keyboard.mjs http://localhost:4322` | tabs through the page; every stop must show focus |
 | `node scripts/axe.mjs http://localhost:4322` | axe-core WCAG 2.2 AA on every page and open overlay |

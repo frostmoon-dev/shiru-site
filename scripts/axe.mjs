@@ -24,7 +24,7 @@ for (const width of [1280, 375]) {
   const ctx = await browser.newContext({ viewport: { width, height: 800 } });
   await ctx.addInitScript(() => sessionStorage.setItem('shiru:intro-seen', '1'));
   const page = await ctx.newPage();
-  for (const path of ['/', '/archives/bond-garden/', '/grimoire/the-engineering-years/', '/404.html']) {
+  for (const path of ['/', '/grimoire/the-engineering-years/', '/404.html']) {
     await page.goto(base + path, { waitUntil: 'networkidle' });
     // scroll through so lazy effects mount, then back to top
     await page.evaluate(async () => {
