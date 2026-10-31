@@ -17,7 +17,8 @@ export default defineConfig({
   trailingSlash: 'ignore',
   integrations: [react(), sitemap()],
   devToolbar: { enabled: false },
-  prefetch: { prefetchAll: false, defaultStrategy: 'hover' },
+  // pages are tiny and static; prefetching cost more main-thread time than it saved
+  prefetch: false,
   fonts: [
     {
       // Everything else (reading text AND labels): Atkinson Hyperlegible Next (Braille Institute,

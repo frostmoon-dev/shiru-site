@@ -1,5 +1,5 @@
 ---
-import { chapters, ui } from '../content/site';
+import { chapters, hero, ui } from '../content/site';
 import Icon from './Icon.astro';
 import { Image } from 'astro:assets';
 import { collage } from '../content/photos';
@@ -42,17 +42,19 @@ const { home = false } = Astro.props;
   </div>
 </header>
 
+<!-- The menu: a paperclip. On the hero it waits bottom right under its question; once you
+     scroll it docks in the corner. -->
 <button
-  class="hat-btn"
+  class="clip-btn"
   type="button"
   aria-haspopup="dialog"
   aria-expanded="false"
   aria-controls="spell-menu"
-  data-hat
+  data-menu-btn
 >
-  <span class="visually-hidden">{ui.menuOpen}</span>
-  <span class="hat-btn__float"><Image src={collage.hat} alt="" width={240} loading="eager" decoding="async" /></span>
-  <span class="hat-btn__hint label" data-hint="hat" aria-hidden="true">{ui.menuHint}</span>
+  <span class="clip-btn__whisper">{hero.whisper}</span>
+  <span class="visually-hidden"> {ui.menuOpen}</span>
+  <span class="clip-btn__clip"><Image src={collage.paperclip} alt="" width={44} loading="eager" decoding="async" /></span>
 </button>
 
 <dialog id="spell-menu" class="spell-menu" aria-label={ui.menuTitle} data-spell-menu>
@@ -107,14 +109,6 @@ const { home = false } = Astro.props;
     padding: 0;
     gap: 0;
   }
-  .chapter-index li + li::before {
-    content: '';
-    width: 3px;
-    height: 3px;
-    background: var(--muted);
-    rotate: 45deg;
-    align-self: center;
-  }
   .chapter-index li {
     display: flex;
   }
@@ -157,75 +151,79 @@ const { home = false } = Astro.props;
     display: none;
   }
   :global(html:not(.js)) .sound-toggle,
-  :global(html:not(.js)) .hat-btn {
+  :global(html:not(.js)) .clip-btn {
     display: none;
   }
 
-  /* ---- The hat: floats large over the hero, docks small once you scroll ---- */
-  .hat-btn {
+  /* ---- The paperclip menu button ---- */
+  .clip-btn {
     position: fixed;
     z-index: var(--z-nav);
     right: var(--gutter);
     top: calc(var(--space-2) + var(--touch) + var(--space-1));
-    width: 76px;
-    height: 64px;
-    padding: 0;
+    display: grid;
+    justify-items: center;
+    gap: var(--space-3);
+    min-width: var(--touch);
+    min-height: var(--touch);
+    padding: var(--space-1);
     border: 0;
     background: transparent;
-    color: var(--bone);
-    transform-origin: 50% 80%;
-    transition:
-      width var(--dur-slow) var(--ease-ink),
-      height var(--dur-slow) var(--ease-ink),
-      top var(--dur-slow) var(--ease-ink),
-      right var(--dur-slow) var(--ease-ink);
-  }
-  :global(html.at-hero) .hat-btn {
-    width: clamp(130px, 17vw, 240px);
-    height: clamp(100px, 13vw, 186px);
-    top: 20vh;
-    right: 8vw;
-  }
-  .hat-btn__float {
-    display: block;
-    width: 100%;
-    height: 100%;
-    animation: hat-bob 6s var(--ease-ink) infinite;
-    filter: drop-shadow(0 10px 14px rgb(5 3 4 / 0.6));
-  }
-  .hat-btn__float :global(img) {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-  }
-  .hat-btn:hover .hat-btn__float {
-    animation-duration: 2.4s;
-  }
-  .hat-btn:active .hat-btn__float {
-    transform: rotate(-12deg);
-  }
-  .hat-btn__hint {
-    position: absolute;
-    left: 50%;
-    bottom: -1.6em;
-    translate: -50% 0;
-    white-space: nowrap;
     color: var(--muted);
+    font-weight: 700;
+    font-size: var(--text-small);
+    letter-spacing: 0.06em;
+  }
+  .clip-btn__whisper {
+    display: none;
+    white-space: nowrap;
+  }
+  .clip-btn__clip {
+    display: block;
+    width: 18px;
+    transform-origin: 50% 8%;
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+  .clip-btn__clip :global(img) {
+    width: 100%;
+    height: auto;
+  }
+  .clip-btn:hover .clip-btn__clip {
+    transform: rotate(-9deg);
+  }
+  .clip-btn:hover,
+  .clip-btn:focus-visible {
+    color: var(--bone);
+  }
+  /* on the hero: bottom right, under "For whom do you weep?" (as in the Canva design) */
+  :global(html.at-hero) .clip-btn {
+    top: 79.4svh;
+    right: auto;
+    left: 89.4vw;
+    transform: translateX(-50%);
+  }
+  :global(html.at-hero) .clip-btn__whisper {
+    display: block;
+  }
+  :global(html.at-hero) .clip-btn__clip {
+    width: clamp(14px, 1.4vw, 22px);
+  }
+  /* the hero shows only the plain chapter line: no boxes, no sound button */
+  .chapter-index,
+  .site-nav__tools {
+    transition:
+      background-color var(--dur-base),
+      border-color var(--dur-base),
+      opacity var(--dur-base),
+      visibility var(--dur-base);
+  }
+  :global(html.at-hero) .chapter-index {
+    background-color: transparent;
+    border-color: transparent;
+  }
+  :global(html.at-hero) .site-nav__tools {
     opacity: 0;
-    transition: opacity var(--dur-base);
-  }
-  :global(html.at-hero) .hat-btn__hint {
-    opacity: 1;
-  }
-
-  @keyframes hat-bob {
-    0%,
-    100% {
-      transform: translateY(0) rotate(-3deg);
-    }
-    50% {
-      transform: translateY(-9px) rotate(4deg);
-    }
+    visibility: hidden;
   }
 
   /* ---- Spell menu ---- */
@@ -321,19 +319,17 @@ const { home = false } = Astro.props;
     .chapter-index__now {
       display: none;
     }
-    .hat-btn {
+    .clip-btn {
       top: auto;
       bottom: calc(var(--touch) + var(--space-3) + env(safe-area-inset-bottom));
       right: var(--space-2);
-      width: 64px;
-      height: 54px;
     }
-    :global(html.at-hero) .hat-btn {
+    :global(html.at-hero) .clip-btn {
       top: auto;
-      bottom: calc(var(--touch) + var(--space-5));
-      right: var(--space-3);
-      width: 116px;
-      height: 90px;
+      left: auto;
+      right: var(--gutter);
+      bottom: calc(var(--touch) + var(--space-4) + env(safe-area-inset-bottom));
+      transform: none;
     }
     .spell-menu__inner {
       justify-items: start;
@@ -354,7 +350,6 @@ const { home = false } = Astro.props;
 <script>
   import { chapters } from '../content/site';
   import { setSound, soundEnabled, sfx } from '../lib/sfx';
-  import { markHintUsed } from '../lib/hints';
   import { gsap, lockScroll } from '../lib/motion';
   import { prefersReducedMotion } from '../lib/env';
   import { navigate } from 'astro:transitions/client';
@@ -421,12 +416,12 @@ const { home = false } = Astro.props;
     };
   }
 
-  function setupHatMenu() {
-    const hat = document.querySelector<HTMLButtonElement>('[data-hat]');
+  function setupMenu() {
+    const hat = document.querySelector<HTMLButtonElement>('[data-menu-btn]');
     const dialog = document.querySelector<HTMLDialogElement>('[data-spell-menu]');
     if (!hat || !dialog) return;
     const links = [...dialog.querySelectorAll<HTMLAnchorElement>('[data-spell-link]')];
-    const float = hat.querySelector<HTMLElement>('.hat-btn__float');
+    const float = hat.querySelector<HTMLElement>('.clip-btn__clip');
 
     const closeNow = () => {
       if (!dialog.open) return;
@@ -448,8 +443,7 @@ const { home = false } = Astro.props;
 
     const open = () => {
       if (dialog.open) return;
-      markHintUsed('hat');
-      sfx('hat');
+            sfx('hat');
       const reduce = prefersReducedMotion();
       const hr = hat.getBoundingClientRect();
       hat.setAttribute('aria-expanded', 'true');
@@ -461,11 +455,11 @@ const { home = false } = Astro.props;
           gsap.set(links, { opacity: 1, x: 0, y: 0, rotate: 0, scale: 1 });
           return;
         }
-        // The links spill out of the hat's mouth like a spell.
+        // The links spill out from the paperclip, as if it had been holding them together.
         links.forEach((l, i) => {
           const r = l.getBoundingClientRect();
           const dx = hr.left + hr.width / 2 - (r.left + r.width / 2);
-          const dy = hr.top + hr.height * 0.8 - (r.top + r.height / 2);
+          const dy = hr.top + hr.height * 0.6 - (r.top + r.height / 2);
           gsap.fromTo(
             l,
             { x: dx, y: dy, scale: 0.15, rotate: -40 + i * 12, opacity: 0 },
@@ -486,8 +480,9 @@ const { home = false } = Astro.props;
       else
         gsap
           .timeline({ onComplete: show })
-          .to(float, { rotate: -24, y: -6, duration: 0.14, ease: 'power2.out' })
-          .to(float, { rotate: 118, x: -12, y: 10, duration: 0.32, ease: 'power3.in' });
+          // the clip swings open on its top bend
+          .to(float, { rotate: -28, duration: 0.14, ease: 'power2.out' })
+          .to(float, { rotate: 160, y: 6, duration: 0.34, ease: 'power3.in' });
     };
 
     hat.onclick = open;
@@ -512,7 +507,7 @@ const { home = false } = Astro.props;
   document.addEventListener('astro:page-load', () => {
     setupChapterTracking();
     setupSound();
-    setupHatMenu();
+    setupMenu();
   });
   setupHeroState();
   document.addEventListener('astro:after-swap', () => window.dispatchEvent(new Event('scroll')));

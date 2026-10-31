@@ -5,7 +5,7 @@ Canva opens each one as an editable design.
 
 | File | Screen |
 | --- | --- |
-| `01-hero.pptx` | Prologue (hero) with nav and hat |
+| `01-hero.pptx` | Prologue (hero), following Shiru's Canva layout |
 | `02-down-the-rabbit-hole.pptx` | Chapter I · About |
 | `03-case-files.pptx` | Chapter II · Work (the board) |
 | `04-grimoire-closed.pptx` / `05-grimoire-open.pptx` | Chapter III · Writing, book shut and open |
@@ -19,10 +19,8 @@ Canva opens each one as an editable design.
 
 1. **Background**: one flattened picture: colours, paper texture, ink drips, gingham, pinstripes,
    borders, props drawn in code (clocks, cards), the moon's still frame.
-2. **Images**: each photo and cut-out on its own (portrait, eye, hand, moth, hat, keyhole, polaroids).
-3. **Darkness** (hero only): the lantern's shadow as a picture with a soft hole where the light falls.
-   Move it to light something else, or delete it to see everything.
-4. **Text**: every heading, paragraph, label and button label as a real, editable text box.
+2. **Images**: each photo and cut-out on its own (newspaper, eye, hand, moth, paperclip, keyhole, polaroids).
+3. **Text**: every heading, paragraph, label and button label as a real, editable text box.
 
 ## Before you import: fonts
 
@@ -44,9 +42,9 @@ Without them Canva substitutes similar fonts, and text may wrap a little differe
 
 ## What doesn't come across
 
-Animation and interaction (the light cursor, ghost titles, hat menu, page turns, the moon video,
-film grain) are code. These files show each screen as a still: the moon is its poster frame, the
-hero is lit where the lantern rests by default.
+Animation and interaction (the light cursor, film dust, typewriter, glitch, ghost titles, the
+paperclip menu, page turns, the moon video) are code. These files show each screen as a still;
+the moon is its poster frame.
 
 ## Making them again after the site changes
 

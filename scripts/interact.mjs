@@ -36,14 +36,14 @@ await shot('ink-edge');
 // Hat menu
 await page.evaluate(() => window.scrollTo(0, 0));
 await page.waitForTimeout(600);
-await page.click('[data-hat]');
+await page.click('[data-menu-btn]');
 await page.waitForTimeout(1400);
 await shot('menu-open');
 check('menu opens as dialog', await page.evaluate(() => document.querySelector('[data-spell-menu]').open));
 await page.keyboard.press('Escape');
 await page.waitForTimeout(800);
 check('Esc closes menu', await page.evaluate(() => !document.querySelector('[data-spell-menu]').open));
-await page.click('[data-hat]');
+await page.click('[data-menu-btn]');
 await page.waitForTimeout(1200);
 await page.goBack();
 await page.waitForTimeout(800);

@@ -131,12 +131,13 @@ The interface doesn't care what's inside `mount()`:
 | `film-grain` | jumps the grain layer around at ~12 fps | still grain |
 | `flicker-jitter` | bad-bulb flicker + rare 1–2 frame skew | nothing |
 | `ghost-title` | a heading surfaces out of the grain the first time you reach it, then now and then slips into a faint double exposure for a frame | plain title |
-| `lantern-reveal` | a hidden portrait in the dark is uncovered only where the light falls; the light trails the cursor, drifts by itself on touch | still pool of light |
+| `lantern-reveal` | uncovers a hidden layer only where the light falls (currently unused; the hero follows Shiru's Canva design) | still pool of light |
 | `wet-ink` | text swells and smears for a moment | nothing |
 | `ink-edge` | liquid ink shader at the hero's bottom, scroll-stretched (desktop); animated SVG on phones | frozen SVG drips |
 | `lumos` | the cursor carries a small light: a bright tip, a trailing halo, pale motes; a click flares it (mouse only, system cursor stays) | light follows exactly, no motes/flare |
 | `ambient-video` | a silent looping background video, fetched only near the viewport and dropped when far away | poster frame |
 | `fall-parallax` | rabbit-hole drift, tumbling props, zoom-in, tilting floor | props at rest |
 | `section-wipe` | `tear`, `burn`, `pinstripe`, `ink-rise` chapter transitions | the static edge |
-| `typewriter` | types a line, makes one mistake, corrects it | full text |
+| `typewriter` | types text letter by letter, keeping line breaks; optional one-letter typo that corrects itself; `waitForIntro` and `data-type-early` (stay hidden until typing) | full text |
+| `film-dust` | old-film specks, hairs and scratches redrawn ~12×/s on a canvas (the hero) | one still frame of dust |
 | `intro` | candle → photo burst → hero, ≤ 3 s, once per session | still candle, then fade |

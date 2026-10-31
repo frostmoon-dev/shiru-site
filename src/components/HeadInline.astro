@@ -16,6 +16,8 @@ const { intro = false } = Astro.props;
   (function () {
     var root = document.documentElement;
     root.classList.add('js');
+    // home page starts at the hero: set the hero layout before first paint (no jump later)
+    if (intro && !location.hash) root.classList.add('at-hero');
     try {
       // Deep links (/#tea) go straight to the content: no intro in the way.
       if (intro && !location.hash && !sessionStorage.getItem('shiru:intro-seen')) {

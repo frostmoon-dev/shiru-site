@@ -38,7 +38,7 @@ for (const width of [1280, 375]) {
     await audit(page, `${width}px ${path}`);
   }
   await page.goto(base + '/', { waitUntil: 'networkidle' });
-  await page.click('[data-hat]');
+  await page.click('[data-menu-btn]');
   await page.waitForTimeout(1500);
   await audit(page, `${width}px menu open`);
   await page.keyboard.press('Escape');

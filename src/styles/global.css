@@ -275,6 +275,17 @@ a:active {
     opacity: 0.05;
   }
 }
+/* the hero is meant to be near-black: the film dust there does the texturing */
+html.at-hero .atmosphere__grain {
+  opacity: 0.025;
+}
+html.at-hero .atmosphere__vignette {
+  opacity: 0.4;
+}
+.atmosphere__grain,
+.atmosphere__vignette {
+  transition: opacity var(--dur-slow) var(--ease-out);
+}
 
 /* ---------- One-time hints ---------- */
 [data-hint] {
@@ -379,5 +390,18 @@ html:focus-within {
   30% {
     scale: 1.45;
     filter: brightness(1.8);
+  }
+}
+
+/* ---------- Typewriter caret (effects/typewriter) ---------- */
+.typewriter__caret {
+  color: var(--blood-lit);
+  margin-left: 0.1em;
+  font-style: normal;
+  animation: caret 1s steps(1) infinite;
+}
+@keyframes caret {
+  50% {
+    opacity: 0;
   }
 }

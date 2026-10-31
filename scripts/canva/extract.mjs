@@ -14,7 +14,7 @@ const WIDTH = 1440;
 
 const SLIDES = [
   // darkness: the lantern's mask becomes its own editable layer (move or delete it in Canva)
-  { name: '01-hero', path: '/', section: '#top', nav: true, darkness: '.hero__dark' },
+  { name: '01-hero', path: '/', section: '#top', nav: true },
   { name: '02-down-the-rabbit-hole', path: '/', section: '#rabbit-hole' },
   { name: '03-case-files', path: '/', section: '#case-files' },
   { name: '04-grimoire-closed', path: '/', section: '#grimoire' },

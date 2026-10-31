@@ -28,12 +28,10 @@ export const chapters: { id: ChapterId; numeral: string; label: string; title: s
 
 export const ui = {
   skip: 'Skip to the story',
-  scrollHint: 'Scroll if you dare',
   navLabel: 'Chapters',
-  menuOpen: 'Tip the hat: open the menu',
+  menuOpen: 'Open the menu.',
   menuClose: 'Close the menu',
   menuTitle: 'Where to?',
-  menuHint: 'Tip the hat',
   soundOn: 'Sound on',
   soundOff: 'Sound off',
   soundLabel: 'Ambient sound',
@@ -59,12 +57,14 @@ export const intro = {
 
 export const hero = {
   name: 'Shiru',
+  /** The scroll cue under the nav (links to Chapter I). */
+  proceed: 'Proceed at your own discretion',
   kicker: 'Case No. 0 · Subject: unknown',
-  tagline: 'Builds ledgers by day. Translates ghosts by night.',
-  sub: 'ERP developer · English–Malay translator · keeper of a lore archive',
-  /** The hidden portrait in the dark. Decorative; the light only ever shows part of it. */
-  lanternHint: 'Move the light',
-  hatHint: 'Tip the hat',
+  /** Typed out one line at a time. */
+  lines: ['A dreamer.', 'An overthinker.', 'A creator.'],
+  /** The last words glitch. */
+  tagline: { before: 'I make a living out of things that make sense. The rest ', glitch: 'keeps me awake', after: '.' },
+  whisper: 'For whom do you weep?',
 };
 
 export const about = {
