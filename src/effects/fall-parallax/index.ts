@@ -30,8 +30,8 @@ const fallParallax: EffectFactory = () => {
         el.querySelectorAll<HTMLElement>('[data-fall-zoom]').forEach((item) => {
           gsap.fromTo(
             item,
-            { scale: 0.9, opacity: 0.4, transformOrigin: '50% 0%' },
-            { scale: 1, opacity: 1, ease: 'power1.out', scrollTrigger: { trigger: el, start: 'top 85%', end: 'top 15%', scrub: 0.4 } },
+            { scale: 0.9, transformOrigin: '50% 0%' },
+            { scale: 1, ease: 'power1.out', scrollTrigger: { trigger: el, start: 'top 85%', end: 'top 15%', scrub: 0.4 } },
           );
         });
         el.querySelectorAll<HTMLElement>('[data-floor]').forEach((floor) => {

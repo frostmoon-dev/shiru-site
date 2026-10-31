@@ -1,10 +1,15 @@
 ---
-import { Picture } from 'astro:assets';
+import { getImage } from 'astro:assets';
 import { intro } from '../content/site';
 import { introPhotos } from '../content/photos';
+
+// Frames are drawn on a <canvas> (not <img>) so a 50 ms flash never becomes the page's LCP element.
+const frameUrls = await Promise.all(
+  intro.frames.map(async (f) => (await getImage({ src: introPhotos[f.src as keyof typeof introPhotos], width: 420, format: 'webp', quality: 60 })).src),
+);
 ---
 
-<div class="intro" id="intro" role="dialog" aria-modal="true" aria-label="Intro" data-effect="intro" data-effect-eager>
+<div class="intro" id="intro" role="dialog" aria-modal="true" aria-label="Intro" data-effect="intro" data-effect-eager data-effect-priority="high">
   <div class="intro__glow" aria-hidden="true"></div>
   <svg class="intro__candle" viewBox="0 0 120 260" aria-hidden="true" focusable="false">
     <defs>
@@ -23,15 +28,7 @@ import { introPhotos } from '../content/photos';
     <path d="M38 100h44v8c-4 0-4 18-8 18s-4-12-8-12-4 26-9 26-4-22-8-22-4 10-7 10-4-20-4-20z" fill="#e8dcc2"></path>
     <path d="M30 250h60" stroke="#c9a24a" stroke-width="6" stroke-linecap="round"></path>
   </svg>
-  <div class="intro__frames" aria-hidden="true">
-    {
-      intro.frames.map((f) => (
-        <div class="intro__frame">
-          <Picture src={introPhotos[f.src as keyof typeof introPhotos]} alt="" formats={['avif', 'webp']} widths={[420]} sizes="420px" loading="lazy" decoding="async" quality={60} />
-        </div>
-      ))
-    }
-  </div>
+  <canvas class="intro__frames" width="420" height="525" aria-hidden="true" data-frames={JSON.stringify(frameUrls)}></canvas>
   <p class="intro__status label" aria-live="polite"><span>{intro.candleLabel}</span> <span data-intro-progress></span></p>
   <button class="btn intro__skip" type="button" data-intro-skip>{intro.skip}</button>
 </div>
@@ -83,21 +80,13 @@ import { introPhotos } from '../content/photos';
   }
   .intro__frames {
     position: absolute;
-    inset: 0;
-    display: grid;
-    place-items: center;
-    pointer-events: none;
-  }
-  .intro__frame {
-    grid-area: 1 / 1;
+    left: 50%;
+    top: 50%;
     width: min(62vmin, 420px);
     aspect-ratio: 4 / 5;
+    translate: -50% -50%;
     visibility: hidden;
-  }
-  .intro__frame :global(img) {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    pointer-events: none;
     /* luminance-matched: every frame toned to the same dark sepia, so cuts don't strobe */
     filter: sepia(1) brightness(0.55) contrast(1.1);
   }

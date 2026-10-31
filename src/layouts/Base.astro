@@ -94,6 +94,9 @@ const ogUrl = new URL(ogImage, Astro.site).href;
       import { applyHints } from '../lib/hints';
 
       startSmoothScroll();
+      // Register effects as soon as this module runs (before window load) so the intro starts
+      // on time; astro:page-load re-scans after every client-side navigation.
+      startEffects();
       document.addEventListener('astro:page-load', () => {
         applyHints();
         startEffects();

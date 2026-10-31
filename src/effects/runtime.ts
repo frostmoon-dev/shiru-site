@@ -1,6 +1,10 @@
 import { getEffectLoader } from './registry';
 import type { Effect, EffectOptions } from './types';
 import { getEnv, onEnvChange } from '../lib/env';
+import { whenIdle } from './_shared/idle';
+
+// Decorative effects start once the page is idle, so they never compete with first paint.
+let idle: Promise<void> | undefined;
 
 /**
  * Finds every `[data-effect]` element, lazy-loads its effect when it nears the viewport,
@@ -8,7 +12,8 @@ import { getEnv, onEnvChange } from '../lib/env';
  *
  *   data-effect="name"               which effect (folder name in src/effects)
  *   data-effect-options='{"a":1}'    JSON passed to mount()
- *   data-effect-eager                mount immediately and never unmount (global effects)
+ *   data-effect-eager                mount without waiting to be near the viewport; never unmount
+ *   data-effect-priority="high"      don't wait for the page to go idle first (e.g. the intro)
  *
  * The runtime writes `data-effect-state` = loading | mounted | static | error | idle.
  */
@@ -55,6 +60,11 @@ async function activate(inst: Instance) {
   }
   const token = ++inst.token;
   setState(inst, 'loading');
+  if (inst.el.dataset.effectPriority !== 'high') {
+    idle ??= whenIdle(1500);
+    await idle;
+    if (token !== inst.token) return;
+  }
   const env = getEnv();
   let effect: Effect;
   try {

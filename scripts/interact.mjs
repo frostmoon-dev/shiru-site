@@ -91,7 +91,7 @@ const y2 = await page.evaluate(() => window.scrollY);
 check(`Esc returns home, scroll restored (${y} → ${y2})`, (await page.evaluate(() => location.pathname)) === '/' && Math.abs(y - y2) < 120);
 
 // 404
-const r = await page.goto(base + '/nope', { waitUntil: 'networkidle' });
+await page.goto(base + "/nope", { waitUntil: 'networkidle' });
 await shot('404');
 check('404 page renders', (await page.textContent('h1'))?.includes('wrong hole'));
 

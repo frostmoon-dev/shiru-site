@@ -57,6 +57,8 @@ export default defineConfig({
     },
   ],
   vite: {
-    build: { assetsInlineLimit: 2048 },
+    // three.js is one ~740 kB chunk. It is only fetched on desktop, after idle, when a WebGL
+    // effect (hero ink/petals, grimoire) actually mounts, so the default 500 kB warning is noise.
+    build: { assetsInlineLimit: 2048, chunkSizeWarningLimit: 800 },
   },
 });

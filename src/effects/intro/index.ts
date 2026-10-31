@@ -15,6 +15,7 @@ const introEffect: EffectFactory = () => {
   let tl: gsap.core.Timeline | undefined;
   let el: HTMLElement | undefined;
   let done = false;
+  let cap = 0;
   let onKey: ((e: KeyboardEvent) => void) | undefined;
 
   const finish = () => {
@@ -26,19 +27,20 @@ const introEffect: EffectFactory = () => {
     } catch {
       /* ignore */
     }
+    window.clearTimeout(cap);
     const node = el;
-    gsap.to(node, {
-      opacity: 0,
-      duration: 0.35,
-      ease: 'power1.out',
-      onComplete: () => {
-        document.documentElement.classList.remove('intro-pending');
-        node.style.opacity = '';
-        lockScroll(false);
-        window.dispatchEvent(new Event('shiru:intro-done'));
-        document.getElementById('main')?.focus({ preventScroll: true });
-      },
-    });
+    node.querySelector<HTMLElement>('.intro__frames')?.style.setProperty('visibility', 'hidden');
+    // CSS transition (compositor) rather than a tween, so a busy main thread can't stretch it.
+    node.style.transition = 'opacity 300ms ease-out';
+    node.style.opacity = '0';
+    window.setTimeout(() => {
+      document.documentElement.classList.remove('intro-pending');
+      node.style.opacity = '';
+      node.style.transition = '';
+      lockScroll(false);
+      window.dispatchEvent(new Event('shiru:intro-done'));
+      document.getElementById('main')?.focus({ preventScroll: true });
+    }, 300);
     if (onKey) document.removeEventListener('keydown', onKey);
   };
 
@@ -46,6 +48,8 @@ const introEffect: EffectFactory = () => {
     el = target;
     if (!document.documentElement.classList.contains('intro-pending')) return false;
     window.clearTimeout(window.__introFailsafe);
+    // Hard cap: whatever the device does, the intro is over 2.7 s after it starts (+0.3 s fade).
+    cap = window.setTimeout(finish, 2700);
     lockScroll(true);
     const skip = target.querySelector<HTMLButtonElement>('[data-intro-skip]');
     skip?.addEventListener('click', finish, { once: true });
@@ -62,7 +66,9 @@ const introEffect: EffectFactory = () => {
     mount(target, _opts, env) {
       const burst = start(target, !env.saveData);
       if (!document.documentElement.classList.contains('intro-pending')) return;
-      const frames = [...target.querySelectorAll<HTMLElement>('.intro__frame')];
+      const canvas = target.querySelector<HTMLCanvasElement>('.intro__frames');
+      const urls: string[] = canvas ? JSON.parse(canvas.dataset.frames ?? '[]') : [];
+      const g = canvas?.getContext('2d');
       const flame = target.querySelector('.intro__flame');
       const progress = target.querySelector<HTMLElement>('[data-intro-progress]');
       const candle = target.querySelector('.intro__candle');
@@ -71,34 +77,57 @@ const introEffect: EffectFactory = () => {
       tl.from([candle, target.querySelector('.intro__glow')], { opacity: 0, duration: 0.6, ease: 'power1.out' });
 
       if (burst) {
-        // Start fetching the frames now; show whichever have arrived.
-        const imgs = frames.map((f) => f.querySelector('img')).filter((i): i is HTMLImageElement => !!i);
-        imgs.forEach((i) => (i.loading = 'eager'));
+        // Fetch the frames now and pre-tone each one into its own bitmap during the candle beat,
+        // so a flash is a single cheap drawImage. Frames that aren't ready in time are skipped.
+        const canFilter = !!g && 'filter' in g;
+        if (canFilter) canvas!.style.filter = 'none';
         let loaded = 0;
-        imgs.forEach((i) =>
-          i
+        const imgs = urls.map((url) => {
+          const img = new Image();
+          img.decoding = 'async';
+          img.src = url;
+          const toned = document.createElement('canvas');
+          toned.width = canvas?.width ?? 420;
+          toned.height = canvas?.height ?? 525;
+          img
             .decode()
-            .catch(() => undefined)
             .then(() => {
+              const t = toned.getContext('2d');
+              if (t) {
+                // luminance-matched: every frame toned to the same dark sepia
+                if (canFilter) t.filter = 'sepia(1) brightness(0.55) contrast(1.1)';
+                t.drawImage(img, 0, 0, toned.width, toned.height);
+                toned.dataset.ready = '1';
+              }
               loaded++;
-              if (progress) progress.textContent = `${Math.round((loaded / imgs.length) * 100)}%`;
-            }),
-        );
-        const frameDur = 0.05; // ~3 frames at 60 Hz
-        tl.addLabel('burst', 0.95);
-        frames.forEach((f, i) => {
-          const at = 0.95 + i * 0.26;
-          const jx = (Math.random() - 0.5) * 24;
-          const sk = (Math.random() - 0.5) * 6;
-          tl!
-            .set(f, { visibility: 'visible', x: jx, skewX: sk, rotate: (Math.random() - 0.5) * 5 }, at)
-            .set(f, { x: -jx * 0.4, skewX: 0 }, at + frameDur * 0.5)
-            .set(f, { visibility: 'hidden' }, at + frameDur);
-          tl!.to(candle, { opacity: 0.35, duration: 0.03 }, at).to(candle, { opacity: 1, duration: 0.12 }, at + frameDur);
+              if (progress) progress.textContent = `${Math.round((loaded / urls.length) * 100)}%`;
+            })
+            .catch(() => undefined);
+          return toned;
         });
+        // Each photo stays up for exactly 3 rendered frames, however janky the device is.
+        const flash = (img: HTMLCanvasElement) => {
+          if (!g || !canvas || !img.dataset.ready) return;
+          g.drawImage(img, 0, 0);
+          const jx = (Math.random() - 0.5) * 24;
+          gsap.set(canvas, { visibility: 'visible', x: jx, skewX: (Math.random() - 0.5) * 6, rotate: (Math.random() - 0.5) * 5 });
+          gsap.set(candle, { opacity: 0.35 });
+          let n = 0;
+          const step = () => {
+            n++;
+            if (n === 2) gsap.set(canvas, { x: -jx * 0.4, skewX: 0 });
+            if (n < 3) requestAnimationFrame(step);
+            else {
+              gsap.set(canvas, { visibility: 'hidden' });
+              gsap.to(candle, { opacity: 1, duration: 0.12 });
+            }
+          };
+          requestAnimationFrame(step);
+        };
+        imgs.forEach((img, i) => tl!.call(flash, [img], 0.85 + i * 0.24));
       }
       // The candle goes out.
-      tl.to(flame, { scaleY: 0, opacity: 0, transformOrigin: '60px 88px', duration: 0.35, ease: 'power2.in' }, burst ? 2.3 : 1.2)
+      tl.to(flame, { scaleY: 0, opacity: 0, transformOrigin: '60px 88px', duration: 0.3, ease: 'power2.in' }, burst ? 2.05 : 1.1)
         .to(target.querySelector('.intro__glow'), { opacity: 0, duration: 0.3 }, '<');
     },
     unmount() {

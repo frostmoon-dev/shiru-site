@@ -295,3 +295,39 @@ html:focus-within {
     scroll-behavior: auto;
   }
 }
+
+/* ---------- CSS petals (phone / low-power version of petals-webgl) ---------- */
+.css-petals {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.css-petals span {
+  position: absolute;
+  top: 0;
+  border-radius: 80% 10% 80% 10%;
+  background: radial-gradient(circle at 30% 30%, var(--blood), var(--oxblood));
+  animation-name: petal-fall, petal-sway;
+  animation-timing-function: linear, ease-in-out;
+  animation-iteration-count: infinite;
+  animation-direction: normal, alternate;
+  animation-play-state: var(--play, running);
+  will-change: transform;
+}
+@keyframes petal-fall {
+  from {
+    transform: translateY(-5vh) rotate(0deg);
+  }
+  to {
+    transform: translateY(105vh) rotate(540deg);
+  }
+}
+@keyframes petal-sway {
+  from {
+    translate: -14px 0;
+  }
+  to {
+    translate: 18px 0;
+  }
+}

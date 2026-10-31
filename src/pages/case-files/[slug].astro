@@ -24,7 +24,7 @@ const next = caseFiles.files[(idx + 1) % caseFiles.files.length]!;
       <div class="folder__sheet" data-tone="sepia">
         <div class="folder__photo" transition:name={`case-photo-${file.slug}`}>
           <span class="folder__clip" aria-hidden="true"></span>
-          <Picture src={casePhotos[file.photo]} alt={file.photoAlt} formats={['avif', 'webp']} widths={[360, 560, 840]} sizes="(max-width: 719px) 80vw, 360px" />
+          <Picture src={casePhotos[file.photo]} alt={file.photoAlt} formats={['avif', 'webp']} widths={[360, 560, 840]} sizes="(max-width: 719px) 80vw, 360px" loading="eager" fetchpriority="high" />
         </div>
         <div class="folder__text">
           <p class="label folder__no">Case file {file.number}</p>
