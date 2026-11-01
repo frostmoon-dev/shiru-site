@@ -136,11 +136,13 @@ The interface doesn't care what's inside `mount()`:
 | `ink-edge` | liquid ink shader edge, scroll-stretched (desktop); animated SVG on phones (currently unused) | frozen SVG drips |
 | `lumos` | the cursor carries a small light: a bright tip, a trailing halo, pale motes; a click flares it (mouse only, system cursor stays) | light follows exactly, no motes/flare |
 | `ambient-video` | a silent looping background video, fetched only near the viewport and dropped when far away | poster frame |
-| `fall-parallax` | rabbit-hole drift, tumbling props, zoom-in, tilting floor | props at rest |
+| `fall-parallax` | About (Down the rabbit hole): the pocket watch, keyhole, mirror, book and a playing card drift up past you at different depths and tumble; the hole's rings open as you fall in | props at rest |
 | `section-wipe` | `tear`, `burn`, `pinstripe`, `ink-rise` chapter transitions | the static edge |
 | `typewriter` | types text letter by letter, keeping line breaks; optional one-letter typo that corrects itself; `waitForIntro` and `data-type-early` (stay hidden until typing) | full text |
 | `reveal` | entrance animations played once on scroll: `rise`, `settle`, `pop`, `unfurl` (the scroll), `paint` (brush strokes, gingham), `slide`; options `targets`, `stagger`, `delay`, `start` | everything simply there |
 | `hero-entrance` | after the intro: the name sharpens out of a blur, newspaper slides in from its corner (never transparent, so it still counts for LCP), hand rises; the kicker, tagline and "Navigate." are uncovered with a wipe (never half-transparent, so contrast holds at every frame); the eye opens ([data-enter] elements, 8 s CSS fail-safe) | everything simply there |
 | `film-dust` | old-film specks, hairs and scratches redrawn ~12×/s on one fixed canvas over the whole site (in the atmosphere layer) | one still frame of dust |
 | `red-thread` | employment history: a red thread draws down the page as you scroll; each job's pin catches like a bad bulb (two short flickers), its string runs to the card, ghost years drift slower than the page | thread complete, every pin lit |
+| `deal` | the hobby deck: cards start as one stack mid-table at careless angles, then fly to their places one by one and land with a snap (phones: a simple fan-in) | cards in place |
+| `paint-red` | Wonderland's white roses are wiped red as the chapter scrolls by (and wiped back if you scroll up) | roses simply red |
 | `intro` | the moon through branches (muted video from 9 s, slow zoom) → TV static → photo burst cut with short static bursts → static → the moon goes dark → hero, ≤ 3 s (hard cap 2.7 s), once per session | the still moon (poster frame), then fade (no static) |
