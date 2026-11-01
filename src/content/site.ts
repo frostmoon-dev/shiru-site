@@ -193,8 +193,12 @@ export type Curiosity = {
   id: string;
   numeral: string;
   title: string;
-  /** A small line drawing on the card's face (see Curiosities.astro). */
+  /** A small line drawing on the card's face (see Curiosities.astro), used when there's no cut-out. */
   glyph: 'cat' | 'cup' | 'moon' | 'mask' | 'quill' | 'tongues' | 'key' | 'music' | 'rose';
+  /** One of Teha's cut-outs for the card's face (src/content/photos.ts → cutouts). */
+  image?: 'mirror' | 'openBook' | 'witchHat' | 'mapHeart' | 'building' | 'cassette' | 'driedRose';
+  /** Playing-card suit for the corners. */
+  suit: '♥' | '♠' | '♦' | '♣';
   body: string;
   items?: string[];
   links?: { label: string; href: string }[];
@@ -205,7 +209,7 @@ export type Curiosity = {
 /** Chapter II of the personal page: hobbies, as a tarot deck. Everything here is from Teha. */
 export const curiosities = {
   title: 'A deck of curiosities',
-  lead: 'What I do when nobody is paying me to. Turn a card over.',
+  lead: 'What I do when nobody is paying me to. The Queen dealt them; turn one over.',
   turn: 'Turn the card',
   turnBack: 'Turn it back',
   play: 'Play the tea party',
@@ -213,6 +217,7 @@ export const curiosities = {
   cards: [
     {
       id: 'cats',
+      suit: '♥',
       numeral: 'I',
       title: 'Cats',
       glyph: 'cat',
@@ -220,6 +225,7 @@ export const curiosities = {
     },
     {
       id: 'coffee',
+      suit: '♠',
       numeral: 'II',
       title: 'Iced coffee',
       glyph: 'cup',
@@ -227,6 +233,8 @@ export const curiosities = {
     },
     {
       id: 'worlds',
+      suit: '♦',
+      image: 'mirror',
       numeral: 'III',
       title: 'Worlds I play in',
       glyph: 'moon',
@@ -235,6 +243,8 @@ export const curiosities = {
     },
     {
       id: 'characters',
+      suit: '♣',
+      image: 'openBook',
       numeral: 'IV',
       title: 'Characters & AUs',
       glyph: 'quill',
@@ -242,6 +252,8 @@ export const curiosities = {
     },
     {
       id: 'cosplay',
+      suit: '♥',
+      image: 'witchHat',
       numeral: 'V',
       title: 'Cosplay',
       glyph: 'mask',
@@ -249,6 +261,8 @@ export const curiosities = {
     },
     {
       id: 'translation',
+      suit: '♠',
+      image: 'mapHeart',
       numeral: 'VI',
       title: 'Between two tongues',
       glyph: 'tongues',
@@ -256,6 +270,8 @@ export const curiosities = {
     },
     {
       id: 'building',
+      suit: '♦',
+      image: 'building',
       numeral: 'VII',
       title: 'Things I build for fun',
       glyph: 'key',
@@ -264,6 +280,8 @@ export const curiosities = {
     },
     {
       id: 'music',
+      suit: '♣',
+      image: 'cassette',
       numeral: 'VIII',
       title: 'Dark lullabies',
       glyph: 'music',
@@ -272,6 +290,8 @@ export const curiosities = {
     },
     {
       id: 'aesthetic',
+      suit: '♥',
+      image: 'driedRose',
       numeral: 'IX',
       title: 'The aesthetic',
       glyph: 'rose',

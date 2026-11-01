@@ -1,0 +1,21 @@
+---
+/** The personal page (Teha). Only built on the personal site. */
+import Base from '../layouts/Base.astro';
+import Intro from '../sections/Intro.astro';
+import Hero from '../sections/Hero.astro';
+import RabbitHole from '../sections/RabbitHole.astro';
+import Curiosities from '../sections/Curiosities.astro';
+import Stars from '../sections/Stars.astro';
+import Tea from '../sections/Tea.astro';
+import Footer from '../sections/Footer.astro';
+---
+
+<Base page="home">
+  <Intro slot="intro" />
+  <Hero />
+  <RabbitHole />
+  <Curiosities />
+  <Stars />
+  <Tea />
+  <Footer slot="footer" page="home" />
+</Base>

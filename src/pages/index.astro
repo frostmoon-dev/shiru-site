@@ -1,28 +1,10 @@
 ---
-import Base from '../layouts/Base.astro';
-import Intro from '../sections/Intro.astro';
-import Hero from '../sections/Hero.astro';
-import RabbitHole from '../sections/RabbitHole.astro';
-import Curiosities from '../sections/Curiosities.astro';
-import Stars from '../sections/Stars.astro';
-import Tea from '../sections/Tea.astro';
-import Footer from '../sections/Footer.astro';
-import WorkPage from '../components/WorkPage.astro';
-import { isWorkSite } from '../lib/mode';
+// The personal page, or (PUBLIC_SITE_MODE=work) the work page. The env check is replaced at build
+// time, so the branch not taken, and everything it would import, is left out of the build entirely.
+const Page =
+  import.meta.env.PUBLIC_SITE_MODE === 'work'
+    ? (await import('../components/WorkPage.astro')).default
+    : (await import('../components/HomePage.astro')).default;
 ---
 
-{
-  isWorkSite ? (
-    <WorkPage />
-  ) : (
-    <Base page="home">
-      <Intro slot="intro" />
-      <Hero />
-      <RabbitHole />
-      <Curiosities />
-      <Stars />
-      <Tea />
-      <Footer slot="footer" page="home" />
-    </Base>
-  )
-}
+<Page />

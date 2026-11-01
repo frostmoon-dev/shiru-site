@@ -151,6 +151,7 @@ const brand = isWork ? { label: work.heading, href: workPath, aria: `${work.name
   }
   /* the way into the work page (personal page only) */
   .chapter-index__work {
+    white-space: nowrap;
     display: inline-flex;
     align-items: center;
     gap: var(--space-half);
@@ -171,6 +172,31 @@ const brand = isWork ? { label: work.heading, href: workPath, aria: `${work.name
   }
   .dock__work {
     border-top: 1px solid var(--line);
+  }
+  /* tablets: the chapter name and the work link don't both fit */
+  @media (max-width: 1099px) {
+    .site-nav[data-page='home'] .chapter-index__now {
+      display: none;
+    }
+  }
+  /* over the light Wonderland chapter the bar turns to paper and ink */
+  :global(html.nav-light) .site-nav {
+    --focus: #a3141b;
+    background: linear-gradient(to bottom, rgb(239 230 210 / 0.95), rgb(239 230 210 / 0));
+    color: #1b1214;
+  }
+  :global(html.nav-light) .chapter-index__home,
+  :global(html.nav-light) .chapter-index__link,
+  :global(html.nav-light) .sound-toggle {
+    color: #1b1214;
+  }
+  :global(html.nav-light) .chapter-index__now {
+    color: #5a463b;
+  }
+  :global(html.nav-light) .chapter-index__work {
+    color: #1b1214;
+    background: rgb(239 230 210 / 0.7);
+    border-color: rgb(27 18 20 / 0.35);
   }
   .chapter-index__now {
     font-weight: 700;

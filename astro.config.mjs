@@ -5,6 +5,7 @@ import sitemap from '@astrojs/sitemap';
 import { rmSync } from 'node:fs';
 
 // The work-only site (PUBLIC_SITE_MODE=work) ships none of the personal site's public files.
+/** @type {import('astro').AstroIntegration} */
 const workOnlyCleanup = {
   name: 'work-only-cleanup',
   hooks: {

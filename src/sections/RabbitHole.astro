@@ -1,14 +1,23 @@
 ---
 import { Image, getImage } from 'astro:assets';
 import { about, chapters, ui } from '../content/site';
-import { collage, design } from '../content/photos';
+import { collage, cutouts, design } from '../content/photos';
 import SectionHead from '../components/SectionHead.astro';
 
 const ch = chapters.find((c) => c.id === 'rabbit-hole')!;
 const lace = await getImage({ src: design.lace, width: 960, format: 'webp', quality: 80 });
 ---
 
-<section id={ch.id} class="section about" data-tone="void" aria-labelledby="about-title">
+<section id={ch.id} class="section about" data-tone="void" aria-labelledby="about-title" data-effect="fall-parallax">
+  <!-- falling down the hole: things drift up past you at different depths as you scroll -->
+  <div class="fall" aria-hidden="true">
+    <div class="fall__tunnel" data-fall-zoom></div>
+    <span class="fall__item fall__item--watch" data-depth="0.9" data-spin="140"><Image src={design.pocketWatch} alt="" width={220} loading="lazy" decoding="async" /></span>
+    <span class="fall__item fall__item--keyhole" data-depth="0.5" data-spin="-60"><Image src={cutouts.keyhole} alt="" width={120} loading="lazy" decoding="async" /></span>
+    <span class="fall__item fall__item--mirror" data-depth="1.2" data-spin="40"><Image src={cutouts.mirror} alt="" width={200} loading="lazy" decoding="async" /></span>
+    <span class="fall__item fall__item--book" data-depth="0.7" data-spin="-110"><Image src={cutouts.openBook} alt="" width={240} loading="lazy" decoding="async" /></span>
+    <span class="fall__item fall__item--card" data-depth="1.4" data-spin="220"><span>Q<br />♥</span></span>
+  </div>
   <div class="container">
     <SectionHead id="about-title" kicker={ui.caseNo(ch.numeral, ch.label)} title={about.title} lead={about.card} />
 
@@ -56,6 +65,92 @@ const lace = await getImage({ src: design.lace, width: 960, format: 'webp', qual
 </section>
 
 <style>
+  .about {
+    isolation: isolate;
+    overflow: hidden;
+  }
+  .about > .container {
+    position: relative;
+    z-index: 2;
+  }
+  /* ---- the fall ---- */
+  .fall {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+  /* rings of the hole, very faint, opening as you fall in */
+  .fall__tunnel {
+    position: absolute;
+    inset: -10% -20%;
+    background: repeating-radial-gradient(ellipse at 50% 55%, transparent 0 46px, rgb(232 220 194 / 0.035) 46px 48px);
+    mask-image: radial-gradient(ellipse at 50% 55%, #000 25%, transparent 70%);
+  }
+  .fall__item {
+    position: absolute;
+    display: block;
+    opacity: 0.8;
+  }
+  .fall__item :global(img) {
+    width: 100%;
+    height: auto;
+    filter: grayscale(0.35) brightness(0.8);
+  }
+  /* near things are big and soft, far things small and sharp */
+  .fall__item--watch {
+    left: 2%;
+    top: 58%;
+    width: clamp(90px, 10vw, 160px);
+  }
+  .fall__item--keyhole {
+    right: 6%;
+    top: 22%;
+    width: clamp(40px, 4vw, 64px);
+    opacity: 0.55;
+  }
+  .fall__item--mirror {
+    right: 1%;
+    top: 70%;
+    width: clamp(90px, 11vw, 170px);
+    filter: blur(1.5px);
+  }
+  .fall__item--book {
+    left: 38%;
+    top: 92%;
+    width: clamp(100px, 12vw, 190px);
+    opacity: 0.5;
+    filter: blur(0.6px);
+  }
+  .fall__item--card {
+    right: 3%;
+    top: 40%;
+    width: clamp(46px, 4.5vw, 70px);
+    aspect-ratio: 5 / 7;
+    display: grid;
+    place-items: start;
+    padding: 6px;
+    border-radius: 6px;
+    background: #f3ead6;
+    color: #a3141b;
+    font-family: Georgia, serif;
+    font-size: 0.85rem;
+    line-height: 1;
+    filter: blur(2px);
+    opacity: 0.6;
+  }
+  @media (max-width: 719px) {
+    /* phones have no margins to fall through: only the watch and the keyhole, at the edges */
+    .fall__item--mirror,
+    .fall__item--book,
+    .fall__item--card {
+      display: none;
+    }
+    .fall__item--keyhole {
+      right: 2%;
+      top: 70%;
+    }
+  }
   .about__grid {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
