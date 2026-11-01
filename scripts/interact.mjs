@@ -96,10 +96,20 @@ await page.locator('.hero__work').click();
 await page.waitForFunction(() => location.pathname === '/work/', null, { timeout: 8000 }).catch(() => {});
 await page.waitForTimeout(1500);
 check('"See my work" opens the work page', (await page.evaluate(() => location.pathname)) === '/work/');
-const personalLinks = await page.evaluate(() =>
-  [...document.querySelectorAll('a[href]')].map((a) => a.getAttribute('href')).filter((h) => h === '/' || h.startsWith('/#') || h.includes('shirubawing') || h.includes('github.com')),
-);
-check(`work page has no links to the personal side (${personalLinks.join(', ') || 'none'})`, personalLinks.length === 0);
+check('coming from the personal page, the work page offers the way back', await page.locator('.chapter-index__back, .dock__back a').count() > 0);
+// a recruiter opens the work page directly: no way back, no personal links, not even in the HTML
+{
+  const fresh = await browser.newContext({ viewport: { width, height: 800 } });
+  await fresh.addInitScript(() => sessionStorage.setItem('site:intro-seen', '1'));
+  const r = await fresh.newPage();
+  await r.goto(base + '/work/', { waitUntil: 'networkidle' });
+  await r.waitForTimeout(800);
+  const personalLinks = await r.evaluate(() =>
+    [...document.querySelectorAll('a[href]')].map((a) => a.getAttribute('href')).filter((h) => h === '/' || h.startsWith('/#') || h.includes('shirubawing') || h.includes('github.com')),
+  );
+  check(`opened directly, the work page has no links to the personal side (${personalLinks.join(', ') || 'none'})`, personalLinks.length === 0);
+  await fresh.close();
+}
 
 // Grimoire
 await scrollTo('#grimoire', 100);

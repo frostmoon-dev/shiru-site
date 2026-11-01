@@ -660,7 +660,61 @@ const brand = isWork ? { label: work.heading, href: workPath, aria: `${work.name
     setCurrent(current);
   }
 
+  /**
+   * The way back from the work page, for Teha's own visitors only. Viewing the personal page marks
+   * this browser tab (sessionStorage); the work page then adds "Back to Teha" to the top bar and
+   * the menu. Someone who opens the work page directly (a recruiter) has no mark and sees nothing,
+   * not even in the HTML: the link is only created here. The work-only site leaves all of this out
+   * (the env check is replaced at build time and the branch removed).
+   */
+  const FROM_HOME = 'site:from-home';
+  function setupBackHome() {
+    if (import.meta.env.PUBLIC_SITE_MODE === 'work') return;
+    const nav = document.querySelector<HTMLElement>('.site-nav');
+    const page = nav?.dataset.page;
+    try {
+      if (page === 'home') sessionStorage.setItem(FROM_HOME, '1');
+      if (page !== 'work' || sessionStorage.getItem(FROM_HOME) !== '1') return;
+    } catch {
+      return;
+    }
+    // created elements need the component's style scope to pick up its CSS
+    const scope = (from: Element | null, to: Element) => {
+      for (const a of from?.attributes ?? []) if (a.name.startsWith('data-astro-cid')) to.setAttribute(a.name, '');
+    };
+    const label = 'Back to Teha';
+    const index = nav?.querySelector('.chapter-index');
+    if (index && !index.querySelector('.chapter-index__back')) {
+      const a = document.createElement('a');
+      a.className = 'chapter-index__work chapter-index__back';
+      a.href = '/';
+      a.innerHTML = `<span aria-hidden="true">←</span> ${label}`;
+      scope(index, a);
+      index.append(a);
+    }
+    const list = document.querySelector('.dock__list');
+    if (list && !list.querySelector('.dock__back')) {
+      const li = document.createElement('li');
+      li.className = 'dock__work dock__back';
+      const a = document.createElement('a');
+      a.href = '/';
+      a.dataset.dockLink = '';
+      a.dataset.chapter = 'home';
+      const num = document.createElement('span');
+      num.className = 'dock__num';
+      num.textContent = '←';
+      const name = document.createElement('span');
+      name.className = 'dock__name';
+      name.textContent = label;
+      for (const el of [li, a, num, name]) scope(list, el);
+      a.append(num, name);
+      li.append(a);
+      list.append(li);
+    }
+  }
+
   document.addEventListener('astro:page-load', () => {
+    setupBackHome();
     setupChapterTracking();
     setupSound();
     setupDock();

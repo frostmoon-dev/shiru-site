@@ -44,7 +44,10 @@ Import the repo in Vercel. The Astro preset is detected and the output is static
 
 The personal site has everything: `/` is about Teha (hobbies, astrology, contact) and `/work/` is
 the work page (résumé, tech stack, employment, the career grimoire, a work contact). The work page
-never links back to the personal one, and on the personal domain it's marked `noindex`.
+never links back to the personal one for a visitor who opened it directly, and on the personal domain
+it's marked `noindex`. If you have viewed the personal page in the same browser tab, the work page
+adds "← Back to Teha" to the top bar and the eye menu. That link is created by script from a
+per-tab mark, so it is never in the HTML, and the work-only site leaves it out entirely.
 
 To give recruiters **only** the work page, deploy the same repo a second time as a work-only site.
 It builds the work page at `/` and leaves out everything personal: no hero, hobbies, astrology,
