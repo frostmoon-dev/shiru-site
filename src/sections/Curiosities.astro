@@ -238,10 +238,13 @@ const back = await getImage({ src: cutouts.cardBack, width: 800, format: 'webp',
   }
   .tarot {
     perspective: 1400px;
+    /* the card's own width, so the words on its back can size themselves to it */
+    container-type: inline-size;
   }
+  /* every card is exactly 5:7, whatever is drawn on it: the faces are laid over the card, not in it */
   .tarot__inner {
     position: relative;
-    display: grid;
+    display: block;
     aspect-ratio: 5 / 7;
     transform-style: preserve-3d;
     transform: rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
@@ -254,8 +257,8 @@ const back = await getImage({ src: cutouts.cardBack, width: 800, format: 'webp',
     transform: rotateY(180deg);
   }
   .tarot__face {
-    grid-area: 1 / 1;
-    position: relative;
+    position: absolute;
+    inset: 0;
     display: flex;
     flex-direction: column;
     backface-visibility: hidden;
@@ -296,19 +299,21 @@ const back = await getImage({ src: cutouts.cardBack, width: 800, format: 'webp',
     font-family: Georgia, 'Times New Roman', serif;
     font-size: 0.95em;
   }
+  /* the corner marks sit inside the inner border line (which is 8px in) */
   .tarot__index--top {
-    top: var(--space-2);
-    left: var(--space-2);
+    top: 18px;
+    left: 18px;
   }
   .tarot__index--bottom {
-    right: var(--space-2);
-    bottom: var(--space-2);
+    right: 18px;
+    bottom: 18px;
     rotate: 180deg;
   }
   .tarot__front :global(.tarot__art) {
-    width: 64%;
+    width: auto;
+    max-width: 64%;
     height: auto;
-    max-height: 54%;
+    max-height: 48%;
     object-fit: contain;
     filter: drop-shadow(0 6px 8px rgb(43 26 18 / 0.25));
   }
@@ -348,23 +353,25 @@ const back = await getImage({ src: cutouts.cardBack, width: 800, format: 'webp',
   /* the back: Teha's black card with the gold frame, the words set inside the frame */
   .tarot__back {
     transform: rotateY(180deg);
-    gap: var(--space-2);
-    padding: 15% 13% 12%;
+    gap: 0.6em;
+    /* the frame's corner stars reach about 18% in; the words stay inside them */
+    padding: 21% 15% 19%;
     overflow: hidden;
     color: #efe6d3;
+    font-size: clamp(0.78rem, 4.6cqi, 1rem);
     background: #161414 var(--card-back) center / 100% 100% no-repeat;
     border: 0;
   }
   .tarot__back-title {
     font-weight: 700;
-    font-size: var(--text-label);
+    font-size: 0.72em;
     letter-spacing: 0.16em;
     text-transform: uppercase;
     color: #d9b46a;
   }
   .tarot__body {
     color: #efe6d3;
-    line-height: 1.6;
+    line-height: 1.55;
   }
   .tarot__items {
     display: flex;
@@ -375,9 +382,9 @@ const back = await getImage({ src: cutouts.cardBack, width: 800, format: 'webp',
     margin: 0;
   }
   .tarot__items li {
-    padding: var(--space-half) var(--space-1);
+    padding: 0.2em 0.5em;
     border: 1px solid rgb(217 180 106 / 0.5);
-    font-size: var(--text-small);
+    font-size: 0.82em;
     color: #efe6d3;
   }
   .tarot__links a {
@@ -385,6 +392,8 @@ const back = await getImage({ src: cutouts.cardBack, width: 800, format: 'webp',
   }
   .tarot__music {
     align-self: flex-start;
+    padding: 0.5em 1em;
+    font-size: 0.72em;
     color: #efe6d3;
     border-color: #d9b46a;
   }
@@ -401,7 +410,7 @@ const back = await getImage({ src: cutouts.cardBack, width: 800, format: 'webp',
     border: 0;
     background: transparent;
     font-weight: 700;
-    font-size: var(--text-label);
+    font-size: 0.72em;
     letter-spacing: 0.16em;
     text-transform: uppercase;
     color: #d9b46a;
@@ -414,6 +423,18 @@ const back = await getImage({ src: cutouts.cardBack, width: 800, format: 'webp',
     outline: 2px solid #d9b46a;
   }
 
+  /* very small cards (the smallest phones): a little less air, so the longest words still fit */
+  @container (max-width: 250px) {
+    .tarot__back {
+      padding: 19% 13% 15%;
+      gap: 0.45em;
+      font-size: 0.74rem;
+    }
+    .tarot__body {
+      line-height: 1.45;
+    }
+  }
+
   /* without JS every card shows its words, and nothing pretends to turn */
   :global(html:not(.js)) .tarot__inner {
     transform: none;
@@ -423,7 +444,9 @@ const back = await getImage({ src: cutouts.cardBack, width: 800, format: 'webp',
     display: none;
   }
   :global(html:not(.js)) .tarot__back {
+    position: relative;
     transform: none;
+    min-height: 100%;
   }
   :global(html:not(.js)) .tarot__back-btn {
     display: none;
