@@ -1,5 +1,14 @@
 ---
-import { footer, site } from '../content/site';
+import { footer, site, work } from '../content/site';
+import { isWorkSite } from '../lib/mode';
+
+interface Props {
+  page?: 'home' | 'work' | 'other';
+}
+const { page = 'home' } = Astro.props;
+const asWork = page === 'work' || isWorkSite;
+const email = asWork ? work.email : site.email;
+const name = asWork ? work.name : site.name;
 const year = new Date().getFullYear();
 ---
 
@@ -7,11 +16,11 @@ const year = new Date().getFullYear();
   <div class="container">
     <p class="kicker">Case closed · for now</p>
     <p class="footer__line ahs" data-effect="typewriter" data-effect-options={JSON.stringify({ typo: footer.typo })}>{footer.line}</p>
-    <p class="footer__mail"><a href={`mailto:${site.email}`}>{site.email}</a></p>
+    <p class="footer__mail"><a href={`mailto:${email}`}>{email}</a></p>
 
     <div class="footer__base">
       <p>{footer.privacy}</p>
-      <p>{footer.copyright(year)} {footer.fontsCredit}</p>
+      <p>{footer.copyright(year, name)} {footer.fontsCredit}</p>
       <p><a class="footer__top" href="#top">Back to the first page <span aria-hidden="true">↑</span></a></p>
     </div>
   </div>

@@ -1,24 +1,31 @@
 ---
 import { ahs } from '../lib/ahs';
 import { Image } from 'astro:assets';
-import { chapters, hero, ui } from '../content/site';
+import { hero, homeChapters, ui, work, workChapters } from '../content/site';
 import { collage } from '../content/photos';
+import { workPath } from '../lib/mode';
 import Icon from './Icon.astro';
 
 interface Props {
+  /** "home" is the personal page; "work" pages show only work chapters and never link to personal ones. */
+  page?: 'home' | 'work' | 'other';
   home?: boolean;
 }
-const { home = false } = Astro.props;
+const { page = 'other', home = page === 'home' } = Astro.props;
+const isWork = page === 'work';
+const list = isWork ? workChapters : homeChapters;
+const base = isWork ? workPath : '/';
+const brand = isWork ? { label: work.heading, href: workPath, aria: `${work.name}, back to the top` } : { label: 'Teha', href: '/', aria: 'Teha, back to the beginning' };
 ---
 
-<header class="site-nav" data-home={home ? 'true' : 'false'}>
+<header class="site-nav" data-home={home ? 'true' : 'false'} data-page={page}>
   <nav class="chapter-index" aria-label={ui.navLabel}>
-    <a class="chapter-index__home" href="/" aria-label="Teha, back to the beginning">Teha</a>
+    <a class="chapter-index__home" href={brand.href} aria-label={brand.aria}>{brand.label}</a>
     <ol>
       {
-        chapters.map((c) => (
+        list.map((c) => (
           <li>
-            <a class="chapter-index__link" href={`/#${c.id}`} data-chapter-link={c.id}>
+            <a class="chapter-index__link" href={`${base}#${c.id}`} data-chapter-link={c.id}>
               <span aria-hidden="true">{c.numeral}</span>
               <span class="visually-hidden">
                 Chapter {c.numeral}: {c.title}
@@ -32,6 +39,7 @@ const { home = false } = Astro.props;
       <span class="visually-hidden">Now reading:</span>
       <span data-chapter-now-text>{home ? 'Prologue' : ''}</span>
     </p>
+    {page === 'home' && <a class="chapter-index__work" href={workPath}>{work.cta} <span aria-hidden="true">→</span></a>}
   </nav>
 
   <button class="icon-btn sound-toggle" type="button" aria-pressed="false" data-sound-toggle>
@@ -50,22 +58,34 @@ const { home = false } = Astro.props;
     <p class="dock__title kicker">{ui.menuTitle}</p>
     <ol class="dock__list">
       <li>
-        <a href="/" data-dock-link data-chapter="top"><span class="dock__num">0</span><span class="dock__name">Prologue</span></a>
+        <a href={brand.href} data-dock-link data-chapter="top"
+          ><span class="dock__num">0</span><span class="dock__name">{isWork ? 'Top' : 'Prologue'}</span></a
+        >
       </li>
       {
-        chapters.map((c) => (
+        list.map((c) => (
           <li>
-            <a href={`/#${c.id}`} data-dock-link data-chapter={c.id}>
+            <a href={`${base}#${c.id}`} data-dock-link data-chapter={c.id} data-label={`${c.numeral} · ${c.title}`}>
               <span class="dock__num">{c.numeral}</span>
               <span class="dock__name">{ahs(c.title)}</span>
             </a>
           </li>
         ))
       }
+      {
+        page === 'home' && (
+          <li class="dock__work">
+            <a href={workPath} data-dock-link data-chapter="work">
+              <span class="dock__num">→</span>
+              <span class="dock__name">{work.cta}</span>
+            </a>
+          </li>
+        )
+      }
     </ol>
   </nav>
   <button class="dock__btn" type="button" aria-expanded="false" aria-controls="dock-menu" data-menu-btn data-enter>
-    <span class="dock__label" data-dock-label>{home ? hero.navigate : 'Navigate.'}</span>
+    <span class="dock__label" data-dock-label data-resting={home ? hero.navigate : 'Navigate.'}>{home ? hero.navigate : 'Navigate.'}</span>
     <span class="visually-hidden"> {ui.menuOpen}</span>
     <span class="dock__eye" data-eye>
       <Image class="dock__eyeball" src={collage.eye} alt="" widths={[96, 192]} sizes="96px" loading="eager" decoding="async" />
@@ -128,6 +148,29 @@ const { home = false } = Astro.props;
     text-decoration-color: var(--blood);
     text-decoration-thickness: 2px;
     text-underline-offset: 0.5em;
+  }
+  /* the way into the work page (personal page only) */
+  .chapter-index__work {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-half);
+    min-height: var(--touch);
+    padding: 0 var(--space-2);
+    border: 1px solid var(--line);
+    font-weight: 700;
+    font-size: var(--text-label);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--bone);
+    text-decoration: none;
+    background: rgb(5 3 4 / 0.6);
+  }
+  .chapter-index__work:hover,
+  .chapter-index__work:focus-visible {
+    border-color: var(--bone);
+  }
+  .dock__work {
+    border-top: 1px solid var(--line);
   }
   .chapter-index__now {
     font-weight: 700;
@@ -357,7 +400,8 @@ const { home = false } = Astro.props;
     .chapter-index ol {
       gap: 0;
     }
-    .chapter-index__now {
+    .chapter-index__now,
+    .chapter-index__work {
       display: none;
     }
     .dock {
@@ -388,7 +432,8 @@ const { home = false } = Astro.props;
 </style>
 
 <script>
-  import { chapters, hero } from '../content/site';
+  // Chapter names are read from the page (data-label on the menu links), not imported from the
+  // content file: that keeps every other page's words out of this script's bundle.
   import { setSound, soundEnabled, sfx } from '../lib/sfx';
   import { gsap } from '../lib/motion';
   import { prefersReducedMotion } from '../lib/env';
@@ -398,9 +443,11 @@ const { home = false } = Astro.props;
   let current: string | null = null;
 
   function labelFor(id: string | null) {
-    const ch = chapters.find((c) => c.id === id);
-    return ch ? `${ch.numeral} · ${ch.title}` : null;
+    if (!id) return null;
+    return document.querySelector<HTMLElement>(`[data-dock-link][data-chapter="${id}"]`)?.dataset.label ?? null;
   }
+  const chapterIds = () =>
+    [...document.querySelectorAll<HTMLElement>('[data-dock-link][data-label]')].map((l) => l.dataset.chapter ?? '').filter(Boolean);
 
   function setCurrent(id: string | null) {
     current = id;
@@ -416,12 +463,14 @@ const { home = false } = Astro.props;
     const now = document.querySelector<HTMLElement>('[data-chapter-now-text]');
     if (now) now.textContent = labelFor(id) ?? (isHome ? 'Prologue' : '');
     const dockLabel = document.querySelector<HTMLElement>('[data-dock-label]');
-    if (dockLabel) dockLabel.textContent = labelFor(id) ?? (isHome ? hero.navigate : 'Navigate.');
+    if (dockLabel) dockLabel.textContent = labelFor(id) ?? dockLabel.dataset.resting ?? '';
   }
 
   function setupChapterTracking() {
     chapterIO?.disconnect();
-    const sections = chapters.map((c) => document.getElementById(c.id)).filter((s): s is HTMLElement => !!s);
+    const sections = chapterIds()
+      .map((id) => document.getElementById(id))
+      .filter((s): s is HTMLElement => !!s);
     setCurrent(null);
     if (!sections.length) return;
     const visible = new Map<string, number>();
@@ -542,7 +591,7 @@ const { home = false } = Astro.props;
     const isOpen = () => !panel.hidden;
 
     const onOutside = (e: PointerEvent) => {
-      if (!panel.contains(e.target as Node) && !btn.contains(e.target as Node)) window.shiruOverlay.close('menu');
+      if (!panel.contains(e.target as Node) && !btn.contains(e.target as Node)) window.siteOverlay.close('menu');
     };
     const closeNow = () => {
       if (!isOpen()) return;
@@ -556,7 +605,7 @@ const { home = false } = Astro.props;
       sfx('hat');
       panel.hidden = false;
       btn.setAttribute('aria-expanded', 'true');
-      window.shiruOverlay.open('menu', closeNow);
+      window.siteOverlay.open('menu', closeNow);
       document.addEventListener('pointerdown', onOutside, true);
       (links.find((l) => l.getAttribute('aria-current') === 'true') ?? links[0])?.focus({ preventScroll: true });
       if (prefersReducedMotion()) return;
@@ -565,21 +614,21 @@ const { home = false } = Astro.props;
       gsap.from(links, { y: 10, opacity: 0, duration: 0.35, stagger: 0.04, ease: 'power3.out', delay: 0.05, clearProps: 'transform,opacity' });
     };
 
-    btn.onclick = () => (isOpen() ? window.shiruOverlay.close('menu') : open());
+    btn.onclick = () => (isOpen() ? window.siteOverlay.close('menu') : open());
     panel.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
         e.preventDefault();
-        window.shiruOverlay.close('menu');
+        window.siteOverlay.close('menu');
       }
     });
     btn.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && isOpen()) window.shiruOverlay.close('menu');
+      if (e.key === 'Escape' && isOpen()) window.siteOverlay.close('menu');
     });
     links.forEach((l) => {
       l.onclick = (e) => {
         e.preventDefault();
         const href = l.getAttribute('href') ?? '/';
-        window.shiruOverlay.close('menu', () => void navigate(href));
+        window.siteOverlay.close('menu', () => void navigate(href));
       };
     });
     setCurrent(current);

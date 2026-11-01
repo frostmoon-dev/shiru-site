@@ -43,7 +43,8 @@ const heroEntrance: EffectFactory = () => {
             0.1,
           )
           .from(el.querySelector('.hero__hand'), { yPercent: 60, opacity: 0, duration: 2.2, ease: 'power2.out' }, 0.6)
-          .fromTo(el.querySelector('.hero__tagline'), { ...wipe, y: 10 }, { ...wiped, y: 0, duration: 1.1, ease: 'power2.inOut' }, 1.3);
+          .fromTo(el.querySelector('.hero__tagline'), { ...wipe, y: 10 }, { ...wiped, y: 0, duration: 1.1, ease: 'power2.inOut' }, 1.3)
+          .fromTo(el.querySelector('.hero__cta'), { ...wipe }, { ...wiped, duration: 0.8, ease: 'power2.inOut' }, 1.9);
         const menu = q('.dock__btn');
         if (menu && document.documentElement.classList.contains('at-hero'))
           tl.from(menu.querySelector('.dock__eye'), { scaleY: 0.05, opacity: 0, duration: 0.7, ease: 'power3.out', clearProps: 'transform,opacity' }, 1.6).fromTo(
@@ -56,11 +57,11 @@ const heroEntrance: EffectFactory = () => {
       };
       if (document.documentElement.classList.contains('intro-pending')) {
         waiting = run;
-        window.addEventListener('shiru:intro-done', run, { once: true });
+        window.addEventListener('site:intro-done', run, { once: true });
       } else run();
     },
     unmount() {
-      if (waiting) window.removeEventListener('shiru:intro-done', waiting);
+      if (waiting) window.removeEventListener('site:intro-done', waiting);
       waiting = undefined;
       tl?.progress(1).kill();
       if (root) show(root);

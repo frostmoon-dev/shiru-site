@@ -5,15 +5,18 @@ Canva opens each one as an editable design.
 
 | File | Screen |
 | --- | --- |
-| `01-hero.pptx` | Prologue (hero), following Teha's Canva layout |
-| `02-down-the-rabbit-hole.pptx` | Chapter I · About |
-| `03-on-the-record.pptx` | Chapter II · On the record (résumé) |
-| `04-the-paper-trail.pptx` | Chapter III · The paper trail (employment history), every file shut |
-| `05-grimoire-closed.pptx` / `06-grimoire-open.pptx` | Chapter IV · Career, book shut and open |
-| `07-tea-at-midnight.pptx` / `08-tea-letter-open.pptx` | Chapter V · Contact, envelope sealed and letter out |
-| `09-footer.pptx` | Come back after dark |
-| `10-grimoire-chapter-page.pptx` | A grimoire chapter |
-| `11-not-found.pptx` | The 404 page |
+| `01-hero.pptx` | Personal page · Prologue (hero) |
+| `02-down-the-rabbit-hole.pptx` | Personal page · I About |
+| `03-a-deck-of-curiosities.pptx` | Personal page · II Hobbies (cards face up) |
+| `04-tea-at-midnight.pptx` / `05-tea-letter-open.pptx` | Personal page · Contact, envelope sealed and letter out |
+| `06-footer.pptx` | Come back after dark |
+| `07-work-top.pptx` | Work page · top (name, résumé, LinkedIn, email) |
+| `08-on-the-record.pptx` | Work page · I Résumé |
+| `09-the-tool-cabinet.pptx` | Work page · II Tech stack |
+| `10-the-paper-trail.pptx` | Work page · III Employment |
+| `11-grimoire-closed.pptx` / `12-grimoire-open.pptx` | Work page · IV Career, book shut and open |
+| `13-grimoire-chapter-page.pptx` | A grimoire chapter |
+| `14-not-found.pptx` | The 404 page |
 
 ## Each design has these layers (bottom to top)
 

@@ -34,16 +34,35 @@ Import the repo in Vercel. The Astro preset is detected and the output is static
 
 | Name | What it does |
 | --- | --- |
-| `SITE_URL` | Canonical origin for `<link rel="canonical">`, Open Graph and `sitemap.xml`. Falls back to `https://$VERCEL_PROJECT_PRODUCTION_URL`, then `https://shiru.example`. |
+| `SITE_URL` | Canonical origin for `<link rel="canonical">`, Open Graph and `sitemap.xml`. Falls back to `https://$VERCEL_PROJECT_PRODUCTION_URL`, then `https://example.com`. |
+| `PUBLIC_SITE_MODE` | Leave unset for the personal site. Set to `work` for the recruiter-only site (see below). |
 | `PUBLIC_CONTACT_ENDPOINT` | A form endpoint that accepts a JSON `POST` and answers `2xx` (for example a Formspree form URL). **Not set yet:** the contact form currently opens the visitor's mail app (`mailto:`). The button label says so. |
 
 `PUBLIC_*` variables end up in the browser. Never put secrets in them. See `.env.example`.
 
+### Two sites from one codebase: personal and work-only
+
+The personal site has everything: `/` is about Teha (hobbies, astrology, contact) and `/work/` is
+the work page (résumé, tech stack, employment, the career grimoire, a work contact). The work page
+never links back to the personal one, and on the personal domain it's marked `noindex`.
+
+To give recruiters **only** the work page, deploy the same repo a second time as a work-only site.
+It builds the work page at `/` and leaves out everything personal: no hero, hobbies, astrology,
+socials, "Teha", personal email, or the personal social card.
+
+1. In Vercel: **Add New… → Project**, import this same repository again, and give the project a
+   neutral name (the name becomes its `*.vercel.app` address), e.g. `nurfatihah-muhammad`.
+2. Under **Settings → Environment Variables**, add `PUBLIC_SITE_MODE` = `work` (all environments).
+3. Optionally add `SITE_URL` with that project's address or a custom domain, then deploy.
+
+Share that address with recruiters. Share the personal one with everyone else.
+
 ## Edit the words
 
 All copy is in **`src/content/site.ts`**. Images are wired in `src/content/photos.ts`.
-Search for `TODO:` to find every placeholder. The placeholder asset list is in
-[`public/assets/placeholder/README.md`](public/assets/placeholder/README.md).
+The intro's flash photos are still placeholders (`src/assets/placeholder/intro-*.jpg`). Astrology
+appears once `stars.sun` (and optionally `moon`, `rising`) is filled in; social accounts go in
+`tea.links`. The work page's words live in `work`, `record`, `techStack`, `history` and `grimoire`.
 
 ## Add an effect
 
@@ -60,9 +79,9 @@ src/
   effects/               plug-in effects + runtime.ts (lazy load / unmount / reduced motion)
     _webgl/stage.ts      the one shared WebGL context
   islands/               React islands (the R3F grimoire)
-  sections/              Hero, RabbitHole, Record (résumé), History (employment), Grimoire (career), Tea, Footer, Intro
+  sections/              personal: Hero, RabbitHole, Curiosities (hobby cards), Stars (astrology), Tea · work: WorkHeader, Record, Stack, History, Grimoire, Tea (work variant) · Footer, Intro
   components/            top chapter index + eye dock menu, section head, close control, icons
-  pages/                 index, grimoire/[slug], 404, robots.txt
+  pages/                 index (personal, or the work page in work mode), [...work] (/work/), grimoire/[slug], 404, robots.txt, site.webmanifest
 scripts/                 test + asset scripts (below)
 ```
 

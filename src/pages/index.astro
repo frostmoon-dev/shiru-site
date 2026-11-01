@@ -3,20 +3,26 @@ import Base from '../layouts/Base.astro';
 import Intro from '../sections/Intro.astro';
 import Hero from '../sections/Hero.astro';
 import RabbitHole from '../sections/RabbitHole.astro';
-import Record from '../sections/Record.astro';
-import History from '../sections/History.astro';
-import Grimoire from '../sections/Grimoire.astro';
+import Curiosities from '../sections/Curiosities.astro';
+import Stars from '../sections/Stars.astro';
 import Tea from '../sections/Tea.astro';
 import Footer from '../sections/Footer.astro';
+import WorkPage from '../components/WorkPage.astro';
+import { isWorkSite } from '../lib/mode';
 ---
 
-<Base home>
-  <Intro slot="intro" />
-  <Hero />
-  <RabbitHole />
-  <Record />
-  <History />
-  <Grimoire />
-  <Tea />
-  <Footer slot="footer" />
-</Base>
+{
+  isWorkSite ? (
+    <WorkPage />
+  ) : (
+    <Base page="home">
+      <Intro slot="intro" />
+      <Hero />
+      <RabbitHole />
+      <Curiosities />
+      <Stars />
+      <Tea />
+      <Footer slot="footer" page="home" />
+    </Base>
+  )
+}

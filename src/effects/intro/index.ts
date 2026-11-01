@@ -9,7 +9,7 @@ import { gsap, lockScroll } from '../../lib/motion';
  * Mitigations kept: frames are luminance-matched dark sepia (no bright/white frames), no red
  * flashes, frames cover ~60% of the viewport, and reduced motion / save-data skip the burst.
  */
-const SEEN = 'shiru:intro-seen';
+const SEEN = 'site:intro-seen';
 
 const introEffect: EffectFactory = () => {
   let tl: gsap.core.Timeline | undefined;
@@ -38,7 +38,7 @@ const introEffect: EffectFactory = () => {
       node.style.opacity = '';
       node.style.transition = '';
       lockScroll(false);
-      window.dispatchEvent(new Event('shiru:intro-done'));
+      window.dispatchEvent(new Event('site:intro-done'));
       document.getElementById('main')?.focus({ preventScroll: true });
     }, 300);
     if (onKey) document.removeEventListener('keydown', onKey);

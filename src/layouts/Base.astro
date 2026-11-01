@@ -2,7 +2,8 @@
 import { ClientRouter } from 'astro:transitions';
 import { Font } from 'astro:assets';
 import '../styles/global.css';
-import { site, ui } from '../content/site';
+import { site, ui, work } from '../content/site';
+import { isWorkSite } from '../lib/mode';
 import HeadInline from '../components/HeadInline.astro';
 import SiteNav from '../components/SiteNav.astro';
 import SvgDefs from '../components/SvgDefs.astro';
@@ -10,22 +11,29 @@ import SvgDefs from '../components/SvgDefs.astro';
 interface Props {
   title?: string;
   description?: string;
+  /** "work" pages carry the professional identity (name, OG card) and never the personal one. */
+  page?: 'home' | 'work' | 'other';
   home?: boolean;
   /** Page ships no canonical (e.g. 404). */
   noindex?: boolean;
   ogImage?: string;
   ogImageAlt?: string;
 }
+const { page: pageProp, home: homeProp, title, noindex: noindexProp = false } = Astro.props;
+const page = pageProp ?? (homeProp ? 'home' : 'other');
+const home = page === 'home';
+// Work pages, and every page of the work-only site, speak as the professional identity.
+const asWork = page === 'work' || isWorkSite;
+const id = asWork ? work : site;
 const {
-  title,
-  description = site.description,
-  home = false,
-  noindex = false,
-  ogImage = site.ogImage,
-  ogImageAlt = site.ogImageAlt,
+  description = id.description,
+  ogImage = id.ogImage,
+  ogImageAlt = id.ogImageAlt,
 } = Astro.props;
+// On the personal site, /work/ stays out of search results, so a search for the name leads to the work-only site.
+const noindex = noindexProp || (page === 'work' && !isWorkSite);
 
-const fullTitle = title ? `${title} · ${site.name}` : site.title;
+const fullTitle = title ? `${title} · ${id.name}` : id.title;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const ogUrl = new URL(ogImage, Astro.site).href;
 ---
@@ -47,7 +55,7 @@ const ogUrl = new URL(ogImage, Astro.site).href;
     <link rel="sitemap" href="/sitemap-index.xml" />
 
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content={site.name} />
+    <meta property="og:site_name" content={id.name} />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
@@ -71,7 +79,7 @@ const ogUrl = new URL(ogImage, Astro.site).href;
   <body>
     <a class="skip-link" href="#main">{ui.skip}</a>
     <SvgDefs />
-    <SiteNav home={home} />
+    <SiteNav page={asWork ? 'work' : page} />
     <slot name="intro" />
     <main id="main" tabindex="-1">
       <slot />

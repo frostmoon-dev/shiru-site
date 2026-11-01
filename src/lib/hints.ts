@@ -2,7 +2,7 @@
  * One-time hints ("click the seal"). A hint is any element with data-hint="<key>".
  * It shows until the related interaction happens once, then never again (localStorage).
  */
-const KEY = 'shiru:hints-used';
+const KEY = 'site:hints-used';
 
 function used(): Set<string> {
   try {

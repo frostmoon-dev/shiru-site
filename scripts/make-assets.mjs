@@ -64,6 +64,13 @@ async function shot(html, path, w, h, type = 'jpeg', transparent = false) {
 const brandOnly = process.argv.includes('--brand');
 if (!brandOnly) for (let i = 1; i <= 5; i++) await shot(photo('', motifs.portrait(i)), `src/assets/placeholder/intro-${i}.jpg`, 800, 1000);
 await shot(og, 'public/og.png', 1200, 630, 'png');
+// the work page's card: the professional name only, nothing from the personal side
+const ogWork = og
+  .replace('<div class="kicker">CASE NO. 0 · SUBJECT: UNKNOWN</div>', '<div class="kicker">CASE FILE · PROFESSION</div>')
+  .replace('<div class="title ghost">Teha</div><div class="title">Teha</div>', '<div class="title ghost">Nurfatihah</div><div class="title">Nurfatihah</div>')
+  .replace('BUILDS LEDGERS BY DAY. TRANSLATES GHOSTS BY NIGHT.', 'NURFATIHAH MUHAMMAD · DYNAMICS 365 F&amp;O DEVELOPER')
+  .replace('ERP DEVELOPER · ENGLISH–MALAY TRANSLATOR · KEEPER OF A LORE ARCHIVE', 'X++ · SSRS · EXTENSIONS · BUSINESS CENTRAL · MALAYSIA');
+await shot(ogWork.replace('font-size:190px', 'font-size:150px'), 'public/og-work.png', 1200, 630, 'png');
 await shot(iconHtml(180, true), 'public/apple-touch-icon.png', 180, 180, 'png');
 await shot(iconHtml(32, false), 'public/favicon-32.png', 32, 32, 'png', true);
 await shot(iconHtml(192, true), 'public/icon-192.png', 192, 192, 'png');

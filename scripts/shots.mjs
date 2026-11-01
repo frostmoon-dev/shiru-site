@@ -17,7 +17,7 @@ for (const w of widths) {
     deviceScaleFactor: 1,
     hasTouch: w < 500,
   });
-  if ('nointro' in flags) await ctx.addInitScript(() => sessionStorage.setItem('shiru:intro-seen', '1'));
+  if ('nointro' in flags) await ctx.addInitScript(() => sessionStorage.setItem('site:intro-seen', '1'));
   const page = await ctx.newPage();
   page.on('console', (m) => {
     if (m.type() === 'error' || m.type() === 'warning') {

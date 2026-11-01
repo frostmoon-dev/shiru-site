@@ -7,7 +7,7 @@ const base = process.argv[2] ?? 'http://localhost:4321';
 const width = Number(process.argv[3] ?? 1280);
 const browser = await chromium.launch({ args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
 const ctx = await browser.newContext({ viewport: { width, height: width < 500 ? 812 : 800 }, hasTouch: width < 500 });
-await ctx.addInitScript(() => sessionStorage.setItem('shiru:intro-seen', '1'));
+await ctx.addInitScript(() => sessionStorage.setItem('site:intro-seen', '1'));
 const page = await ctx.newPage();
 const log = [];
 page.on('console', (m) => ['error', 'warning'].includes(m.type()) && log.push(`${m.type()}: ${m.text()}`));
@@ -57,24 +57,6 @@ await page.waitForTimeout(2200);
 const teaTop = await page.evaluate(() => Math.round(document.querySelector('#tea').getBoundingClientRect().top));
 check(`menu link lands on Tea at midnight (top ${teaTop}px)`, Math.abs(teaTop) < 90);
 
-// Grimoire
-await scrollTo('#grimoire', 100);
-await page.waitForTimeout(2500);
-await shot('grimoire-closed');
-const openBtn = page.getByRole('button', { name: 'Open the grimoire' });
-await openBtn.click();
-await page.waitForTimeout(2200);
-await shot('grimoire-open');
-const before = await page.textContent('.book__count');
-await page.keyboard.press('ArrowRight');
-await page.waitForTimeout(1400);
-await shot('grimoire-turned');
-const after = await page.textContent('.book__count');
-check(`→ turns page ("${before}" → "${after}")`, before !== after);
-await page.goBack();
-await page.waitForTimeout(1200);
-check('Back closes book', (await page.locator('.book.is-open').count()) === 0 && (await page.evaluate(() => location.pathname)) === '/');
-
 // Envelope + form
 await scrollTo('#tea', 50);
 check('letter hidden before the seal breaks', await page.evaluate(() => getComputedStyle(document.querySelector('[data-letter]')).display === 'none'));
@@ -93,6 +75,49 @@ check('empty submit shows 3 errors', (await page.locator('.field__error:not([hid
 await page.keyboard.press('Escape');
 await page.waitForTimeout(1600);
 check('Esc closes envelope', (await page.locator('.stage.is-open, .stage.is-opening').count()) === 0);
+
+// Hobbies: a tarot card turns over, and back
+await scrollTo('#curiosities', 100);
+await page.waitForTimeout(1200);
+const card = page.locator('[data-tarot]').first();
+await card.scrollIntoViewIfNeeded();
+await card.locator('[data-turn]').click();
+await page.waitForTimeout(900);
+await shot('tarot-turned');
+check('a hobby card turns over', await card.evaluate((c) => c.classList.contains('is-turned') && !c.querySelector('[data-back]').inert));
+await card.locator('[data-turn-back]').click();
+await page.waitForTimeout(900);
+check('and turns back', await card.evaluate((c) => !c.classList.contains('is-turned')));
+
+// The way into the work page, and nothing on it leads back to the personal page
+await page.evaluate(() => window.scrollTo(0, 0));
+await page.waitForTimeout(800);
+await page.locator('.hero__work').click();
+await page.waitForFunction(() => location.pathname === '/work/', null, { timeout: 8000 }).catch(() => {});
+await page.waitForTimeout(1500);
+check('"See my work" opens the work page', (await page.evaluate(() => location.pathname)) === '/work/');
+const personalLinks = await page.evaluate(() =>
+  [...document.querySelectorAll('a[href]')].map((a) => a.getAttribute('href')).filter((h) => h === '/' || h.startsWith('/#') || h.includes('shirubawing') || h.includes('github.com')),
+);
+check(`work page has no links to the personal side (${personalLinks.join(', ') || 'none'})`, personalLinks.length === 0);
+
+// Grimoire
+await scrollTo('#grimoire', 100);
+await page.waitForTimeout(2500);
+await shot('grimoire-closed');
+const openBtn = page.getByRole('button', { name: 'Open the grimoire' });
+await openBtn.click();
+await page.waitForTimeout(2200);
+await shot('grimoire-open');
+const before = await page.textContent('.book__count');
+await page.keyboard.press('ArrowRight');
+await page.waitForTimeout(1400);
+await shot('grimoire-turned');
+const after = await page.textContent('.book__count');
+check(`→ turns page ("${before}" → "${after}")`, before !== after);
+await page.goBack();
+await page.waitForTimeout(1200);
+check('Back closes book', (await page.locator('.book.is-open').count()) === 0 && (await page.evaluate(() => location.pathname)) === '/work/');
 
 // Résumé: the download is a real, same-origin PDF
 await scrollTo('#record', 100);
@@ -136,7 +161,7 @@ await page.keyboard.press('Escape');
 await page.waitForFunction(() => location.pathname === '/', null, { timeout: 8000 }).catch(() => {});
 await page.waitForTimeout(1500);
 const y2 = await page.evaluate(() => window.scrollY);
-check(`Esc returns to the grimoire, scroll restored (${y} → ${y2})`, (await page.evaluate(() => location.pathname)) === '/' && Math.abs(y - y2) < 120);
+check(`Esc returns to the grimoire, scroll restored (${y} → ${y2})`, (await page.evaluate(() => location.pathname)) === '/work/' && Math.abs(y - y2) < 120);
 
 // 404
 await page.goto(base + "/nope", { waitUntil: 'networkidle' });

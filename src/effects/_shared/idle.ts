@@ -9,7 +9,7 @@ export function whenIdle(timeout = 2500): Promise<void> {
     const idle = () => (ric ? ric(() => resolve(), { timeout }) : setTimeout(resolve, 800));
     const afterLoad = () => (document.readyState === 'complete' ? idle() : window.addEventListener('load', idle, { once: true }));
     if (document.documentElement.classList.contains('intro-pending')) {
-      window.addEventListener('shiru:intro-done', afterLoad, { once: true });
+      window.addEventListener('site:intro-done', afterLoad, { once: true });
     } else afterLoad();
   });
 }

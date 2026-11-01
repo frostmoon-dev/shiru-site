@@ -1,5 +1,6 @@
 ---
 import { ahs } from '../../lib/ahs';
+import { workPath } from '../../lib/mode';
 import type { GetStaticPaths } from 'astro';
 import Base from '../../layouts/Base.astro';
 import CloseFile from '../../components/CloseFile.astro';
@@ -18,9 +19,9 @@ const prev = grimoire.entries[i - 1];
 const next = grimoire.entries[i + 1];
 ---
 
-<Base title={entry.title} description={entry.excerpt}>
+<Base title={entry.title} description={entry.excerpt} page="work">
   <article class="section entry" data-tone="void" aria-labelledby="entry-title">
-    <CloseFile href="/#grimoire" label="Back to the grimoire" flag="shiru:from-grimoire" />
+    <CloseFile href={`${workPath}#grimoire`} label="Back to the grimoire" flag="site:from-grimoire" />
     <div class="container">
       <header class="section-head">
         <p class="kicker">Case No. {chapterNo} · Chapter {entry.numeral} · {entry.date ? <time datetime={entry.date}>{entry.when}</time> : entry.when}</p>

@@ -25,12 +25,12 @@ const { intro = false } = Astro.props;
     if (intro && !location.hash) root.classList.add('at-hero');
     try {
       // Deep links (/#tea) go straight to the content: no intro in the way.
-      if (intro && !location.hash && !sessionStorage.getItem('shiru:intro-seen')) {
+      if (intro && !location.hash && !sessionStorage.getItem('site:intro-seen')) {
         root.classList.add('intro-pending');
         // Fail-safe: if the intro script never starts, the page is never held hostage.
         window.__introFailsafe = window.setTimeout(function () {
           root.classList.remove('intro-pending');
-          window.dispatchEvent(new Event('shiru:intro-done'));
+          window.dispatchEvent(new Event('site:intro-done'));
         }, 3500);
       }
     } catch (e) {
@@ -43,15 +43,15 @@ const { intro = false } = Astro.props;
     function run(fn) {
       if (typeof fn === 'function') window.setTimeout(fn, 0);
     }
-    window.shiruOverlay = {
+    window.siteOverlay = {
       open: function (id, close) {
-        var state = Object.assign({}, history.state || {}, { shiruOverlay: id });
+        var state = Object.assign({}, history.state || {}, { siteOverlay: id });
         history.pushState(state, '');
         stack.push({ id: id, close: close });
       },
       close: function (id, then) {
         var top = stack[stack.length - 1];
-        if (top && top.id === id && history.state && history.state.shiruOverlay === id) {
+        if (top && top.id === id && history.state && history.state.siteOverlay === id) {
           pending = then || null;
           history.back();
           return;
@@ -74,7 +74,7 @@ const { intro = false } = Astro.props;
       if (location.pathname !== docPath) return; // a real page change: Astro's router handles it
       var st = e.state || {};
       var top = stack[stack.length - 1];
-      if (top && st.shiruOverlay !== top.id) {
+      if (top && st.siteOverlay !== top.id) {
         e.stopImmediatePropagation();
         stack.pop();
         top.close();
@@ -83,7 +83,7 @@ const { intro = false } = Astro.props;
         run(then);
         return;
       }
-      if (st.shiruOverlay) e.stopImmediatePropagation(); // stale overlay entry (Forward): ignore
+      if (st.siteOverlay) e.stopImmediatePropagation(); // stale overlay entry (Forward): ignore
     });
     document.addEventListener('astro:after-swap', function () {
       stack.length = 0;

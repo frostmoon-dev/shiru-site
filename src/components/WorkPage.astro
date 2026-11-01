@@ -1,0 +1,24 @@
+---
+/**
+ * The work page: everything a recruiter needs, and nothing personal. Rendered at /work/ on the
+ * personal site, and at / on the work-only site (PUBLIC_SITE_MODE=work).
+ */
+import Base from '../layouts/Base.astro';
+import WorkHeader from '../sections/WorkHeader.astro';
+import Record from '../sections/Record.astro';
+import Stack from '../sections/Stack.astro';
+import History from '../sections/History.astro';
+import Grimoire from '../sections/Grimoire.astro';
+import Tea from '../sections/Tea.astro';
+import Footer from '../sections/Footer.astro';
+---
+
+<Base page="work">
+  <WorkHeader />
+  <Record />
+  <Stack />
+  <History />
+  <Grimoire />
+  <Tea variant="work" />
+  <Footer slot="footer" page="work" />
+</Base>

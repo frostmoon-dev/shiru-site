@@ -22,9 +22,9 @@ async function audit(page, label) {
 
 for (const width of [1280, 375]) {
   const ctx = await browser.newContext({ viewport: { width, height: 800 } });
-  await ctx.addInitScript(() => sessionStorage.setItem('shiru:intro-seen', '1'));
+  await ctx.addInitScript(() => sessionStorage.setItem('site:intro-seen', '1'));
   const page = await ctx.newPage();
-  for (const path of ['/', '/grimoire/the-engineering-years/', '/404.html']) {
+  for (const path of ['/', '/work/', '/grimoire/the-engineering-years/', '/404.html']) {
     await page.goto(base + path, { waitUntil: 'networkidle' });
     // scroll through so lazy effects mount, then back to top
     await page.evaluate(async () => {
@@ -51,6 +51,12 @@ for (const width of [1280, 375]) {
   await page.waitForTimeout(1500);
   await page.click('[data-submit]');
   await audit(page, `${width}px envelope open + errors`);
+  await page.evaluate(() => document.querySelector('#curiosities').scrollIntoView());
+  await page.waitForTimeout(1500);
+  await page.locator('[data-turn]').first().click();
+  await page.waitForTimeout(1000);
+  await audit(page, `${width}px hobby card turned`);
+  await page.goto(base + '/work/', { waitUntil: 'networkidle' });
   await page.evaluate(() => document.querySelector('#grimoire').scrollIntoView());
   await page.waitForTimeout(2500);
   await page.getByRole('button', { name: 'Open the grimoire' }).click();

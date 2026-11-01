@@ -4,7 +4,7 @@ const { chromium } = createRequire(import.meta.url)('playwright');
 const base = process.argv[2] ?? 'http://localhost:4322';
 const b = await chromium.launch();
 const ctx = await b.newContext({ viewport: { width: 1280, height: 800 } });
-await ctx.addInitScript(() => sessionStorage.setItem('shiru:intro-seen', '1'));
+await ctx.addInitScript(() => sessionStorage.setItem('site:intro-seen', '1'));
 const p = await ctx.newPage();
 await p.goto(base + '/', { waitUntil: 'networkidle' });
 await p.waitForTimeout(1000);

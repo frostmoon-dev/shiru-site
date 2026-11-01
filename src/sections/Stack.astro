@@ -1,0 +1,131 @@
+---
+import { chapters, techStack, ui } from '../content/site';
+import SectionHead from '../components/SectionHead.astro';
+import { ahs } from '../lib/ahs';
+
+const ch = chapters.find((c) => c.id === 'stack')!;
+---
+
+<section id={ch.id} class="section stack" data-tone="void" aria-labelledby="stack-title">
+  <div class="container">
+    <SectionHead id="stack-title" kicker={ui.caseNo(ch.numeral, ch.label)} title={techStack.title} lead={techStack.lead} />
+
+    <!-- an apothecary cabinet: each shelf has a lettered label; its tools sit on the shelf -->
+    <ol class="cabinet" data-effect="reveal" data-effect-options='{"type":"rise","targets":".shelf","stagger":0.1}'>
+      {
+        techStack.shelves.map((s) => (
+          <li class="shelf">
+            <div class="shelf__label">
+              <span class="shelf__mark" aria-hidden="true">
+                {s.mark}
+              </span>
+              <div>
+                <h3 class="shelf__name">{ahs(s.name)}</h3>
+                <p class="shelf__note">{s.note}</p>
+              </div>
+            </div>
+            <ul class="shelf__items">
+              {s.items.map((it, i) => (
+                <li style={`--n:${i}`}>{it}</li>
+              ))}
+            </ul>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .cabinet {
+    display: grid;
+    list-style: none;
+    padding: 0;
+    /* top margin comes from .section-head + * (the shared rhythm) */
+    margin-inline: 0;
+    margin-bottom: 0;
+    border-top: 1px solid var(--line);
+  }
+  .shelf {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-3);
+    padding-block: var(--space-4);
+    /* the shelf board */
+    border-bottom: 2px solid rgb(232 220 194 / 0.16);
+    box-shadow: 0 10px 18px -16px rgb(0 0 0 / 0.9);
+  }
+  .shelf__label {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+  .shelf__mark {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 3.25rem;
+    height: 3.25rem;
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    line-height: 1;
+    color: var(--bone);
+    border: 1px solid rgb(232 220 194 / 0.55);
+    outline: 1px solid rgb(232 220 194 / 0.25);
+    outline-offset: -5px;
+    transition:
+      color var(--dur-base) var(--ease-out),
+      border-color var(--dur-base) var(--ease-out);
+  }
+  .shelf__name {
+    font-size: var(--step-2);
+    line-height: 1;
+    color: var(--bone);
+  }
+  .shelf__note {
+    margin-top: var(--space-half);
+    font-size: var(--text-small);
+    font-style: italic;
+    color: var(--muted);
+  }
+  .shelf__items {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: var(--space-1);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .shelf__items li {
+    padding: var(--space-1) var(--space-2);
+    border: 1px solid var(--line);
+    background: rgb(232 220 194 / 0.03);
+    color: var(--bone);
+    font-size: var(--text-small);
+    transition:
+      translate var(--dur-base) var(--ease-out) calc(var(--n) * 30ms),
+      border-color var(--dur-base) var(--ease-out);
+  }
+  /* pointing at a shelf lights its label and lifts its jars, one after another */
+  .shelf:hover .shelf__mark {
+    color: var(--blood-lit);
+    border-color: var(--bone);
+  }
+  .shelf:hover .shelf__items li {
+    translate: 0 -4px;
+    border-color: rgb(232 220 194 / 0.4);
+  }
+  @media (min-width: 960px) {
+    .shelf {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      align-items: center;
+      gap: var(--space-6);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .shelf__items li {
+      transition: none;
+    }
+  }
+</style>

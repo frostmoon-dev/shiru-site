@@ -85,7 +85,7 @@ const labels = {
     const a = (e.target as Element | null)?.closest?.('a[href^="/grimoire/"]');
     if (!a || !a.closest('#grimoire')) return;
     try {
-      sessionStorage.setItem('shiru:from-grimoire', '1');
+      sessionStorage.setItem('site:from-grimoire', '1');
     } catch {
       /* storage blocked: the close button just links back */
     }

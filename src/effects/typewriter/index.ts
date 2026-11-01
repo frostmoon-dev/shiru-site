@@ -78,13 +78,13 @@ const typewriter: EffectFactory = () => {
       };
       if (opts.waitForIntro && document.documentElement.classList.contains('intro-pending')) {
         onIntro = start;
-        window.addEventListener('shiru:intro-done', start, { once: true });
+        window.addEventListener('site:intro-done', start, { once: true });
       } else start();
     },
     unmount() {
       io?.disconnect();
       window.clearTimeout(timer);
-      if (onIntro) window.removeEventListener('shiru:intro-done', onIntro);
+      if (onIntro) window.removeEventListener('site:intro-done', onIntro);
       onIntro = undefined;
       if (el) {
         el.innerHTML = originalHTML;

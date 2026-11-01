@@ -5,6 +5,7 @@
  * properly. Replace it before launch. Search the repo for "TODO:" to find all of them.
  */
 
+/** The personal site. */
 export const site = {
   name: 'Teha',
   /** Used for the mailto fallback, the contact icons and the footer. */
@@ -12,20 +13,79 @@ export const site = {
   locale: 'en',
   title: 'Teha · ERP by day, words by night',
   description:
-    'Teha builds Dynamics 365 Finance & Operations systems in X++ by day and wanders into peculiar projects by night. Case No. 0: subject unknown.',
+    'Teha: an ERP developer by day who wanders into peculiar projects by night. Cats, iced coffee, characters and the occasional moth. Case No. 0: subject unknown.',
   ogImage: '/og.png',
   ogImageAlt: 'The name TEHA in pale lettering on black, under the line Case No. 0, Subject: unknown.',
 } as const;
 
-export type ChapterId = 'rabbit-hole' | 'record' | 'history' | 'grimoire' | 'tea';
+/**
+ * The work page (and the recruiter-only site). Nothing here points at the personal side:
+ * the professional name, the CV's email address, LinkedIn.
+ */
+export const work = {
+  name: 'Nurfatihah Muhammad',
+  email: 'fatihahmuhd467@gmail.com',
+  linkedin: 'https://www.linkedin.com/in/fatihahmuhd/',
+  title: 'Nurfatihah Muhammad · Dynamics 365 F&O Developer',
+  description:
+    'Nurfatihah Muhammad: Microsoft Dynamics 365 Finance & Operations developer in Malaysia. X++, SSRS reports and extensions. Résumé, employment history and contact.',
+  ogImage: '/og-work.png',
+  ogImageAlt: 'Nurfatihah Muhammad, Dynamics 365 Finance & Operations developer, in pale lettering on black.',
+  kicker: 'Case file · Profession',
+  /** The big name at the top of the work page. */
+  heading: 'Nurfatihah',
+  lead: 'Microsoft Dynamics 365 Finance & Operations developer. X++, SSRS reports and extensions; requirements in, working solutions out.',
+  linkedinLabel: 'LinkedIn',
+  emailLabel: 'Email',
+  /** On the personal site's hero and About: the way into the work page. */
+  cta: 'See my work',
+} as const;
 
-export const chapters: { id: ChapterId; numeral: string; label: string; title: string }[] = [
-  { id: 'rabbit-hole', numeral: 'I', label: 'About', title: 'Down the rabbit hole' },
-  { id: 'record', numeral: 'II', label: 'Résumé', title: 'On the record' },
-  { id: 'history', numeral: 'III', label: 'Employment', title: 'The paper trail' },
-  { id: 'grimoire', numeral: 'IV', label: 'Career', title: 'The grimoire' },
-  { id: 'tea', numeral: 'V', label: 'Contact', title: 'Tea at midnight' },
-];
+/**
+ * Astrology (personal page). Fill in the signs, e.g. sun: 'Scorpio'. The chapter, its nav entry
+ * and its cards only appear once at least the sun sign is set: nothing is shown half-empty.
+ */
+export const stars = {
+  title: 'Written in the stars',
+  lead: 'Three cards the sky dealt before I had a say.',
+  sun: '',
+  moon: '',
+  rising: '',
+  roles: {
+    sun: { label: 'Sun', note: 'who I am' },
+    moon: { label: 'Moon', note: 'what I feel' },
+    rising: { label: 'Rising', note: 'how I arrive' },
+  },
+};
+export function hasStars() {
+  return stars.sun.trim() !== '';
+}
+
+export type ChapterId = 'rabbit-hole' | 'curiosities' | 'stars' | 'tea' | 'record' | 'stack' | 'history' | 'grimoire' | 'contact';
+export type Chapter = { id: ChapterId; numeral: string; label: string; title: string };
+
+const NUMERALS = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
+const numbered = (list: Omit<Chapter, 'numeral'>[]): Chapter[] => list.map((c, i) => ({ ...c, numeral: NUMERALS[i]! }));
+
+/** Chapters of the personal page (the astrology chapter only appears once its signs are filled in). */
+export const homeChapters: Chapter[] = numbered([
+  { id: 'rabbit-hole', label: 'About', title: 'Down the rabbit hole' },
+  { id: 'curiosities', label: 'Hobbies', title: 'A deck of curiosities' },
+  ...(hasStars() ? [{ id: 'stars' as const, label: 'Astrology', title: 'Written in the stars' }] : []),
+  { id: 'tea', label: 'Contact', title: 'Tea at midnight' },
+]);
+
+/** Chapters of the work page. */
+export const workChapters: Chapter[] = numbered([
+  { id: 'record', label: 'Résumé', title: 'On the record' },
+  { id: 'stack', label: 'Tech stack', title: 'The tool cabinet' },
+  { id: 'history', label: 'Employment', title: 'The paper trail' },
+  { id: 'grimoire', label: 'Career', title: 'The grimoire' },
+  { id: 'contact', label: 'Contact', title: 'Send word' },
+]);
+
+/** Every chapter, for lookups by id. */
+export const chapters: Chapter[] = [...homeChapters, ...workChapters];
 
 export const ui = {
   skip: 'Skip to the story',
@@ -77,14 +137,15 @@ export const about = {
   sweet: 'Pinned at midnight. It still moves, sometimes.',
   sweetAlt: 'A pale moth, pinned like a specimen.',
   body: [
-    'By day, I work with X++ and Microsoft Dynamics 365 Finance & Operations. I spend my time shaping business logic, extending existing systems, and bringing new functionality into existence. I have a particular fondness for starting with a requirement, following its logic, and turning an idea into something tangible. There’s a certain pleasure in creating order where there was once only possibility.',
+    'By day, I’m an ERP developer. I spend my time shaping business logic, extending existing systems, and bringing new functionality into existence. I have a particular fondness for starting with a requirement, following its logic, and turning an idea into something tangible. There’s a certain pleasure in creating order where there was once only possibility.',
     'By night, I tend to wander a little further into my own imagination. I have a habit of collecting interests, entertaining peculiar ideas, and turning passing thoughts into projects. Some become websites, some become experiments, and others remain little fragments of something I haven’t quite figured out yet. I enjoy the process of bringing an idea into existence, even if I occasionally leave a trail of unfinished things behind me.',
   ],
   /** On the black scroll. */
   facts: [
     { term: 'Hours', detail: 'Mostly after dark' },
+    { term: 'Lives in', detail: 'Malaysia' },
     { term: 'Curiosities', detail: 'An unreasonable number' },
-    { term: 'LinkedIn', detail: 'The professional record', href: 'https://www.linkedin.com/in/fatihahmuhd/' },
+    { term: 'By day', detail: 'ERP developer · see my work', href: '/work/' },
   ] as { term: string; detail: string; href?: string }[],
   warning: 'Careful. Looks can deceive.',
 };
@@ -126,6 +187,113 @@ export const record = {
   view: 'Or read it in the browser',
   previewAlt: 'The first page of the résumé: Nurfatihah Muhammad, professional summary, skills, experience and education.',
   more: 'The long version is in the grimoire',
+};
+
+export type Curiosity = {
+  id: string;
+  numeral: string;
+  title: string;
+  /** A small line drawing on the card's face (see Curiosities.astro). */
+  glyph: 'cat' | 'cup' | 'moon' | 'mask' | 'quill' | 'tongues' | 'key' | 'music' | 'rose';
+  body: string;
+  items?: string[];
+  links?: { label: string; href: string }[];
+  /** The music card can switch the site's music on and off. */
+  playsMusic?: boolean;
+};
+
+/** Chapter II of the personal page: hobbies, as a tarot deck. Everything here is from Teha. */
+export const curiosities = {
+  title: 'A deck of curiosities',
+  lead: 'What I do when nobody is paying me to. Turn a card over.',
+  turn: 'Turn the card',
+  turnBack: 'Turn it back',
+  play: 'Play the tea party',
+  pause: 'Stop the music',
+  cards: [
+    {
+      id: 'cats',
+      numeral: 'I',
+      title: 'Cats',
+      glyph: 'cat',
+      body: 'Cats, always. The best colleagues: quiet, warm, and they never ask for a status update.',
+    },
+    {
+      id: 'coffee',
+      numeral: 'II',
+      title: 'Iced coffee',
+      glyph: 'cup',
+      body: 'The official fuel. Always iced, at any hour, in any weather.',
+    },
+    {
+      id: 'worlds',
+      numeral: 'III',
+      title: 'Worlds I play in',
+      glyph: 'moon',
+      body: 'Where my evenings go, and where half my characters come from.',
+      items: ['Fate/Grand Order', 'Genshin Impact', 'Honkai: Star Rail', 'Wuthering Waves'],
+    },
+    {
+      id: 'characters',
+      numeral: 'IV',
+      title: 'Characters & AUs',
+      glyph: 'quill',
+      body: 'Taking someone I love and asking who they’d be somewhere else. Half my side projects exist so they have somewhere to talk.',
+    },
+    {
+      id: 'cosplay',
+      numeral: 'V',
+      title: 'Cosplay',
+      glyph: 'mask',
+      body: 'I buy my cosplays rather than sew them. The craft I care about is choosing who to be for a day.',
+    },
+    {
+      id: 'translation',
+      numeral: 'VI',
+      title: 'Between two tongues',
+      glyph: 'tongues',
+      body: 'I translate between English and Malay. Some words have no twin on the other side; you learn to walk around them politely.',
+    },
+    {
+      id: 'building',
+      numeral: 'VII',
+      title: 'Things I build for fun',
+      glyph: 'key',
+      body: 'Chat apps where my characters can answer back, a messenger for two, a tracker that judges my spending, and over a hundred VS Code colour themes.',
+      links: [{ label: 'All of it on GitHub', href: 'https://github.com/frostmoon-dev' }],
+    },
+    {
+      id: 'music',
+      numeral: 'VIII',
+      title: 'Dark lullabies',
+      glyph: 'music',
+      body: 'Music boxes, ticking clocks and things that sound slightly wrong. The tea party playing on this site is my own, made with Suno.',
+      playsMusic: true,
+    },
+    {
+      id: 'aesthetic',
+      numeral: 'IX',
+      title: 'The aesthetic',
+      glyph: 'rose',
+      body: 'American Horror Story, Alice in Wonderland and a little Violet Harmon. You may have noticed.',
+    },
+  ] satisfies Curiosity[],
+};
+
+/**
+ * The work page's tech stack, shelf by shelf. From Teha's earlier portfolio
+ * (frostmoon-dev/my-portfolio, content/skills.ts): no bars, no percentages, just what's on each shelf.
+ */
+export const techStack = {
+  title: 'The tool cabinet',
+  lead: 'What I reach for, shelf by shelf. The top two pay the bills; the rest is how I build everything else.',
+  shelves: [
+    { mark: 'A', name: 'Enterprise applications', note: 'Where the day job lives.', items: ['Dynamics 365 Finance & Operations', 'Business Central (AL)', 'SSRS', 'Data entities', 'Workflow'] },
+    { mark: 'B', name: 'Core development', note: 'The languages I think in.', items: ['X++', 'TypeScript', 'JavaScript', 'SQL Server'] },
+    { mark: 'C', name: 'Frontend', note: 'Web apps, built properly.', items: ['Next.js', 'React', 'Tailwind CSS', 'PWA', 'Supabase', 'Prisma', 'PostgreSQL'] },
+    { mark: 'D', name: 'Motion & interface', note: 'Motion, colour and rooms like this one.', items: ['GSAP', 'Framer Motion', 'Three.js / React Three Fiber', 'UI / UX'] },
+    { mark: 'E', name: 'Tools & workflow', note: 'What keeps the work honest.', items: ['Git & GitHub', 'Vitest', 'Playwright', 'Figma', 'Canva'] },
+  ],
 };
 
 export type Job = {
@@ -393,12 +561,26 @@ export const tea = {
   success: 'The raven made it. I’ll write back after dark.',
   successMailto: 'Your mail app should be open with the letter ready. Press send there and the raven will fly.',
   error: (email: string) => `The raven got lost. Try again, or email me directly at ${email}.`,
-  /** Shown as icons. TODO: real LinkedIn and GitHub URLs. */
+  /** The personal contact list. */
   links: [
     { label: 'Email', icon: 'mail', href: 'mailto:shirubawing@gmail.com', detail: 'shirubawing@gmail.com' },
-    { label: 'LinkedIn', icon: 'linkedin', href: 'https://www.linkedin.com/in/fatihahmuhd/', detail: 'The professional record' },
     { label: 'GitHub', icon: 'github', href: 'https://github.com/frostmoon-dev', detail: 'Code, experiments, unfinished things' },
-  ] as { label: string; icon: 'mail' | 'linkedin' | 'github'; href: string; detail: string }[],
+    { label: 'LinkedIn', icon: 'linkedin', href: 'https://www.linkedin.com/in/fatihahmuhd/', detail: 'The professional record' },
+    /** Social media: add one line per account, e.g.
+     *  { label: 'Instagram', icon: 'link', href: 'https://instagram.com/…', detail: '@handle' }, */
+  ] as ContactLink[],
+};
+
+export type ContactLink = { label: string; icon: 'mail' | 'linkedin' | 'github' | 'link'; href: string; detail: string };
+
+/** The work page's contact chapter: the same envelope, professional addresses only. */
+export const workContact = {
+  title: 'Send word',
+  intro: 'For roles, projects or questions about the résumé. Replies come from the address on it.',
+  links: [
+    { label: 'Email', icon: 'mail', href: `mailto:${work.email}`, detail: work.email },
+    { label: 'LinkedIn', icon: 'linkedin', href: work.linkedin, detail: 'in/fatihahmuhd' },
+  ] as ContactLink[],
 };
 
 export const footer = {
@@ -406,7 +588,7 @@ export const footer = {
   typo: { at: 6, wrong: 'o' },
   privacy:
     'No cookies, no trackers, no analytics. Your browser remembers only whether you’ve seen the intro this session and which hints you’ve used. Nothing leaves your device unless you send me a letter.',
-  copyright: (year: number) => `© ${year} Teha. Text and photos all rights reserved.`,
+  copyright: (year: number, name: string) => `© ${year} ${name}. Text and photos all rights reserved.`,
   fontsCredit: 'Headings in American Horror Story by KELGE. Text in Atkinson Hyperlegible Next by the Braille Institute (SIL OFL).',
 };
 
@@ -419,5 +601,5 @@ export const notFound = {
 };
 
 export const hints = {
-  storageKey: 'shiru:hints',
+  storageKey: 'site:hints',
 };

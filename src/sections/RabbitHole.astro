@@ -32,10 +32,14 @@ const lace = await getImage({ src: design.lace, width: 960, format: 'webp', qual
               <div class="facts__row">
                 <dt>{f.term}</dt>
                 <dd>
-                  {f.href ? (
+                  {f.href?.startsWith('http') ? (
                     <a href={f.href} rel="me noopener" target="_blank">
                       {f.detail} <span aria-hidden="true">↗</span>
                       <span class="visually-hidden"> (opens in a new tab)</span>
+                    </a>
+                  ) : f.href ? (
+                    <a href={f.href}>
+                      {f.detail} <span aria-hidden="true">→</span>
                     </a>
                   ) : (
                     f.detail

@@ -1,27 +1,35 @@
 ---
 import { Image, getImage } from 'astro:assets';
-import { chapters, site, tea, ui } from '../content/site';
+import { chapters, site, tea, ui, work, workContact } from '../content/site';
 import { collage, design } from '../content/photos';
 import Icon from '../components/Icon.astro';
 import TeaIcon from '../components/TeaIcon.astro';
 import SectionHead from '../components/SectionHead.astro';
 
-const ch = chapters.find((c) => c.id === 'tea')!;
+interface Props {
+  /** "work": the work page's contact chapter (professional addresses only). */
+  variant?: 'home' | 'work';
+}
+const { variant = 'home' } = Astro.props;
+const isWork = variant === 'work';
+const ch = chapters.find((c) => c.id === (isWork ? 'contact' : 'tea'))!;
+const copy = isWork ? { title: workContact.title, intro: workContact.intro, links: workContact.links } : { title: tea.title, intro: tea.intro, links: tea.links };
+const email = isWork ? work.email : site.email;
 const endpoint = import.meta.env.PUBLIC_CONTACT_ENDPOINT?.trim() || '';
 const mode = endpoint ? 'endpoint' : 'mailto';
-const action = endpoint || `mailto:${site.email}`;
+const action = endpoint || `mailto:${email}`;
 const paper = await getImage({ src: collage.paper, width: 900, format: 'webp', quality: 72 });
 const gingham = await getImage({ src: design.gingham, width: 1600, format: 'webp', quality: 60 });
 ---
 
 <section id={ch.id} class="section tea" data-tone="void" aria-labelledby="tea-title" style={`--gingham:url(${gingham.src})`}>
   <div class="container">
-    <SectionHead id="tea-title" kicker={ui.caseNo(ch.numeral, ch.label)} title={tea.title} lead={tea.intro} />
+    <SectionHead id="tea-title" kicker={ui.caseNo(ch.numeral, ch.label)} title={copy.title} lead={copy.intro} />
 
     <div class="tea__grid">
       <ul class="contact" data-effect="reveal" data-effect-options='{"type":"rise","targets":"li","stagger":0.08}'>
         {
-          tea.links.map((l) => (
+          copy.links.map((l) => (
             <li>
               <a href={l.href} rel={l.href.startsWith('http') ? 'me noopener' : undefined} target={l.href.startsWith('http') ? '_blank' : undefined}>
                 <TeaIcon name={l.icon} />
@@ -93,8 +101,8 @@ const gingham = await getImage({ src: design.gingham, width: 1600, format: 'webp
     sending: tea.sending,
     success: tea.success,
     successMailto: tea.successMailto,
-    error: tea.error(site.email),
-    email: site.email,
+    error: tea.error(email),
+    email,
   })}
 ></script>
 <template id="tea-icon-error"><Icon name="warn" size={20} /></template>
@@ -475,7 +483,7 @@ const gingham = await getImage({ src: design.gingham, width: 1600, format: 'webp
       seal.setAttribute('aria-expanded', 'true');
       markHintUsed('seal');
       sfx('seal');
-      window.shiruOverlay.open('letter', close);
+      window.siteOverlay.open('letter', close);
       env.classList.add('is-cracked');
       stage.classList.add('is-opening');
       const settle = () => {
@@ -497,9 +505,9 @@ const gingham = await getImage({ src: design.gingham, width: 1600, format: 'webp
         .from(parts(), { y: 8, opacity: 0, duration: 0.35, stagger: 0.06, ease: 'power2.out', clearProps: 'transform,opacity' }, 1.6);
     };
     seal.onclick = open;
-    form.querySelector<HTMLButtonElement>('[data-fold]')!.onclick = () => window.shiruOverlay.close('letter');
+    form.querySelector<HTMLButtonElement>('[data-fold]')!.onclick = () => window.siteOverlay.close('letter');
     letter.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') window.shiruOverlay.close('letter');
+      if (e.key === 'Escape') window.siteOverlay.close('letter');
     });
 
     const check = (focusFirst: boolean) => {

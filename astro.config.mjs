@@ -2,6 +2,18 @@
 import { defineConfig, fontProviders } from 'astro/config';
 import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
+import { rmSync } from 'node:fs';
+
+// The work-only site (PUBLIC_SITE_MODE=work) ships none of the personal site's public files.
+const workOnlyCleanup = {
+  name: 'work-only-cleanup',
+  hooks: {
+    'astro:build:done': ({ dir }) => {
+      if (process.env.PUBLIC_SITE_MODE !== 'work') return;
+      for (const file of ['og.png']) rmSync(new URL(file, dir), { force: true });
+    },
+  },
+};
 
 // Canonical origin. Set SITE_URL in Vercel once a custom domain exists.
 // VERCEL_PROJECT_PRODUCTION_URL is a Vercel system variable (host only, no protocol).
@@ -9,13 +21,14 @@ const site =
   process.env.SITE_URL ??
   (process.env.VERCEL_PROJECT_PRODUCTION_URL
     ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-    : 'https://shiru.example');
+    : 'https://example.com');
 
 export default defineConfig({
   site,
   output: 'static',
   trailingSlash: 'ignore',
-  integrations: [react(), sitemap()],
+  // On the personal site, /work/ is noindex (the work-only site is the one to find), so it stays out of the sitemap too.
+  integrations: [react(), workOnlyCleanup, sitemap({ filter: (page) => new URL(page).pathname.replace(/\/$/, '') !== '/work' })],
   devToolbar: { enabled: false },
   // pages are tiny and static; prefetching cost more main-thread time than it saved
   prefetch: false,

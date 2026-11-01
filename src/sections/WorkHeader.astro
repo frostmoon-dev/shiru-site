@@ -1,0 +1,78 @@
+---
+import { record, work } from '../content/site';
+import Icon from '../components/Icon.astro';
+import TeaIcon from '../components/TeaIcon.astro';
+---
+
+<!-- The top of the work page: who, what, and the three things a recruiter wants first. -->
+<header id="top" class="section work-head" data-tone="void" aria-labelledby="work-title">
+  <div class="container">
+    <p class="kicker" data-effect="reveal">{work.kicker}</p>
+    <h1 id="work-title" class="display-1 work-head__name" data-effect="ghost-title">{work.heading}</h1>
+    <p class="work-head__full">{work.name}</p>
+    <p class="lead work-head__lead" data-effect="reveal">{work.lead}</p>
+    <div class="work-head__actions">
+      <a class="btn btn--solid" href={record.pdf.href} download={record.pdf.filename}>
+        <Icon name="download" size={18} />
+        <span>{record.download}</span>
+      </a>
+      <a class="btn work-head__btn" href={work.linkedin} rel="noopener" target="_blank">
+        <TeaIcon name="linkedin" />
+        <span>{work.linkedinLabel}</span>
+        <span class="visually-hidden"> (opens in a new tab)</span>
+      </a>
+      <a class="btn work-head__btn" href={`mailto:${work.email}`}>
+        <TeaIcon name="mail" />
+        <span>{work.email}</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<style>
+  .work-head {
+    min-height: 82svh;
+    display: flex;
+    align-items: center;
+    padding-top: calc(var(--section-pad) + var(--space-5));
+  }
+  /* the first section has no hairline above it */
+  .work-head > .container::before {
+    display: none;
+  }
+  .work-head__name {
+    margin-top: var(--space-4);
+    font-size: clamp(3.4rem, 1rem + 9vw, 9.5rem);
+    color: var(--bone);
+  }
+  .work-head__full {
+    margin-top: var(--space-2);
+    font-weight: 700;
+    font-size: var(--text-label);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .work-head__lead {
+    margin-top: var(--space-5);
+    max-width: 40rem;
+  }
+  .work-head__actions {
+    margin-top: var(--space-6);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  .work-head__btn {
+    color: var(--bone);
+    border-color: var(--line);
+  }
+  .work-head__btn:hover,
+  .work-head__btn:focus-visible {
+    border-color: var(--bone);
+  }
+  .work-head__btn :global(svg) {
+    width: 20px;
+    height: 20px;
+  }
+</style>

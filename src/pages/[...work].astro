@@ -1,0 +1,10 @@
+---
+/** /work/ on the personal site. The work-only site serves the same page at / instead. */
+import type { GetStaticPaths } from 'astro';
+import WorkPage from '../components/WorkPage.astro';
+import { isWorkSite } from '../lib/mode';
+
+export const getStaticPaths = (() => (isWorkSite ? [] : [{ params: { work: 'work' } }])) satisfies GetStaticPaths;
+---
+
+<WorkPage />

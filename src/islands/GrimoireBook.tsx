@@ -105,7 +105,7 @@ export default function GrimoireBook({ entries, labels }: Props) {
     setOpen(true);
     sfx('creak');
     setStatus(`${labels.title} opened. ${describe(spread)}`);
-    window.shiruOverlay?.open(OVERLAY_ID, () => {
+    window.siteOverlay?.open(OVERLAY_ID, () => {
       setOpen(false);
       setTurned(false);
       setStatus(`${labels.title} closed.`);
@@ -130,7 +130,7 @@ export default function GrimoireBook({ entries, labels }: Props) {
     }, duration + 50);
     void import('../lib/hints').then((m) => m.markHintUsed('grimoire'));
   };
-  const doClose = () => window.shiruOverlay?.close(OVERLAY_ID);
+  const doClose = () => window.siteOverlay?.close(OVERLAY_ID);
 
   const go = useCallback(
     (dir: 'next' | 'prev') => {

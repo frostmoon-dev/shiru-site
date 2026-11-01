@@ -1,0 +1,321 @@
+---
+import { chapters, curiosities, ui } from '../content/site';
+import SectionHead from '../components/SectionHead.astro';
+import { ahs } from '../lib/ahs';
+
+const ch = chapters.find((c) => c.id === 'curiosities')!;
+
+// Line drawings for the card faces (64 × 64, stroked in bone).
+const GLYPHS: Record<string, string> = {
+  cat: 'M16 52c-2-14 4-26 16-26s18 12 16 26z M18 33 14 15l11 9 M46 33l4-18-11 9 M29 44h6l-3 3z M22 46l-8 1 M42 46l8 1',
+  cup: 'M19 18h26l-3 38H22z M36 18l7-11 M23 28h18 M26 33h6v6h-6z M33 40h6v6h-6z',
+  moon: 'M42 10a22 22 0 1 0 0 44 17 17 0 1 1 0-44z M50 18l1.5 3 3 1.5-3 1.5-1.5 3-1.5-3-3-1.5 3-1.5z',
+  mask: 'M13 17c13-5 25-5 38 0 0 19-7 31-19 31S13 36 13 17z M21 28c3-3 7-3 9 0 M34 28c3-3 7-3 9 0 M26 39c4 3 8 3 12 0',
+  quill: 'M48 9C33 13 22 27 18 47 M48 9c-2 13-11 21-25 25 M15 56l4-9',
+  tongues: 'M9 13h27v17H20l-7 7v-7H9z M28 35h27v17h-4v7l-7-7H28z M15 20h14 M15 24h9 M34 42h14 M34 46h9',
+  key: 'M20 15a8 8 0 1 0 0 16 8 8 0 1 0 0-16z M26 29l23 23 M41 44l5-5 M46 49l5-5',
+  music: 'M24 47V16l23-7v31 M24 23l23-7 M19 42a5 5 0 1 0 0 10 5 5 0 1 0 0-10z M42 35a5 5 0 1 0 0 10 5 5 0 1 0 0-10z',
+  rose: 'M32 30c-6 0-10-4-10-9s5-9 10-9 10 4 10 9-4 9-10 9z M27 21c3-4 7-4 10 0 M32 30v26 M32 43c-6-3-11-1-13 4 M32 48c5-4 10-3 12 1',
+};
+---
+
+<section id={ch.id} class="section deck" data-tone="void" aria-labelledby="curiosities-title">
+  <div class="container">
+    <SectionHead id="curiosities-title" kicker={ui.caseNo(ch.numeral, ch.label)} title={curiosities.title} lead={curiosities.lead} />
+
+    <ul class="deck__cards" data-effect="reveal" data-effect-options='{"type":"rise","targets":".tarot","stagger":0.07}'>
+      {
+        curiosities.cards.map((c) => (
+          <li class="tarot" data-tarot>
+            <div class="tarot__inner">
+              {/* the face: numeral, a drawing, the name. The whole face is the button that turns it. */}
+              <div class="tarot__face tarot__front" data-front>
+                <span class="tarot__numeral" aria-hidden="true">
+                  {c.numeral}
+                </span>
+                <svg class="tarot__glyph" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+                  <path d={GLYPHS[c.glyph]} />
+                </svg>
+                <h3 class="tarot__title">{ahs(c.title)}</h3>
+                <button class="tarot__turn" type="button" aria-expanded="false" aria-controls={`card-${c.id}`} data-turn>
+                  <span class="visually-hidden">
+                    {curiosities.turn}: {c.title}
+                  </span>
+                </button>
+              </div>
+              {/* the back: what it's about */}
+              <div class="tarot__face tarot__back" id={`card-${c.id}`} data-back>
+                <p class="tarot__back-title" aria-hidden="true">
+                  {c.numeral} · {c.title}
+                </p>
+                <p class="tarot__body">{c.body}</p>
+                {c.items && (
+                  <ul class="tarot__items">
+                    {c.items.map((i) => (
+                      <li>{i}</li>
+                    ))}
+                  </ul>
+                )}
+                {c.links && (
+                  <p class="tarot__links">
+                    {c.links.map((l) => (
+                      <a href={l.href} rel="me noopener" target="_blank">
+                        {l.label} <span aria-hidden="true">↗</span>
+                        <span class="visually-hidden"> (opens in a new tab)</span>
+                      </a>
+                    ))}
+                  </p>
+                )}
+                {c.playsMusic && (
+                  <button class="btn tarot__music" type="button" data-music aria-pressed="false" data-play={curiosities.play} data-pause={curiosities.pause}>
+                    <span data-music-label>{curiosities.play}</span>
+                  </button>
+                )}
+                <button class="tarot__back-btn" type="button" data-turn-back>
+                  {curiosities.turnBack} <span aria-hidden="true">↺</span>
+                </button>
+              </div>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .deck__cards {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-5);
+    list-style: none;
+    padding: 0;
+    /* top margin comes from .section-head + * (the shared rhythm) */
+    margin-inline: 0;
+    margin-bottom: 0;
+  }
+
+  /* ---- one card ---- */
+  .tarot {
+    perspective: 1400px;
+  }
+  .tarot__inner {
+    position: relative;
+    display: grid;
+    aspect-ratio: 5 / 8;
+    transform-style: preserve-3d;
+    transition: transform 0.8s var(--ease-ink);
+  }
+  .tarot.is-turned .tarot__inner {
+    transform: rotateY(180deg);
+  }
+  .tarot__face {
+    grid-area: 1 / 1;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    backface-visibility: hidden;
+    padding: var(--space-4) var(--space-3);
+    background: #0d0b0c;
+    border: 1px solid rgb(232 220 194 / 0.55);
+    outline: 1px solid rgb(232 220 194 / 0.25);
+    outline-offset: -9px;
+    box-shadow: 0 18px 34px rgb(0 0 0 / 0.55);
+  }
+
+  /* front */
+  .tarot__front {
+    align-items: center;
+    justify-content: space-between;
+    text-align: center;
+    transition:
+      translate var(--dur-base) var(--ease-out),
+      border-color var(--dur-base) var(--ease-out);
+  }
+  .tarot__numeral {
+    font-family: var(--font-display);
+    font-feature-settings: 'ss04' 1, 'liga' 0, 'dlig' 0;
+    font-size: var(--step-2);
+    color: var(--blood-lit);
+    line-height: 1;
+  }
+  .tarot__glyph {
+    width: 46%;
+    fill: none;
+    stroke: var(--bone);
+    stroke-width: 1.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    filter: drop-shadow(0 0 10px rgb(232 220 194 / 0.15));
+  }
+  .tarot__title {
+    font-size: var(--step-2);
+    line-height: 1.05;
+    color: var(--bone);
+    text-wrap: balance;
+  }
+  /* the whole face turns the card */
+  .tarot__turn {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+  }
+  .tarot__turn:focus-visible {
+    outline-offset: 4px;
+  }
+  .tarot:not(.is-turned):hover .tarot__front {
+    translate: 0 -6px;
+    border-color: var(--bone);
+  }
+
+  /* back */
+  .tarot__back {
+    transform: rotateY(180deg);
+    gap: var(--space-2);
+    overflow: hidden;
+  }
+  .tarot__back-title {
+    font-weight: 700;
+    font-size: var(--text-label);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .tarot__body {
+    color: var(--text-body);
+    line-height: 1.6;
+  }
+  .tarot__items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .tarot__items li {
+    padding: var(--space-half) var(--space-1);
+    border: 1px solid var(--line);
+    font-size: var(--text-small);
+    color: var(--bone);
+  }
+  .tarot__links a {
+    color: var(--bone);
+  }
+  .tarot__music {
+    align-self: flex-start;
+    color: var(--bone);
+  }
+  .tarot__music[aria-pressed='true'] {
+    border-color: var(--blood-lit);
+  }
+  .tarot__back-btn {
+    margin-top: auto;
+    align-self: flex-start;
+    min-height: var(--touch);
+    padding: 0;
+    border: 0;
+    background: transparent;
+    font-weight: 700;
+    font-size: var(--text-label);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    cursor: pointer;
+  }
+  .tarot__back-btn:hover {
+    color: var(--bone);
+  }
+
+  /* without JS every card shows its back (the words), and nothing pretends to turn */
+  :global(html:not(.js)) .tarot__inner {
+    transform: none;
+    aspect-ratio: auto;
+  }
+  :global(html:not(.js)) .tarot__front {
+    display: none;
+  }
+  :global(html:not(.js)) .tarot__back {
+    transform: none;
+  }
+  :global(html:not(.js)) .tarot__back-btn {
+    display: none;
+  }
+
+  @media (max-width: 959px) {
+    .deck__cards {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  /* phones: a hand of cards to swipe through */
+  @media (max-width: 599px) {
+    .deck__cards {
+      display: flex;
+      gap: var(--space-3);
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      overscroll-behavior-x: contain;
+      padding: var(--space-3) 14vw var(--space-4);
+      margin-inline: calc(var(--gutter) * -1);
+      scrollbar-width: none;
+    }
+    .tarot {
+      flex: 0 0 72vw;
+      scroll-snap-align: center;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tarot__inner,
+    .tarot__front {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  import { sfx } from '../lib/sfx';
+
+  function setup() {
+    document.querySelectorAll<HTMLElement>('[data-tarot]').forEach((card) => {
+      const turn = card.querySelector<HTMLButtonElement>('[data-turn]');
+      const back = card.querySelector<HTMLElement>('[data-back]');
+      const front = card.querySelector<HTMLElement>('[data-front]');
+      const backBtn = card.querySelector<HTMLButtonElement>('[data-turn-back]');
+      if (!turn || !back || !front || !backBtn) return;
+      // the hidden side can't be reached: its links and buttons stay out of the tab order
+      back.inert = true;
+      const set = (turned: boolean) => {
+        card.classList.toggle('is-turned', turned);
+        turn.setAttribute('aria-expanded', String(turned));
+        back.inert = !turned;
+        front.inert = turned;
+        sfx('page');
+        // move focus with the card, after it has turned far enough to see
+        window.setTimeout(() => (turned ? backBtn : turn).focus({ preventScroll: true }), 120);
+      };
+      turn.onclick = () => set(true);
+      backBtn.onclick = () => set(false);
+      card.onkeydown = (e) => {
+        if (e.key === 'Escape' && card.classList.contains('is-turned')) set(false);
+      };
+    });
+
+    // the music card plays the site's music: it presses the same switch as the speaker in the top bar
+    const toggle = document.querySelector<HTMLButtonElement>('[data-sound-toggle]');
+    const music = document.querySelector<HTMLButtonElement>('[data-music]');
+    const label = music?.querySelector<HTMLElement>('[data-music-label]');
+    if (!toggle || !music || !label) return;
+    const sync = () => {
+      const on = toggle.getAttribute('aria-pressed') === 'true';
+      music.setAttribute('aria-pressed', String(on));
+      label.textContent = on ? (music.dataset.pause ?? '') : (music.dataset.play ?? '');
+    };
+    music.onclick = () => toggle.click();
+    new MutationObserver(sync).observe(toggle, { attributes: true, attributeFilter: ['aria-pressed'] });
+    sync();
+  }
+  document.addEventListener('astro:page-load', setup);
+</script>
