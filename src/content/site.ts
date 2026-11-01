@@ -48,9 +48,9 @@ export const work = {
 export const stars = {
   title: 'Written in the stars',
   lead: 'Three cards the sky dealt before I had a say.',
-  sun: '',
-  moon: '',
-  rising: '',
+  sun: 'Gemini',
+  moon: 'Leo',
+  rising: 'Taurus',
   roles: {
     sun: { label: 'Sun', note: 'who I am' },
     moon: { label: 'Moon', note: 'what I feel' },
@@ -566,12 +566,13 @@ export const tea = {
     { label: 'Email', icon: 'mail', href: 'mailto:shirubawing@gmail.com', detail: 'shirubawing@gmail.com' },
     { label: 'GitHub', icon: 'github', href: 'https://github.com/frostmoon-dev', detail: 'Code, experiments, unfinished things' },
     { label: 'LinkedIn', icon: 'linkedin', href: 'https://www.linkedin.com/in/fatihahmuhd/', detail: 'The professional record' },
-    /** Social media: add one line per account, e.g.
-     *  { label: 'Instagram', icon: 'link', href: 'https://instagram.com/…', detail: '@handle' }, */
+    { label: 'Instagram', icon: 'instagram', href: 'https://www.instagram.com/teha.muhd/', detail: '@teha.muhd' },
+    { label: 'X', icon: 'x', href: 'https://x.com/shirubawing', detail: '@shirubawing' },
+    { label: 'TikTok', icon: 'tiktok', href: 'https://www.tiktok.com/@shirubawing', detail: '@shirubawing' },
   ] as ContactLink[],
 };
 
-export type ContactLink = { label: string; icon: 'mail' | 'linkedin' | 'github' | 'link'; href: string; detail: string };
+export type ContactLink = { label: string; icon: 'mail' | 'linkedin' | 'github' | 'link' | 'instagram' | 'x' | 'tiktok'; href: string; detail: string };
 
 /** The work page's contact chapter: the same envelope, professional addresses only. */
 export const workContact = {

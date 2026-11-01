@@ -133,10 +133,12 @@ check(`résumé downloads as a PDF (${cv.download}, ${cv.type})`, cv.ok && cv.do
 await scrollTo('#history', 0);
 await page.waitForTimeout(600);
 await page.evaluate(async () => {
+  // walk down the whole chapter, a little at a time, like a reader would
   const el = document.querySelector('#history');
-  for (let y = 0; y < el.offsetHeight; y += 300) {
-    window.scrollTo(0, el.getBoundingClientRect().top + window.scrollY + 300);
-    await new Promise((r) => setTimeout(r, 120));
+  const top = el.getBoundingClientRect().top + window.scrollY;
+  for (let y = top - 400; y < top + el.offsetHeight; y += 200) {
+    window.scrollTo(0, y);
+    await new Promise((r) => setTimeout(r, 150));
   }
 });
 await page.waitForTimeout(1200);
