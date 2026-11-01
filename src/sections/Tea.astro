@@ -44,13 +44,9 @@ const gingham = await getImage({ src: design.gingham, width: 1600, format: 'webp
 
       <div class="stage" data-stage>
         <div class="envelope" data-envelope data-mode={mode} data-effect="reveal" data-effect-options='{"type":"settle"}'>
-          <Image class="envelope__img" src={collage.envelope} alt="" width={640} loading="lazy" decoding="async" />
+          <Image class="envelope__img" src={collage.envelope} alt="" widths={[480, 720, 1100]} sizes="(max-width: 959px) 90vw, 36rem" loading="lazy" decoding="async" />
           <button class="envelope__seal" type="button" data-seal aria-expanded="false" aria-controls="letter">
             <span class="visually-hidden">{tea.sealLabel}</span>
-            <svg viewBox="0 0 100 100" aria-hidden="true" focusable="false">
-              <path class="seal__crack" d="M46 4l4 20-6 12 7 14-5 16 6 14-3 16" fill="none" stroke="#2b1215" stroke-width="3" stroke-linecap="round"></path>
-              <path class="seal__crack" d="M50 50l18-6 14 4M48 66l-20 8" fill="none" stroke="#2b1215" stroke-width="2.4" stroke-linecap="round"></path>
-            </svg>
           </button>
           <p class="envelope__hint" data-hint="seal"><span aria-hidden="true">↑ </span>{tea.sealHint}</p>
         </div>
@@ -205,9 +201,9 @@ const gingham = await getImage({ src: design.gingham, width: 1600, format: 'webp
   .envelope__seal {
     position: absolute;
     z-index: 3;
-    left: 50%;
-    top: 57.7%;
-    width: 22%;
+    left: 50.6%;
+    top: 52.6%;
+    width: 21%;
     aspect-ratio: 1;
     min-width: var(--touch);
     translate: -50% -50%;
@@ -230,20 +226,7 @@ const gingham = await getImage({ src: design.gingham, width: 1600, format: 'webp
     outline-color: var(--bone);
     box-shadow: 0 0 0 6px var(--void);
   }
-  .envelope__seal svg {
-    width: 100%;
-    height: 100%;
-    overflow: visible;
-  }
-  .seal__crack {
-    stroke-dasharray: 140;
-    stroke-dashoffset: 140;
-    transition: stroke-dashoffset 360ms var(--ease-drop);
-  }
-  .envelope.is-cracked .seal__crack {
-    stroke-dashoffset: 0;
-  }
-  .envelope.is-cracked .envelope__seal {
+  .envelope.is-opened .envelope__seal {
     pointer-events: none;
   }
   .envelope__hint {
@@ -463,7 +446,7 @@ const gingham = await getImage({ src: design.gingham, width: 1600, format: 'webp
       tl?.kill();
       const done = () => {
         stage.classList.remove('is-opening', 'is-open');
-        env.classList.remove('is-cracked');
+        env.classList.remove('is-opened');
         gsap.set([env, letter, envImg], { clearProps: 'transform,opacity,visibility' });
         seal.setAttribute('aria-expanded', 'false');
         seal.focus({ preventScroll: true });
@@ -482,9 +465,9 @@ const gingham = await getImage({ src: design.gingham, width: 1600, format: 'webp
       if (stage.classList.contains('is-opening') || stage.classList.contains('is-open')) return;
       seal.setAttribute('aria-expanded', 'true');
       markHintUsed('seal');
-      sfx('seal');
+      sfx('paper');
       window.siteOverlay.open('letter', close);
-      env.classList.add('is-cracked');
+      env.classList.add('is-opened');
       stage.classList.add('is-opening');
       const settle = () => {
         stage.classList.remove('is-opening');
@@ -494,15 +477,13 @@ const gingham = await getImage({ src: design.gingham, width: 1600, format: 'webp
       if (prefersReducedMotion()) return settle();
       tl = gsap
         .timeline({ onComplete: settle })
-        // the crack runs (CSS), then the envelope gives a small shudder
-        .to(envImg, { x: -4, rotate: -4, duration: 0.05, repeat: 5, yoyo: true, ease: 'none' }, 0.35)
-        // the paper rises out from behind it…
-        .fromTo(letter, { yPercent: 22, scale: 0.72, opacity: 0 }, { opacity: 1, duration: 0.25, ease: 'none' }, 0.7)
-        .to(letter, { yPercent: -10, scale: 0.8, duration: 0.7, ease: 'power2.out' }, 0.7)
+        // no cracking: the paper simply slides up out of the envelope…
+        .fromTo(letter, { yPercent: 22, scale: 0.72, opacity: 0 }, { opacity: 1, duration: 0.25, ease: 'none' }, 0.1)
+        .to(letter, { yPercent: -10, scale: 0.8, duration: 0.7, ease: 'power2.out' }, 0.1)
         // …the envelope falls away, and the letter comes forward
-        .to(env, { yPercent: 60, rotate: -10, opacity: 0, duration: 0.65, ease: 'power2.in' }, 1.1)
-        .to(letter, { yPercent: 0, scale: 1, duration: 0.7, ease: 'power3.out', clearProps: 'transform,opacity' }, 1.25)
-        .from(parts(), { y: 8, opacity: 0, duration: 0.35, stagger: 0.06, ease: 'power2.out', clearProps: 'transform,opacity' }, 1.6);
+        .to(env, { yPercent: 60, rotate: -10, opacity: 0, duration: 0.65, ease: 'power2.in' }, 0.5)
+        .to(letter, { yPercent: 0, scale: 1, duration: 0.7, ease: 'power3.out', clearProps: 'transform,opacity' }, 0.65)
+        .from(parts(), { y: 8, opacity: 0, duration: 0.35, stagger: 0.06, ease: 'power2.out', clearProps: 'transform,opacity' }, 1.0);
     };
     seal.onclick = open;
     form.querySelector<HTMLButtonElement>('[data-fold]')!.onclick = () => window.siteOverlay.close('letter');

@@ -20,6 +20,10 @@ import building from '../assets/collage/building.png';
 import openBook from '../assets/collage/open-book.png';
 import witchHat from '../assets/collage/witch-hat.png';
 import keyhole from '../assets/collage/keyhole.png';
+import cat from '../assets/collage/cat.png';
+import icedCoffee from '../assets/collage/iced-coffee.png';
+import cardBack from '../assets/collage/card-back.png';
+import moonCutout from '../assets/collage/moon.png';
 import moth from '../assets/collage/butterfly.png';
 import lace from '../assets/design/lace-frame.png';
 import gingham from '../assets/design/gingham.jpg';
@@ -37,7 +41,7 @@ export const introPhotos = { 'intro-1': intro1, 'intro-2': intro2, 'intro-3': in
 export const collage = { hand, envelope, paper, newspaper, paperclip, eye, moth } as const;
 
 /** Teha's vintage cut-outs (Nov 2026): the hobby cards, Wonderland, the Burton night and the fall. */
-export const cutouts = { mapHeart, cassette, mirror, starChart, roses, quail, dragonfly, driedRose, building, openBook, witchHat, keyhole } as const;
+export const cutouts = { mapHeart, cassette, mirror, starChart, roses, quail, dragonfly, driedRose, building, openBook, witchHat, keyhole, cat, icedCoffee, cardBack, moon: moonCutout } as const;
 export type CutoutName = keyof typeof cutouts;
 
 /** Pieces from Teha's revised Canva designs (Oct 2026). */

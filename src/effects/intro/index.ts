@@ -2,7 +2,8 @@ import type { EffectFactory } from '../types';
 import { gsap, lockScroll } from '../../lib/motion';
 
 /**
- * The intro: the moon through the branches, TV static, an AHS-style burst of photos, then the hero.
+ * The intro: Teha's moon through the branches (breathing, creeping closer, slipping out of register,
+ * eaten by a red shadow), TV static, an AHS-style burst of photos, then the hero.
  * ≤ 3 s, skippable (button or Esc), once per session.
  *
  * Photosensitivity (owner-approved exception): the burst cuts faster than 3/s, in AHS style.
@@ -70,21 +71,22 @@ const introEffect: EffectFactory = () => {
       const urls: string[] = canvas ? JSON.parse(canvas.dataset.frames ?? '[]') : [];
       const g = canvas?.getContext('2d');
       const progress = target.querySelector<HTMLElement>('[data-intro-progress]');
-      const moon = target.querySelector<HTMLVideoElement>('.intro__moon');
-      // Start from the moment the moon clears the branches; a hair faster than life.
-      if (moon) {
-        const play = () => {
-          try {
-            moon.currentTime = 9;
-          } catch {
-            /* not seekable yet */
-          }
-          moon.playbackRate = 1.25;
-          void moon.play().catch(() => undefined);
-        };
-        if (moon.readyState >= 1) play();
-        else moon.addEventListener('loadedmetadata', play, { once: true });
-      }
+      const moon = target.querySelector<HTMLElement>('.intro__moon');
+      const eclipse = target.querySelector<HTMLElement>('.intro__eclipse');
+      const slips = [...target.querySelectorAll<HTMLElement>('.intro__slip')];
+      // A frame or two out of register: the copies jump sideways and snap back.
+      const slip = () => {
+        slips.forEach((s, i) => gsap.set(s, { opacity: 0.55, x: (i ? -1 : 1) * gsap.utils.random(6, 14), y: gsap.utils.random(-3, 3), clipPath: `inset(${gsap.utils.random(10, 60)}% 0 ${gsap.utils.random(10, 40)}% 0)` }));
+        if (moon) gsap.set(moon, { skewX: gsap.utils.random(-4, 4) });
+        requestAnimationFrame(() =>
+          requestAnimationFrame(() =>
+            requestAnimationFrame(() => {
+              slips.forEach((s) => gsap.set(s, { opacity: 0, x: 0, y: 0 }));
+              if (moon) gsap.set(moon, { skewX: 0 });
+            }),
+          ),
+        );
+      };
 
       // TV static: a 320×180 canvas of grey snow, scaled up, with a slow rolling bar.
       const staticCanvas = target.querySelector<HTMLCanvasElement>('.intro__static');
@@ -120,7 +122,14 @@ const introEffect: EffectFactory = () => {
       };
 
       tl = gsap.timeline({ onComplete: finish });
-      tl.from([moon, target.querySelector('.intro__glow')], { opacity: 0, duration: 0.6, ease: 'power1.out' });
+      tl.from([moon, target.querySelector('.intro__glow')], { opacity: 0, duration: 0.6, ease: 'power1.out' })
+        // it creeps closer the whole time, turning a little, as if leaning in to look
+        .fromTo(moon, { scale: 0.82, rotate: 4 }, { scale: 1.22, rotate: -5, duration: 2.6, ease: 'power1.in' }, 0)
+        // a red shadow eats it from the side: a blood moon
+        .to(eclipse, { translate: '-8% 0', duration: 1.6, ease: 'power2.inOut' }, 0.5)
+        .call(slip, [], 0.42)
+        .call(slip, [], 1.32)
+        .call(slip, [], 1.88);
 
       if (burst) {
         // Fetch the frames now and pre-tone each one into its own bitmap during the moon beat,
@@ -177,15 +186,15 @@ const introEffect: EffectFactory = () => {
         });
         tl.call(staticBurst, [0.2], 1.95);
       }
-      // A cloud passes: the moon goes dark.
-      tl.to([moon, target.querySelector('.intro__glow')], { opacity: 0, duration: 0.35, ease: 'power2.in' }, burst ? 2.05 : 1.1);
+      // The moon goes out.
+      tl.to([moon, target.querySelector('.intro__glow')], { opacity: 0, scale: 1.3, duration: 0.35, ease: 'power2.in' }, burst ? 2.05 : 1.1);
     },
     unmount() {
       tl?.kill();
       if (onKey) document.removeEventListener('keydown', onKey);
     },
     reducedMotion(target) {
-      // No flashes, no static, no motion: the still moon (poster frame) for a moment, then a plain fade.
+      // No flashes, no static, no motion: the still moon for a moment, then a plain fade.
       if (!start(target, false) && !document.documentElement.classList.contains('intro-pending')) return;
       window.setTimeout(finish, 1200);
     },

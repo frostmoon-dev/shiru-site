@@ -196,7 +196,7 @@ export type Curiosity = {
   /** A small line drawing on the card's face (see Curiosities.astro), used when there's no cut-out. */
   glyph: 'cat' | 'cup' | 'moon' | 'mask' | 'quill' | 'tongues' | 'key' | 'music' | 'rose';
   /** One of Teha's cut-outs for the card's face (src/content/photos.ts → cutouts). */
-  image?: 'mirror' | 'openBook' | 'witchHat' | 'mapHeart' | 'building' | 'cassette' | 'driedRose';
+  image?: 'mirror' | 'openBook' | 'witchHat' | 'mapHeart' | 'building' | 'cassette' | 'driedRose' | 'cat' | 'icedCoffee';
   /** Playing-card suit for the corners. */
   suit: '♥' | '♠' | '♦' | '♣';
   body: string;
@@ -218,6 +218,7 @@ export const curiosities = {
     {
       id: 'cats',
       suit: '♥',
+      image: 'cat',
       numeral: 'I',
       title: 'Cats',
       glyph: 'cat',
@@ -226,6 +227,7 @@ export const curiosities = {
     {
       id: 'coffee',
       suit: '♠',
+      image: 'icedCoffee',
       numeral: 'II',
       title: 'Iced coffee',
       glyph: 'cup',
@@ -587,8 +589,6 @@ export const tea = {
     { label: 'GitHub', icon: 'github', href: 'https://github.com/frostmoon-dev', detail: 'Code, experiments, unfinished things' },
     { label: 'LinkedIn', icon: 'linkedin', href: 'https://www.linkedin.com/in/fatihahmuhd/', detail: 'The professional record' },
     { label: 'Instagram', icon: 'instagram', href: 'https://www.instagram.com/teha.muhd/', detail: '@teha.muhd' },
-    { label: 'X', icon: 'x', href: 'https://x.com/shirubawing', detail: '@shirubawing' },
-    { label: 'TikTok', icon: 'tiktok', href: 'https://www.tiktok.com/@shirubawing', detail: '@shirubawing' },
   ] as ContactLink[],
 };
 

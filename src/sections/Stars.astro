@@ -35,7 +35,7 @@ const cards = (['sun', 'moon', 'rising'] as const)
       {/* a crooked, Burton-ish night: a slow star wheel, a sickly moon, a spiral hill, twisted trees */}
       <div class="night" aria-hidden="true">
         <div class="night__sky" />
-        <div class="night__moon" />
+        <Image class="night__moon" src={cutouts.moon} alt="" widths={[240, 480]} sizes="(max-width: 719px) 120px, 16vw" loading="lazy" decoding="async" />
         <Image class="night__chart" src={cutouts.starChart} alt="" widths={[480, 900]} sizes="60vw" loading="lazy" decoding="async" />
         <svg class="night__hill" viewBox="0 0 1440 320" preserveAspectRatio="none">
           <path d="M0 320V236c120-10 230-36 340-84 70-30 130-74 196-104 44-20 98-24 128 6 26 26 18 66-14 78-26 10-52-4-50-28 2-18 22-26 36-18M664 54c34 18 62 52 108 84 92 64 214 90 352 98 120 8 222 6 316 2v82z" />
@@ -111,18 +111,20 @@ const cards = (['sun', 'moon', 'rising'] as const)
       filter: brightness(1.25);
     }
   }
-  /* a too-big, slightly sick moon */
-  .night__moon {
+  /* Teha's moon, glow and all; it breathes, very slowly */
+  .stars :global(.night__moon) {
     position: absolute;
-    top: 7%;
-    right: 9%;
-    width: clamp(110px, 14vw, 210px);
-    aspect-ratio: 1;
-    border-radius: 50%;
-    background: radial-gradient(circle at 38% 35%, #f1efe2, #cfcab4 55%, #a7a38c);
-    box-shadow:
-      0 0 40px rgb(230 228 210 / 0.35),
-      0 0 120px rgb(160 180 200 / 0.25);
+    top: 4%;
+    right: 7%;
+    width: clamp(150px, 17vw, 270px);
+    height: auto;
+    animation: moon-breathe 7s ease-in-out infinite alternate;
+  }
+  @keyframes moon-breathe {
+    to {
+      scale: 1.04;
+      filter: brightness(1.08);
+    }
   }
   /* the old star chart turns behind everything, very slowly */
   .stars :global(.night__chart) {
@@ -275,10 +277,10 @@ const cards = (['sun', 'moon', 'rising'] as const)
   }
   @media (max-width: 719px) {
     /* phones: a small moon tucked into the corner, clear of the title */
-    .night__moon {
-      top: calc(var(--touch) + var(--space-3));
-      right: var(--space-3);
-      width: 56px;
+    .stars :global(.night__moon) {
+      top: calc(var(--touch) + var(--space-1));
+      right: var(--space-1);
+      width: 92px;
     }
     .stars__cards {
       grid-template-columns: minmax(0, 1fr);
@@ -289,6 +291,7 @@ const cards = (['sun', 'moon', 'rising'] as const)
   @media (prefers-reduced-motion: reduce) {
     .night__sky,
     .stars :global(.night__chart),
+    .stars :global(.night__moon),
     .star,
     .stars.is-live .night__fly {
       animation: none;

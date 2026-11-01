@@ -2,21 +2,27 @@
 import { getImage } from 'astro:assets';
 import { intro } from '../content/site';
 import { introPhotos } from '../content/photos';
-import moonPoster from '../assets/collage/moon-poster.jpg';
+import moonDisc from '../assets/collage/moon.png';
 
 // Frames are drawn on a <canvas> (not <img>) so a 50 ms flash never becomes the page's LCP element.
 const frameUrls = await Promise.all(
   intro.frames.map(async (f) => (await getImage({ src: introPhotos[f.src as keyof typeof introPhotos], width: 420, format: 'webp', quality: 60 })).src),
 );
-const poster = await getImage({ src: moonPoster, width: 960, format: 'webp', quality: 55 });
+const moon = await getImage({ src: moonDisc, width: 494, format: 'webp', quality: 75 });
 ---
 
 <div class="intro" id="intro" role="dialog" aria-modal="true" aria-label="Intro" data-effect="intro" data-effect-eager data-effect-priority="high">
-  <!-- The moon through the branches (Teha's footage), muted, played from mid-rise. -->
-  <video class="intro__moon" muted playsinline preload="auto" poster={poster.src} aria-hidden="true" tabindex="-1" disablepictureinpicture>
-    <source src="/media/moon.mp4" type="video/mp4" />
-  </video>
+  <!--
+    Teha's moon through the branches. It breathes, it creeps closer, it slips out of register,
+    and a red shadow eats it from the side: a blood moon, before it goes out.
+  -->
   <div class="intro__glow" aria-hidden="true"></div>
+  <div class="intro__moon" aria-hidden="true">
+    <img class="intro__disc" src={moon.src} alt="" width="493" height="494" decoding="async" fetchpriority="high" />
+    <img class="intro__disc intro__slip intro__slip--a" src={moon.src} alt="" width="493" height="494" decoding="async" />
+    <img class="intro__disc intro__slip intro__slip--b" src={moon.src} alt="" width="493" height="494" decoding="async" />
+    <span class="intro__shade"><span class="intro__eclipse"></span></span>
+  </div>
   <canvas class="intro__static" width="320" height="180" aria-hidden="true"></canvas>
   <canvas class="intro__frames" width="420" height="525" aria-hidden="true" data-frames={JSON.stringify(frameUrls)}></canvas>
   <p class="intro__status label" aria-live="polite"><span>{intro.moonLabel}</span> <span data-intro-progress></span></p>
@@ -39,36 +45,76 @@ const poster = await getImage({ src: moonPoster, width: 960, format: 'webp', qua
   :global(html.intro-pending) {
     overflow: hidden;
   }
+  /* the moon: centred a little above the middle, where the photos burst */
   .intro__moon {
+    position: absolute;
+    left: 50%;
+    top: 46%;
+    width: min(42vmin, 320px);
+    aspect-ratio: 1;
+    translate: -50% -50%;
+    border-radius: 50%;
+    isolation: isolate;
+  }
+  .intro__disc {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    /* nudged so the moon sits a little above the centre, where the photos burst */
-    object-position: 50% 62%;
-    transform-origin: 52% 48%;
-    animation: moon-drift 3s linear both;
+    filter: contrast(1.05) brightness(0.95);
+    /* it breathes, just slightly too fast */
+    animation: moon-breathe 1.7s ease-in-out infinite alternate;
   }
-  @keyframes moon-drift {
-    from {
-      scale: 1.12;
-    }
+  @keyframes moon-breathe {
     to {
-      scale: 1.22;
+      scale: 1.025;
+      filter: contrast(1.12) brightness(1.04);
     }
   }
-  /* cold moonlight bleeding into the dark */
+  /* two copies that slip out of register for a frame or two */
+  .intro__slip {
+    opacity: 0;
+    mix-blend-mode: screen;
+    animation: none;
+  }
+  .intro__slip--a {
+    filter: sepia(1) saturate(6) hue-rotate(-40deg) brightness(0.7);
+  }
+  .intro__slip--b {
+    filter: grayscale(1) brightness(1.3);
+  }
+  /* the red shadow that creeps across, only ever seen on the moon itself */
+  .intro__shade {
+    position: absolute;
+    /* exactly over the disc (the picture's outer 11% is glow) */
+    inset: 11%;
+    border-radius: 50%;
+    overflow: hidden;
+  }
+  .intro__eclipse {
+    position: absolute;
+    inset: -4%;
+    border-radius: 50%;
+    background: radial-gradient(circle at 60% 50%, rgb(70 4 8 / 0.92) 0 52%, rgb(110 10 16 / 0.7) 62%, transparent 72%);
+    mix-blend-mode: multiply;
+    translate: -112% 0;
+    pointer-events: none;
+  }
+  /* cold light around it */
   .intro__glow {
     position: absolute;
-    inset: 0;
+    left: 50%;
+    top: 46%;
+    width: min(110vmin, 900px);
+    aspect-ratio: 1;
+    translate: -50% -50%;
+    border-radius: 50%;
     pointer-events: none;
-    background: radial-gradient(ellipse at 52% 46%, rgb(214 222 205 / 0.08), transparent 55%);
+    background: radial-gradient(circle, rgb(214 222 190 / 0.16), rgb(214 222 190 / 0.04) 35%, transparent 60%);
   }
   @media (prefers-reduced-motion: reduce) {
-    .intro__moon {
+    .intro__disc {
       animation: none;
-      scale: 1.12;
     }
   }
   .intro__frames {

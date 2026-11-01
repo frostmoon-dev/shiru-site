@@ -7,7 +7,29 @@
  *
  * Components call `sfx('page')`; nothing plays unless the visitor switched sound on.
  */
-export type Sfx = 'page' | 'creak' | 'seal' | 'hat';
+export type Sfx = 'page' | 'creak' | 'seal' | 'hat' | 'card' | 'paper';
+
+/** Recorded effects (public/media/sfx), fetched the first time sound is switched on. The rest are synthesised. */
+const RECORDED: Partial<Record<Sfx, string>> = {
+  page: '/media/sfx/page.mp3', // a book page turning (the grimoire)
+  card: '/media/sfx/card.mp3', // a playing card picked up and turned (the hobby deck)
+  paper: '/media/sfx/paper.mp3', // paper crackling (the letter coming out of the envelope)
+};
+const buffers = new Map<Sfx, AudioBuffer>();
+let loading: Promise<void> | undefined;
+function loadRecorded(c: AudioContext) {
+  loading ??= Promise.all(
+    Object.entries(RECORDED).map(async ([name, url]) => {
+      try {
+        const res = await fetch(url);
+        buffers.set(name as Sfx, await c.decodeAudioData(await res.arrayBuffer()));
+      } catch {
+        /* a missing sound just stays silent */
+      }
+    }),
+  ).then(() => undefined);
+  return loading;
+}
 
 let ctx: AudioContext | undefined;
 let master: GainNode | undefined;
@@ -79,6 +101,7 @@ export function setSound(on: boolean) {
   enabled = on;
   if (on) {
     void ensureCtx().resume();
+    void loadRecorded(ensureCtx());
     startMusic();
   } else {
     stopMusic();
@@ -88,6 +111,17 @@ export function setSound(on: boolean) {
 export function sfx(name: Sfx) {
   if (!soundEnabled() || !ctx || !master) return;
   const c = ctx;
+  const recorded = buffers.get(name);
+  if (recorded) {
+    const src = c.createBufferSource();
+    src.buffer = recorded;
+    const g = c.createGain();
+    g.gain.value = 0.9;
+    src.connect(g).connect(master);
+    src.start();
+    return;
+  }
+  if (name === 'card' || name === 'paper') return; // recorded only
   const t = c.currentTime;
   const g = c.createGain();
   g.connect(master);
