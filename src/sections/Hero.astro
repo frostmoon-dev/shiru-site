@@ -9,8 +9,6 @@ import { collage } from '../content/photos';
   The eye + "Navigate." (bottom right) is the menu button; it lives in SiteNav.
 -->
 <section id="top" class="hero" data-tone="void" aria-labelledby="hero-title" data-effect="hero-entrance" data-effect-priority="high">
-  <!-- leaving the hero: an iris-out, like the end of an old film -->
-  <span class="passage" data-effect="passage" data-effect-options='{"type":"iris"}' aria-hidden="true"></span>
   <div class="hero__collage" aria-hidden="true">
     <Image
       class="hero__newspaper"
@@ -58,8 +56,6 @@ import { collage } from '../content/photos';
     min-height: 100svh;
     background: var(--void);
     overflow-x: clip;
-    /* the iris: wide open (130%) until the passage effect starts closing it */
-    mask-image: radial-gradient(circle farthest-corner at 50% var(--iris-y, 42%), #000 calc(var(--iris, 130%) - 1.2%), transparent var(--iris, 130%));
   }
 
   /* ---- collage (positions measured from the 1440 × 900 Canva frame) ---- */
