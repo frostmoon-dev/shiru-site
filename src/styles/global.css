@@ -523,3 +523,13 @@ h3,
   height: 100%;
   mix-blend-mode: screen;
 }
+
+/* markers that carry a section's passage effect (see src/effects/passage) */
+.passage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+}
