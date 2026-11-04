@@ -180,6 +180,8 @@ const gingham = await getImage({ src: design.gingham, width: 1600, format: 'webp
     display: grid;
     justify-items: center;
     align-items: start;
+    /* the letter measures itself against this */
+    container-type: inline-size;
   }
   .stage > * {
     grid-area: 1 / 1;
@@ -256,11 +258,23 @@ const gingham = await getImage({ src: design.gingham, width: 1600, format: 'webp
   .letter {
     position: relative;
     z-index: 1;
-    width: min(100%, 36rem);
-    /* keeps every field well inside the torn edges. The paper stretches with the form's height,
-       so the torn top and bottom grow on narrow screens: those get a fixed minimum as well. */
-    padding: max(17%, 5rem) 14% max(16%, 4.5rem);
-    background: var(--paper) center / 100% 100% no-repeat;
+    /*
+      The torn paper is laid on as a 9-slice: its torn top (with the second sheet and that
+      sheet's tear line, the top 23% of the picture), its torn bottom and its ragged sides keep
+      their natural proportions at any size; only the plain middle stretches with the form.
+      The border widths are those slices at the letter's own scale, so the writing always starts
+      on the main sheet, below the tear, with even room on every side.
+    */
+    --w: min(100cqi, 36rem);
+    width: var(--w);
+    border-style: solid;
+    border-color: transparent;
+    border-width: calc(var(--w) * 0.21) calc(var(--w) * 0.045) calc(var(--w) * 0.073) calc(var(--w) * 0.07);
+    border-image-source: var(--paper);
+    border-image-slice: 23% 4.5% 8% 7% fill;
+    border-image-repeat: stretch;
+    padding: clamp(1.25rem, calc(var(--w) * 0.05), 2rem) calc(var(--w) * 0.075) clamp(1.25rem, calc(var(--w) * 0.045), 1.75rem)
+      calc(var(--w) * 0.07);
     filter: drop-shadow(0 18px 24px rgb(0 0 0 / 0.55));
   }
   :global(html.js) .stage:not(.is-opening):not(.is-open) .letter {
