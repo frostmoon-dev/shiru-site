@@ -129,14 +129,14 @@ const span = (job: Job) =>
     left: var(--thread-x);
     width: 2px;
     translate: -50% 0;
-    background: rgb(232 220 194 / 0.08);
+    background: rgb(57 49 47 / 0.08);
   }
   .trail__fill {
     position: absolute;
     inset: 0;
-    background: linear-gradient(var(--blood), var(--blood-lit));
+    background: linear-gradient(var(--olive), var(--olive-dk));
     transform-origin: 50% 0;
-    box-shadow: 0 0 8px rgb(163 20 27 / 0.6);
+    box-shadow: 0 0 6px rgb(108 110 81 / 0.35);
   }
   .trail__list {
     position: relative;
@@ -180,8 +180,8 @@ const span = (job: Job) =>
     height: var(--pin);
     translate: -50% -50%;
     border-radius: 50%;
-    background: radial-gradient(circle at 35% 35%, #e5434a, #6b0c11 70%);
-    box-shadow: 0 0 0 3px var(--void), 0 0 14px rgb(229 67 74 / 0.55);
+    background: radial-gradient(circle at 35% 35%, #e3cd8f, #7d6630 70%);
+    box-shadow: 0 0 0 3px var(--void), 0 0 12px rgb(168 138 74 / 0.5);
     z-index: 1;
   }
   .job__pin::after {
@@ -199,7 +199,8 @@ const span = (job: Job) =>
   .job__card {
     position: relative;
     padding: var(--space-4) var(--space-4) var(--space-3);
-    background: rgb(13 11 12 / 0.92);
+    background: var(--card);
+    box-shadow: 0 14px 28px rgb(57 49 47 / 0.1);
     border: 1px solid var(--line);
     transition:
       border-color var(--dur-base) var(--ease-out),
@@ -207,7 +208,7 @@ const span = (job: Job) =>
   }
   .job:hover .job__card,
   .job:focus-within .job__card {
-    border-color: rgb(232 220 194 / 0.4);
+    border-color: rgb(108 110 81 / 0.6);
     translate: 0 -3px;
   }
   .job__when {
@@ -224,8 +225,8 @@ const span = (job: Job) =>
   .job__now {
     padding: 2px var(--space-1);
     margin-right: var(--space-half);
-    background: var(--blood);
-    color: var(--bone);
+    background: var(--olive-dk);
+    color: var(--parchment);
   }
   .job__role {
     margin-top: var(--space-2);
@@ -315,7 +316,7 @@ const span = (job: Job) =>
     margin-top: var(--space-3);
     padding: var(--space-2);
     border-left: 2px solid var(--blood-lit);
-    background: rgb(232 220 194 / 0.04);
+    background: rgb(186 188 156 / 0.2);
     color: var(--bone);
   }
   .job__milestone-when {
@@ -388,14 +389,14 @@ const span = (job: Job) =>
 
   /* ---- lighting up as the thread arrives (only once the effect is running) ---- */
   :global(.trail.is-armed) .job:not(.is-lit) .job__pin {
-    background: #2b2627;
+    background: #d4cbbd;
     box-shadow: 0 0 0 3px var(--void);
   }
   :global(.trail.is-armed) .job:not(.is-lit) .job__pin::after {
     scale: 0 1;
   }
   :global(.trail.is-armed) .job:not(.is-lit) .job__card {
-    border-color: rgb(232 220 194 / 0.06);
+    border-color: rgb(57 49 47 / 0.08);
   }
   .job.is-lit .job__pin {
     animation: pin-flicker 0.7s steps(1, end);
@@ -424,13 +425,13 @@ const span = (job: Job) =>
   }
   @keyframes card-flicker {
     0% {
-      border-color: rgb(232 220 194 / 0.06);
+      border-color: rgb(57 49 47 / 0.08);
     }
     20% {
-      border-color: rgb(229 67 74 / 0.7);
+      border-color: rgb(168 138 74 / 0.9);
     }
     35% {
-      border-color: rgb(232 220 194 / 0.06);
+      border-color: rgb(57 49 47 / 0.08);
     }
     60%,
     100% {

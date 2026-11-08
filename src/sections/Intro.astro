@@ -1,31 +1,54 @@
 ---
 import { getImage } from 'astro:assets';
 import { intro } from '../content/site';
-import { introPhotos } from '../content/photos';
 import moonDisc from '../assets/collage/moon.png';
 
-// Frames are drawn on a <canvas> (not <img>) so a 50 ms flash never becomes the page's LCP element.
-const frameUrls = await Promise.all(
-  intro.frames.map(async (f) => (await getImage({ src: introPhotos[f.src as keyof typeof introPhotos], width: 420, format: 'webp', quality: 60 })).src),
-);
-const moon = await getImage({ src: moonDisc, width: 494, format: 'webp', quality: 75 });
+const moon = await getImage({ src: moonDisc, width: 300, format: 'webp', quality: 75 });
 ---
 
+<!--
+  The glasshouse at dusk: a gothic arched window is drawn line by line in olive ink, the moon
+  rises inside it through the dusk, leaves climb from the sill, and the page opens onto the hero.
+-->
 <div class="intro" id="intro" role="dialog" aria-modal="true" aria-label="Intro" data-effect="intro" data-effect-eager data-effect-priority="high">
-  <!--
-    Teha's moon through the branches. It breathes, it creeps closer, it slips out of register,
-    and a red shadow eats it from the side: a blood moon, before it goes out.
-  -->
-  <div class="intro__glow" aria-hidden="true"></div>
-  <div class="intro__moon" aria-hidden="true">
-    <img class="intro__disc" src={moon.src} alt="" width="493" height="494" decoding="async" fetchpriority="high" />
-    <img class="intro__disc intro__slip intro__slip--a" src={moon.src} alt="" width="493" height="494" decoding="async" />
-    <img class="intro__disc intro__slip intro__slip--b" src={moon.src} alt="" width="493" height="494" decoding="async" />
-    <span class="intro__shade"><span class="intro__eclipse"></span></span>
-  </div>
-  <canvas class="intro__static" width="320" height="180" aria-hidden="true"></canvas>
-  <canvas class="intro__frames" width="420" height="525" aria-hidden="true" data-frames={JSON.stringify(frameUrls)}></canvas>
-  <p class="intro__status label" aria-live="polite"><span>{intro.moonLabel}</span> <span data-intro-progress></span></p>
+  <svg class="intro__window" viewBox="0 0 300 440" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="intro-dusk" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#4b4c39" />
+        <stop offset="0.55" stop-color="#6c6e51" />
+        <stop offset="1" stop-color="#c9c8a1" />
+      </linearGradient>
+      <clipPath id="intro-pane">
+        <path d="M48 410 V176 Q48 52 150 34 Q252 52 252 176 V410 Z" />
+      </clipPath>
+    </defs>
+    <!-- the dusk through the glass, and the moon rising in it -->
+    <g clip-path="url(#intro-pane)">
+      <rect class="intro__dusk" x="40" y="20" width="220" height="400" fill="url(#intro-dusk)" />
+      <image class="intro__moon" href={moon.src} x="102" y="120" width="96" height="96" />
+    </g>
+    <!-- the frame, drawn in ink: arch, inner arch, two lancets, the rose, mullion, transom, sill -->
+    <g class="intro__ink" fill="none" stroke="#585a40" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M30 412 V170 Q30 30 150 12 Q270 30 270 170 V412" stroke-width="2.4" />
+      <path d="M48 410 V176 Q48 52 150 34 Q252 52 252 176 V410" stroke-width="1.4" />
+      <path d="M150 34 V410" stroke-width="1.2" />
+      <path d="M48 250 H252" stroke-width="1.2" />
+      <path d="M58 250 V170 Q58 110 104 92 Q140 110 142 170 V250" stroke-width="1" />
+      <path d="M158 250 V170 Q160 110 196 92 Q242 110 242 170 V250" stroke-width="1" />
+      <circle cx="150" cy="104" r="22" stroke-width="1" />
+      <path d="M14 414 H286" stroke-width="2.4" />
+    </g>
+    <!-- leaves and a lily climbing from the sill -->
+    <g class="intro__leaves" fill="none" stroke="#6c6e51" stroke-width="1.4" stroke-linecap="round">
+      <path d="M40 412 C 44 380 36 352 52 324" />
+      <path d="M52 324 C 64 330 70 344 60 356 C 50 352 46 338 52 324 Z" />
+      <path d="M44 372 C 30 364 24 352 28 340 C 40 344 46 356 44 372 Z" />
+      <path d="M262 412 C 258 372 268 340 252 300" />
+      <path d="M252 300 C 246 292 248 280 256 276 M252 300 C 258 290 266 286 272 290 M252 300 C 252 288 244 282 238 284" />
+      <path d="M260 360 C 274 352 282 340 278 328 C 266 332 258 346 260 360 Z" />
+    </g>
+  </svg>
+  <p class="intro__status label" aria-live="polite"><span>{intro.moonLabel}</span></p>
   <button class="btn intro__skip" type="button" data-intro-skip>{intro.skip}</button>
 </div>
 
@@ -36,8 +59,10 @@ const moon = await getImage({ src: moonDisc, width: 494, format: 'webp', quality
     z-index: var(--z-intro);
     display: none;
     place-items: center;
-    background: var(--void);
-    color: var(--bone);
+    background:
+      radial-gradient(ellipse at 50% 45%, rgb(255 255 255 / 0.5), transparent 60%),
+      var(--parchment);
+    color: var(--cocoa);
   }
   :global(html.intro-pending) .intro {
     display: grid;
@@ -45,99 +70,10 @@ const moon = await getImage({ src: moonDisc, width: 494, format: 'webp', quality
   :global(html.intro-pending) {
     overflow: hidden;
   }
-  /* the moon: centred a little above the middle, where the photos burst */
-  .intro__moon {
-    position: absolute;
-    left: 50%;
-    top: 46%;
-    width: min(42vmin, 320px);
-    aspect-ratio: 1;
-    translate: -50% -50%;
-    border-radius: 50%;
-    isolation: isolate;
-  }
-  .intro__disc {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    filter: contrast(1.05) brightness(0.95);
-    /* it breathes, just slightly too fast */
-    animation: moon-breathe 1.7s ease-in-out infinite alternate;
-  }
-  @keyframes moon-breathe {
-    to {
-      scale: 1.025;
-      filter: contrast(1.12) brightness(1.04);
-    }
-  }
-  /* two copies that slip out of register for a frame or two */
-  .intro__slip {
-    opacity: 0;
-    mix-blend-mode: screen;
-    animation: none;
-  }
-  .intro__slip--a {
-    filter: sepia(1) saturate(6) hue-rotate(-40deg) brightness(0.7);
-  }
-  .intro__slip--b {
-    filter: grayscale(1) brightness(1.3);
-  }
-  /* the red shadow that creeps across, only ever seen on the moon itself */
-  .intro__shade {
-    position: absolute;
-    /* exactly over the disc (the picture's outer 11% is glow) */
-    inset: 11%;
-    border-radius: 50%;
-    overflow: hidden;
-  }
-  .intro__eclipse {
-    position: absolute;
-    inset: -4%;
-    border-radius: 50%;
-    background: radial-gradient(circle at 60% 50%, rgb(70 4 8 / 0.92) 0 52%, rgb(110 10 16 / 0.7) 62%, transparent 72%);
-    mix-blend-mode: multiply;
-    translate: -112% 0;
-    pointer-events: none;
-  }
-  /* cold light around it */
-  .intro__glow {
-    position: absolute;
-    left: 50%;
-    top: 46%;
-    width: min(110vmin, 900px);
-    aspect-ratio: 1;
-    translate: -50% -50%;
-    border-radius: 50%;
-    pointer-events: none;
-    background: radial-gradient(circle, rgb(214 222 190 / 0.16), rgb(214 222 190 / 0.04) 35%, transparent 60%);
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .intro__disc {
-      animation: none;
-    }
-  }
-  .intro__frames {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    width: min(62vmin, 420px);
-    aspect-ratio: 4 / 5;
-    translate: -50% -50%;
-    visibility: hidden;
-    pointer-events: none;
-    /* luminance-matched: every frame toned to the same dark sepia, so cuts don't strobe */
-    filter: sepia(1) brightness(0.55) contrast(1.1);
-  }
-  /* AHS-style TV static: dim snow with a rolling bar, only in short bursts */
-  .intro__static {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-    pointer-events: none;
-    mix-blend-mode: screen;
+  .intro__window {
+    width: min(58vmin, 340px);
+    height: auto;
+    overflow: visible;
   }
   .intro__status {
     position: absolute;
@@ -149,6 +85,6 @@ const moon = await getImage({ src: moonDisc, width: 494, format: 'webp', quality
     position: absolute;
     right: var(--gutter);
     bottom: var(--space-3);
-    color: var(--bone);
+    color: var(--cocoa);
   }
 </style>

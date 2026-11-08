@@ -50,7 +50,7 @@ const lumos: EffectFactory = () => {
         m.x += m.vx * dt;
         m.y += m.vy * dt;
         const k = 1 - m.life / m.max;
-        ctx.fillStyle = `rgba(243, 234, 214, ${(0.7 * k).toFixed(3)})`;
+        ctx.fillStyle = `rgba(168, 138, 74, ${(0.55 * k).toFixed(3)})`;
         ctx.beginPath();
         ctx.arc(m.x, m.y, m.r * (0.5 + k * 0.5), 0, Math.PI * 2);
         ctx.fill();

@@ -1,6 +1,6 @@
 import { CanvasTexture, SRGBColorSpace, RepeatWrapping } from 'three';
 
-// The cover emblem: a keyhole (circle + flared slot), with a thin bone ring around it.
+// The cover emblem: a keyhole (circle + flared slot), with a thin gold ring around it.
 function keyholePath(cx: number, cy: number, r: number) {
   const p = new Path2D();
   p.arc(cx, cy, r, 0, Math.PI * 2);
@@ -55,30 +55,30 @@ function drawEmblem(ctx: CanvasRenderingContext2D, fill: string, stroke: string)
 
 export function leatherTexture() {
   const [c, ctx] = canvas(512, 704);
-  // black book cloth, worn at the edges
-  ctx.fillStyle = '#0d0b0c';
+  // olive book cloth, worn at the edges
+  ctx.fillStyle = '#4f5240';
   ctx.fillRect(0, 0, 512, 704);
   for (let i = 0; i < 40; i++) {
-    ctx.fillStyle = `rgba(${Math.random() < 0.5 ? '38,34,36' : '0,0,0'},${(Math.random() * 0.3).toFixed(2)})`;
+    ctx.fillStyle = `rgba(${Math.random() < 0.5 ? '108,110,81' : '42,42,31'},${(Math.random() * 0.12).toFixed(2)})`;
     ctx.beginPath();
     ctx.ellipse(Math.random() * 512, Math.random() * 704, 30 + Math.random() * 90, 20 + Math.random() * 60, Math.random() * 3, 0, Math.PI * 2);
     ctx.fill();
   }
   const edge = ctx.createRadialGradient(256, 352, 220, 256, 352, 470);
   edge.addColorStop(0, 'rgba(0,0,0,0)');
-  edge.addColorStop(1, 'rgba(60,54,50,.35)');
+  edge.addColorStop(1, 'rgba(42,42,31,.45)');
   ctx.fillStyle = edge;
   ctx.fillRect(0, 0, 512, 704);
-  speckle(ctx, 512, 704, 9000, '#000', 0.4);
-  speckle(ctx, 512, 704, 2500, '#5a524a', 0.18);
-  // bone-foil double frame + keyhole emblem (foil worn thin in places)
-  ctx.strokeStyle = 'rgba(232,220,194,.7)';
+  speckle(ctx, 512, 704, 9000, '#2a2a1f', 0.35);
+  speckle(ctx, 512, 704, 2500, '#babc9c', 0.12);
+  // gold-foil double frame + keyhole emblem (foil worn thin in places)
+  ctx.strokeStyle = 'rgba(214,184,112,.85)';
   ctx.lineWidth = 2;
   ctx.strokeRect(34, 34, 444, 636);
   ctx.lineWidth = 1;
   ctx.strokeRect(44, 44, 424, 616);
-  drawEmblem(ctx, 'rgba(232,220,194,.82)', 'rgba(232,220,194,.6)');
-  speckle(ctx, 512, 704, 1800, '#0d0b0c', 0.6);
+  drawEmblem(ctx, 'rgba(214,184,112,.92)', 'rgba(214,184,112,.75)');
+  speckle(ctx, 512, 704, 1800, '#4f5240', 0.6);
   const t = new CanvasTexture(c);
   t.colorSpace = SRGBColorSpace;
   return t;
@@ -101,12 +101,12 @@ export function embossTexture() {
 export function paperTexture() {
   const [c, ctx] = canvas(512, 704);
   const g = ctx.createRadialGradient(256, 352, 80, 256, 352, 460);
-  g.addColorStop(0, '#ece1c9');
-  g.addColorStop(1, '#bfa77a');
+  g.addColorStop(0, '#faf5ee');
+  g.addColorStop(1, '#e1cfbd');
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, 512, 704);
-  speckle(ctx, 512, 704, 4000, '#5a4632', 0.12);
-  ctx.strokeStyle = 'rgba(42,26,18,.07)';
+  speckle(ctx, 512, 704, 4000, '#7c6d67', 0.12);
+  ctx.strokeStyle = 'rgba(108,110,81,.12)';
   for (let y = 120; y < 640; y += 28) {
     ctx.beginPath();
     ctx.moveTo(60, y);

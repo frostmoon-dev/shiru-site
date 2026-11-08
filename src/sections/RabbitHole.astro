@@ -16,7 +16,6 @@ const lace = await getImage({ src: design.lace, width: 960, format: 'webp', qual
     <span class="fall__item fall__item--keyhole" data-depth="0.5" data-spin="-60"><Image src={cutouts.keyhole} alt="" width={120} loading="lazy" decoding="async" /></span>
     <span class="fall__item fall__item--mirror" data-depth="1.2" data-spin="40"><Image src={cutouts.mirror} alt="" width={200} loading="lazy" decoding="async" /></span>
     <span class="fall__item fall__item--book" data-depth="0.7" data-spin="-110"><Image src={cutouts.openBook} alt="" width={240} loading="lazy" decoding="async" /></span>
-    <span class="fall__item fall__item--card" data-depth="1.4" data-spin="220"><span>Q<br />♥</span></span>
   </div>
   <div class="container">
     <SectionHead id="about-title" kicker={ui.caseNo(ch.numeral, ch.label)} title={about.title} lead={about.card} />
@@ -84,7 +83,7 @@ const lace = await getImage({ src: design.lace, width: 960, format: 'webp', qual
   .fall__tunnel {
     position: absolute;
     inset: -10% -20%;
-    background: repeating-radial-gradient(ellipse at 50% 55%, transparent 0 46px, rgb(232 220 194 / 0.035) 46px 48px);
+    background: repeating-radial-gradient(ellipse at 50% 55%, transparent 0 46px, rgb(57 49 47 / 0.045) 46px 48px);
     mask-image: radial-gradient(ellipse at 50% 55%, #000 25%, transparent 70%);
   }
   .fall__item {
@@ -95,7 +94,7 @@ const lace = await getImage({ src: design.lace, width: 960, format: 'webp', qual
   .fall__item :global(img) {
     width: 100%;
     height: auto;
-    filter: grayscale(0.35) brightness(0.8);
+    filter: sepia(0.2) saturate(0.85);
   }
   /* near things are big and soft, far things small and sharp */
   .fall__item--watch {
@@ -122,31 +121,11 @@ const lace = await getImage({ src: design.lace, width: 960, format: 'webp', qual
     opacity: 0.5;
     filter: blur(0.6px);
   }
-  .fall__item--card {
-    right: 3%;
-    top: 40%;
-    width: clamp(46px, 4.5vw, 70px);
-    aspect-ratio: 5 / 7;
-    display: grid;
-    place-items: start;
-    padding: 6px;
-    border-radius: 6px;
-    background: #f3ead6;
-    color: #a3141b;
-    font-family: Georgia, serif;
-    font-size: 0.85rem;
-    line-height: 1;
-    filter: blur(2px);
-    opacity: 0.6;
-  }
   @media (max-width: 719px) {
     /* phones have no margins to fall through: only the watch and the keyhole, at the edges */
     .fall__item--mirror,
     .fall__item--book,
-    .fall__item--card {
-      display: none;
-    }
-    .fall__item--keyhole {
+      .fall__item--keyhole {
       right: 2%;
       top: 70%;
     }
@@ -172,14 +151,15 @@ const lace = await getImage({ src: design.lace, width: 960, format: 'webp', qual
     padding: 22% 20%;
     margin: 0;
   }
-  /* the doily, lifted from near-black to a pale grey so it reads on the dark page */
+  /* the doily: cocoa lace around a dark specimen panel */
   .lace::before {
     content: '';
     position: absolute;
     inset: 0;
     z-index: -1;
-    background: var(--lace) center / 100% 100% no-repeat;
-    filter: brightness(5.5) sepia(0.25);
+    /* the black lace used as a stencil, filled with cocoa ink */
+    background: var(--cocoa);
+    mask: var(--lace) center / 100% 100% no-repeat;
   }
   .lace__specimen {
     position: relative;
@@ -216,7 +196,7 @@ const lace = await getImage({ src: design.lace, width: 960, format: 'webp', qual
     height: 9px;
     translate: -50% 0;
     border-radius: 50%;
-    background: radial-gradient(circle at 35% 35%, #e5434a, #6b0c11 70%);
+    background: radial-gradient(circle at 35% 35%, #e3cd8f, #7d6630 70%);
     box-shadow: 0 2px 3px rgb(0 0 0 / 0.6);
   }
   @keyframes moth-twitch {
@@ -248,7 +228,7 @@ const lace = await getImage({ src: design.lace, width: 960, format: 'webp', qual
     font-size: var(--text-small);
     line-height: 1.5;
     text-align: center;
-    color: var(--bone);
+    color: var(--parchment);
     max-width: 16ch;
   }
 

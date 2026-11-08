@@ -40,7 +40,7 @@ export const introPhotos = { 'intro-1': intro1, 'intro-2': intro2, 'intro-3': in
 /** Cut-outs supplied by Teha (Canva collage sheets), cut apart by scripts/ (see README). */
 export const collage = { hand, envelope, paper, newspaper, paperclip, eye, moth } as const;
 
-/** Teha's vintage cut-outs (Nov 2026): the hobby cards, Wonderland, the Burton night and the fall. */
+/** Teha's vintage cut-outs (Nov 2026): the hobby cards, the hero, the herbarium, the dusk glasshouse and the fall. */
 export const cutouts = { mapHeart, cassette, mirror, starChart, roses, quail, dragonfly, driedRose, building, openBook, witchHat, keyhole, cat, icedCoffee, cardBack, moon: moonCutout } as const;
 export type CutoutName = keyof typeof cutouts;
 

@@ -15,7 +15,7 @@ export const site = {
   description:
     'Teha: an ERP developer by day who wanders into peculiar projects by night. Cats, iced coffee, characters and the occasional moth. Case No. 0: subject unknown.',
   ogImage: '/og.png',
-  ogImageAlt: 'The name TEHA in pale lettering on black, under the line Case No. 0, Subject: unknown.',
+  ogImageAlt: 'The name TEHA in cocoa lettering on parchment, under the line Case No. 0, Subject: unknown.',
 } as const;
 
 /**
@@ -30,7 +30,7 @@ export const work = {
   description:
     'Nurfatihah Muhammad: Microsoft Dynamics 365 Finance & Operations developer in Malaysia. X++, SSRS reports and extensions. Résumé, employment history and contact.',
   ogImage: '/og-work.png',
-  ogImageAlt: 'Nurfatihah Muhammad, Dynamics 365 Finance & Operations developer, in pale lettering on black.',
+  ogImageAlt: 'Nurfatihah Muhammad, Dynamics 365 Finance & Operations developer, in cocoa lettering on parchment.',
   kicker: 'Case file · Profession',
   /** The big name at the top of the work page. */
   heading: 'Nurfatihah',
@@ -47,7 +47,7 @@ export const work = {
  */
 export const stars = {
   title: 'Written in the stars',
-  lead: 'Three cards the sky dealt before I had a say.',
+  lead: 'Seen from the glasshouse after dark: three signs the sky chose before I had a say.',
   sun: 'Gemini',
   moon: 'Leo',
   rising: 'Taurus',
@@ -70,7 +70,7 @@ const numbered = (list: Omit<Chapter, 'numeral'>[]): Chapter[] => list.map((c, i
 /** Chapters of the personal page (the astrology chapter only appears once its signs are filled in). */
 export const homeChapters: Chapter[] = numbered([
   { id: 'rabbit-hole', label: 'About', title: 'Down the rabbit hole' },
-  { id: 'curiosities', label: 'Hobbies', title: 'A deck of curiosities' },
+  { id: 'curiosities', label: 'Hobbies', title: 'Small, living things' },
   ...(hasStars() ? [{ id: 'stars' as const, label: 'Astrology', title: 'Written in the stars' }] : []),
   { id: 'tea', label: 'Contact', title: 'Tea at midnight' },
 ]);
@@ -140,7 +140,7 @@ export const about = {
     'By day, I’m an ERP developer. I spend my time shaping business logic, extending existing systems, and bringing new functionality into existence. I have a particular fondness for starting with a requirement, following its logic, and turning an idea into something tangible. There’s a certain pleasure in creating order where there was once only possibility.',
     'By night, I tend to wander a little further into my own imagination. I have a habit of collecting interests, entertaining peculiar ideas, and turning passing thoughts into projects. Some become websites, some become experiments, and others remain little fragments of something I haven’t quite figured out yet. I enjoy the process of bringing an idea into existence, even if I occasionally leave a trail of unfinished things behind me.',
   ],
-  /** On the black scroll. */
+  /** On the scroll. */
   facts: [
     { term: 'Hours', detail: 'Mostly after dark' },
     { term: 'Lives in', detail: 'Malaysia' },
@@ -208,8 +208,8 @@ export type Curiosity = {
 
 /** Chapter II of the personal page: hobbies, as a tarot deck. Everything here is from Teha. */
 export const curiosities = {
-  title: 'A deck of curiosities',
-  lead: 'What I do when nobody is paying me to. The Queen dealt them; turn one over.',
+  title: 'Small, living things',
+  lead: 'What I keep when nobody is paying me to: pressed, labelled, only slightly dusty. Turn one over.',
   turn: 'Turn the card',
   turnBack: 'Turn it back',
   play: 'Play the tea party',
@@ -343,7 +343,7 @@ export type Job = {
  */
 export const history = {
   title: 'The paper trail',
-  lead: 'Every job, in the order it happened. Follow the red thread; open any file for the details.',
+  lead: 'Every job, in the order it happened. Follow the thread; open any file for the details.',
   hint: 'Each card opens.',
   open: 'Open the file',
   close: 'Close the file',

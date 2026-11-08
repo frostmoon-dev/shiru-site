@@ -78,9 +78,9 @@ const ch = chapters.find((c) => c.id === 'record')!;
     display: block;
     width: min(100%, 26rem);
     padding: var(--space-1);
-    background: #efe6d3;
+    background: var(--card);
     rotate: -2deg;
-    box-shadow: 0 22px 44px rgb(0 0 0 / 0.6);
+    box-shadow: 0 22px 44px rgb(57 49 47 / 0.2);
     transition:
       rotate var(--dur-base) var(--ease-out),
       translate var(--dur-base) var(--ease-out);
@@ -99,12 +99,12 @@ const ch = chapters.find((c) => c.id === 'record')!;
     width: 100%;
     height: auto;
     /* aged a little, so a white page doesn't glare out of the dark */
-    filter: sepia(0.35) brightness(0.86) contrast(1.05);
+    filter: sepia(0.18) contrast(1.02);
     transition: filter var(--dur-slow) var(--ease-out);
   }
   .record__sheet:hover .record__page,
   .record__sheet:focus-visible .record__page {
-    filter: sepia(0.15) brightness(0.95);
+    filter: none;
   }
   .record__clip {
     position: absolute;

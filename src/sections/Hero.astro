@@ -1,7 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import { hero, work } from '../content/site';
-import { collage } from '../content/photos';
+import { collage, cutouts } from '../content/photos';
 ---
 
 <!--
@@ -20,8 +20,9 @@ import { collage } from '../content/photos';
       fetchpriority="high"
       decoding="async"
     />
+    <!-- a spray of roses rising in from the bottom corner (the old hand's place and motion) -->
     <span class="hero__hand-wrap" data-enter>
-      <Image class="hero__hand" src={collage.hand} alt="" width={460} loading="eager" decoding="async" />
+      <Image class="hero__hand" src={cutouts.roses} alt="" widths={[320, 640]} sizes="clamp(160px, 22vw, 340px)" loading="eager" decoding="async" />
     </span>
   </div>
 
@@ -38,11 +39,7 @@ import { collage } from '../content/photos';
       {hero.lines.map((l) => <span class="hero__line">{l}</span>)}
     </p>
     <p class="hero__tagline" data-enter>
-      {hero.tagline.before}<em class="glitch"
-        ><span class="glitch__base">{hero.tagline.glitch}</span><span class="glitch__layer glitch__layer--a" aria-hidden="true"
-          >{hero.tagline.glitch}</span
-        ><span class="glitch__layer glitch__layer--b" aria-hidden="true">{hero.tagline.glitch}</span></em
-      >{hero.tagline.after}
+      {hero.tagline.before}<em class="inked">{hero.tagline.glitch}</em>{hero.tagline.after}
     </p>
     <p class="hero__cta" data-enter>
       <a class="btn hero__work" href="/work/">{work.cta} <span aria-hidden="true">→</span></a>
@@ -79,14 +76,14 @@ import { collage } from '../content/photos';
   }
   .hero__hand-wrap {
     position: absolute;
-    left: 0;
-    bottom: -6%;
-    width: clamp(120px, 15.5vw, 250px);
+    left: -2%;
+    bottom: -4%;
+    width: clamp(160px, 22vw, 340px);
   }
   .hero__hand {
     width: 100%;
     height: auto;
-    filter: brightness(0.42);
+    filter: drop-shadow(0 10px 14px rgb(57 49 47 / 0.18));
     transform-origin: 10% 100%;
     animation: hand-reach 9s var(--ease-ink) infinite;
   }
@@ -146,9 +143,6 @@ import { collage } from '../content/photos';
     line-height: 1.65;
     color: var(--muted);
   }
-  .hero__tagline .glitch {
-    font-weight: 700;
-  }
   .hero__cta {
     margin-top: var(--space-5);
   }
@@ -177,94 +171,23 @@ import { collage } from '../content/photos';
     }
   }
 
-  /* ---- glitch: "keeps me awake" slips out of register now and then ---- */
-  .glitch {
-    position: relative;
-    display: inline-block;
-    font-style: italic;
+  /* ---- "keeps me awake": olive italic, underlined in ink that draws itself once the hero arrives ---- */
+  .inked {
+    font-weight: 700;
+    color: var(--olive-dk);
+    background: linear-gradient(var(--olive), var(--olive)) 0 100% / 0% 2px no-repeat;
+    padding-bottom: 2px;
+    transition: background-size 1.1s var(--ease-ink) 0.6s;
   }
-  .glitch__layer {
-    position: absolute;
-    inset: 0;
-    clip-path: inset(0 0 100% 0);
-    pointer-events: none;
-    white-space: nowrap;
+  :global(html.hero-entered) .inked,
+  :global(html:not(.js)) .inked {
+    background-size: 100% 2px;
   }
-  .glitch__layer--a {
-    color: #e5434a;
-    animation: glitch-a 4.2s steps(1, end) infinite;
-  }
-  .glitch__layer--b {
-    color: var(--moon);
-    animation: glitch-b 4.2s steps(1, end) infinite;
-  }
-  .glitch__base {
-    display: inline-block;
-    animation: glitch-base 4.2s steps(1, end) infinite;
-  }
-  /* each burst is ~250 ms out of 4.2 s: well under 3 flashes a second */
-  /* layers are shown and hidden with clip-path (never half-transparent, so contrast holds) */
-  @keyframes glitch-a {
-    0%,
-    86% {
-      transform: none;
-      clip-path: inset(0 0 100% 0);
-    }
-    87% {
-      transform: translate(-3px, 1px);
-      clip-path: inset(10% 0 55% 0);
-    }
-    89% {
-      transform: translate(4px, -1px);
-      clip-path: inset(60% 0 8% 0);
-    }
-    91% {
-      transform: translate(-2px, 0);
-      clip-path: inset(35% 0 35% 0);
-    }
-    93%,
-    100% {
-      transform: none;
-      clip-path: inset(0 0 100% 0);
+  @media (prefers-reduced-motion: reduce) {
+    .inked {
+      transition: none;
     }
   }
-  @keyframes glitch-b {
-    0%,
-    86% {
-      transform: none;
-      clip-path: inset(0 0 100% 0);
-    }
-    88% {
-      transform: translate(3px, 0);
-      clip-path: inset(45% 0 20% 0);
-    }
-    90% {
-      transform: translate(-4px, 1px);
-      clip-path: inset(5% 0 70% 0);
-    }
-    92%,
-    100% {
-      transform: none;
-      clip-path: inset(0 0 100% 0);
-    }
-  }
-  @keyframes glitch-base {
-    0%,
-    86% {
-      transform: none;
-    }
-    88% {
-      transform: skewX(-8deg) translateX(2px);
-    }
-    90% {
-      transform: translateX(-2px);
-    }
-    92%,
-    100% {
-      transform: none;
-    }
-  }
-
 
   @media (max-width: 899px) {
     .hero__newspaper {

@@ -114,7 +114,7 @@ function Book({ open, turn, duration, onReady }: Omit<Props, 'aspect' | 'onLost'
     };
   }, [turn, duration, uniforms, invalidate]);
 
-  const brass = <meshStandardMaterial color="#9d978c" metalness={0.8} roughness={0.45} />; // tarnished silver
+  const brass = <meshStandardMaterial color="#d4b46a" metalness={0.55} roughness={0.38} />; // old gold
   const corners: [number, number, number][] = [
     [PAGE_W + 0.01, PAGE_H / 2 + 0.01, Math.PI],
     [PAGE_W + 0.01, -PAGE_H / 2 - 0.01, Math.PI / 2],
@@ -124,11 +124,11 @@ function Book({ open, turn, duration, onReady }: Omit<Props, 'aspect' | 'onLost'
     <group ref={root} position={[-PAGE_W / 2, 0, 0]} rotation={[-0.16, 0.32, 0]}>
       {/* back board + right-hand page block */}
       <RoundedBox args={[PAGE_W + 0.04, PAGE_H + 0.06, T]} radius={0.02} position={[PAGE_W / 2, 0, -BLOCK - T / 2]}>
-        <meshStandardMaterial color="#0d0b0c" roughness={0.85} />
+        <meshStandardMaterial color="#4f5240" roughness={0.85} />
       </RoundedBox>
       <mesh position={[PAGE_W / 2 - 0.01, 0, -BLOCK / 2]}>
         <boxGeometry args={[PAGE_W - 0.02, PAGE_H - 0.03, BLOCK]} />
-        <meshLambertMaterial color="#d9c9a3" />
+        <meshLambertMaterial color="#efe4d6" />
       </mesh>
       <mesh position={[PAGE_W / 2, 0, 0.001]}>
         <planeGeometry args={[PAGE_W - 0.02, PAGE_H - 0.03]} />
@@ -137,7 +137,7 @@ function Book({ open, turn, duration, onReady }: Omit<Props, 'aspect' | 'onLost'
       {/* spine */}
       <mesh position={[-0.01, 0, -BLOCK / 2]}>
         <boxGeometry args={[0.04, PAGE_H + 0.06, BLOCK + T * 2]} />
-        <meshStandardMaterial color="#080707" roughness={0.8} />
+        <meshStandardMaterial color="#3a3a2c" roughness={0.8} />
       </mesh>
 
       {/* front cover, hinged at the spine; carries the read pages on its inside */}
@@ -200,9 +200,9 @@ export default function GrimoireScene({ open, turn, aspect, duration, onLost, on
       <PerformanceMonitor onDecline={() => setDpr(1)} />
       <CameraFit aspect={aspect} />
       {/* cold moonlight from the upper left, a faint blue rim from below */}
-      <ambientLight intensity={1.05} color="#e9e6df" />
-      <directionalLight position={[-2.5, 3, 4]} intensity={2.3} color="#f1ece2" />
-      <directionalLight position={[3, -2, 2]} intensity={0.55} color="#7d86a8" />
+      <ambientLight intensity={1.05} color="#f3ebe2" />
+      <directionalLight position={[-2.5, 3, 4]} intensity={2.1} color="#fbf3e4" />
+      <directionalLight position={[3, -2, 2]} intensity={0.5} color="#babc9c" />
       <Book open={open} turn={turn} duration={duration} onReady={onReady} />
     </Canvas>
   );

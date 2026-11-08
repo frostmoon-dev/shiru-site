@@ -2,13 +2,10 @@ import type { EffectFactory } from '../types';
 import { gsap, lockScroll } from '../../lib/motion';
 
 /**
- * The intro: Teha's moon through the branches (breathing, creeping closer, slipping out of register,
- * eaten by a red shadow), TV static, an AHS-style burst of photos, then the hero.
- * ≤ 3 s, skippable (button or Esc), once per session.
- *
- * Photosensitivity (owner-approved exception): the burst cuts faster than 3/s, in AHS style.
- * Mitigations kept: frames are luminance-matched dark sepia (no bright/white frames), no red
- * flashes, frames cover ~60% of the viewport, and reduced motion / save-data skip the burst.
+ * The intro: the glasshouse at dusk. A gothic arched window is drawn line by line in olive ink,
+ * the dusk fills its glass, the moon rises inside it, leaves climb from the sill, then the page
+ * opens onto the hero. ≤ 3 s, skippable (button or Esc), once per session. No flashes.
+ * Reduced motion: the finished drawing for a moment, then a plain fade.
  */
 const SEEN = 'site:intro-seen';
 
@@ -30,7 +27,6 @@ const introEffect: EffectFactory = () => {
     }
     window.clearTimeout(cap);
     const node = el;
-    node.querySelector<HTMLElement>('.intro__frames')?.style.setProperty('visibility', 'hidden');
     // CSS transition (compositor) rather than a tween, so a busy main thread can't stretch it.
     node.style.transition = 'opacity 300ms ease-out';
     node.style.opacity = '0';
@@ -65,136 +61,31 @@ const introEffect: EffectFactory = () => {
   return {
     name: 'intro',
     mount(target, _opts, env) {
-      const burst = start(target, !env.saveData);
+      const full = start(target, !env.saveData);
       if (!document.documentElement.classList.contains('intro-pending')) return;
-      const canvas = target.querySelector<HTMLCanvasElement>('.intro__frames');
-      const urls: string[] = canvas ? JSON.parse(canvas.dataset.frames ?? '[]') : [];
-      const g = canvas?.getContext('2d');
-      const progress = target.querySelector<HTMLElement>('[data-intro-progress]');
-      const moon = target.querySelector<HTMLElement>('.intro__moon');
-      const eclipse = target.querySelector<HTMLElement>('.intro__eclipse');
-      const slips = [...target.querySelectorAll<HTMLElement>('.intro__slip')];
-      // A frame or two out of register: the copies jump sideways and snap back.
-      const slip = () => {
-        slips.forEach((s, i) => gsap.set(s, { opacity: 0.55, x: (i ? -1 : 1) * gsap.utils.random(6, 14), y: gsap.utils.random(-3, 3), clipPath: `inset(${gsap.utils.random(10, 60)}% 0 ${gsap.utils.random(10, 40)}% 0)` }));
-        if (moon) gsap.set(moon, { skewX: gsap.utils.random(-4, 4) });
-        requestAnimationFrame(() =>
-          requestAnimationFrame(() =>
-            requestAnimationFrame(() => {
-              slips.forEach((s) => gsap.set(s, { opacity: 0, x: 0, y: 0 }));
-              if (moon) gsap.set(moon, { skewX: 0 });
-            }),
-          ),
-        );
-      };
-
-      // TV static: a 320×180 canvas of grey snow, scaled up, with a slow rolling bar.
-      const staticCanvas = target.querySelector<HTMLCanvasElement>('.intro__static');
-      const sctx = staticCanvas?.getContext('2d');
-      let staticRaf = 0;
-      const snow = sctx ? sctx.createImageData(320, 180) : undefined;
-      const drawStatic = (t: number) => {
-        if (!sctx || !snow) return;
-        const d = snow.data;
-        const bar = ((t / 6) % 220) - 20;
-        for (let y = 0; y < 180; y++) {
-          const rowBoost = Math.abs(y - bar) < 8 ? 40 : 0;
-          for (let x = 0; x < 320; x++) {
-            const v = Math.min(255, (Math.random() * 170) | 0) + rowBoost;
-            const i = (y * 320 + x) * 4;
-            d[i] = d[i + 1] = d[i + 2] = v;
-            d[i + 3] = 255;
-          }
-        }
-        sctx.putImageData(snow, 0, 0);
-      };
-      const staticBurst = (seconds: number) => {
-        if (!staticCanvas) return;
-        const end = performance.now() + seconds * 1000;
-        gsap.set(staticCanvas, { opacity: 0.32 });
-        const loop = (now: number) => {
-          drawStatic(now);
-          if (now < end) staticRaf = requestAnimationFrame(loop);
-          else gsap.set(staticCanvas, { opacity: 0 });
-        };
-        cancelAnimationFrame(staticRaf);
-        staticRaf = requestAnimationFrame(loop);
-      };
-
-      tl = gsap.timeline({ onComplete: finish });
-      tl.from([moon, target.querySelector('.intro__glow')], { opacity: 0, duration: 0.6, ease: 'power1.out' })
-        // it creeps closer the whole time, turning a little, as if leaning in to look
-        .fromTo(moon, { scale: 0.82, rotate: 4 }, { scale: 1.22, rotate: -5, duration: 2.6, ease: 'power1.in' }, 0)
-        // a red shadow eats it from the side: a blood moon
-        .to(eclipse, { translate: '-8% 0', duration: 1.6, ease: 'power2.inOut' }, 0.5)
-        .call(slip, [], 0.42)
-        .call(slip, [], 1.32)
-        .call(slip, [], 1.88);
-
-      if (burst) {
-        // Fetch the frames now and pre-tone each one into its own bitmap during the moon beat,
-        // so a flash is a single cheap drawImage. Frames that aren't ready in time are skipped.
-        const canFilter = !!g && 'filter' in g;
-        if (canFilter) canvas!.style.filter = 'none';
-        let loaded = 0;
-        const imgs = urls.map((url) => {
-          const img = new Image();
-          img.decoding = 'async';
-          img.src = url;
-          const toned = document.createElement('canvas');
-          toned.width = canvas?.width ?? 420;
-          toned.height = canvas?.height ?? 525;
-          img
-            .decode()
-            .then(() => {
-              const t = toned.getContext('2d');
-              if (t) {
-                // luminance-matched: every frame toned to the same dark sepia
-                if (canFilter) t.filter = 'sepia(1) brightness(0.55) contrast(1.1)';
-                t.drawImage(img, 0, 0, toned.width, toned.height);
-                toned.dataset.ready = '1';
-              }
-              loaded++;
-              if (progress) progress.textContent = `${Math.round((loaded / urls.length) * 100)}%`;
-            })
-            .catch(() => undefined);
-          return toned;
-        });
-        // Each photo stays up for exactly 3 rendered frames, however janky the device is.
-        const flash = (img: HTMLCanvasElement) => {
-          if (!g || !canvas || !img.dataset.ready) return;
-          g.drawImage(img, 0, 0);
-          const jx = (Math.random() - 0.5) * 24;
-          gsap.set(canvas, { visibility: 'visible', x: jx, skewX: (Math.random() - 0.5) * 6, rotate: (Math.random() - 0.5) * 5 });
-          gsap.set(moon, { opacity: 0.35 });
-          let n = 0;
-          const step = () => {
-            n++;
-            if (n === 2) gsap.set(canvas, { x: -jx * 0.4, skewX: 0 });
-            if (n < 3) requestAnimationFrame(step);
-            else {
-              gsap.set(canvas, { visibility: 'hidden' });
-              gsap.to(moon, { opacity: 1, duration: 0.12 });
-            }
-          };
-          requestAnimationFrame(step);
-        };
-        tl.call(staticBurst, [0.28], 0.55);
-        imgs.forEach((img, i) => {
-          tl!.call(flash, [img], 0.85 + i * 0.24);
-          if (i % 2 === 1) tl!.call(staticBurst, [0.07], 0.85 + i * 0.24 + 0.12);
-        });
-        tl.call(staticBurst, [0.2], 1.95);
-      }
-      // The moon goes out.
-      tl.to([moon, target.querySelector('.intro__glow')], { opacity: 0, scale: 1.3, duration: 0.35, ease: 'power2.in' }, burst ? 2.05 : 1.1);
+      const ink = [...target.querySelectorAll<SVGGeometryElement>('.intro__ink > *, .intro__leaves > *')];
+      // each line starts undrawn: its dash is as long as the line, offset by all of it
+      ink.forEach((p) => {
+        const len = p.getTotalLength();
+        gsap.set(p, { strokeDasharray: len, strokeDashoffset: len });
+      });
+      const frame = ink.filter((p) => p.closest('.intro__ink'));
+      const leaves = ink.filter((p) => p.closest('.intro__leaves'));
+      const speed = full ? 1 : 0.6; // arrived late: the same drawing, quicker
+      tl = gsap.timeline({ onComplete: finish, defaults: { ease: 'power2.inOut' } });
+      tl.to(frame, { strokeDashoffset: 0, duration: 1.1 * speed, stagger: 0.06 * speed }, 0)
+        .fromTo(target.querySelector('.intro__dusk'), { opacity: 0 }, { opacity: 1, duration: 0.9 * speed, ease: 'power1.out' }, 0.35 * speed)
+        .fromTo(target.querySelector('.intro__moon'), { y: 230, opacity: 0.4 }, { y: 0, opacity: 1, duration: 1.3 * speed, ease: 'power2.out' }, 0.5 * speed)
+        .to(leaves, { strokeDashoffset: 0, duration: 0.8 * speed, stagger: 0.07 * speed }, 1.0 * speed)
+        // a breath at the finished drawing before the page opens
+        .to({}, { duration: 0.35 * speed });
     },
     unmount() {
       tl?.kill();
       if (onKey) document.removeEventListener('keydown', onKey);
     },
     reducedMotion(target) {
-      // No flashes, no static, no motion: the still moon for a moment, then a plain fade.
+      // No motion: the finished drawing for a moment, then a plain fade.
       if (!start(target, false) && !document.documentElement.classList.contains('intro-pending')) return;
       window.setTimeout(finish, 1200);
     },

@@ -52,8 +52,8 @@ const ch = chapters.find((c) => c.id === 'stack')!;
     gap: var(--space-3);
     padding-block: var(--space-4);
     /* the shelf board */
-    border-bottom: 2px solid rgb(232 220 194 / 0.16);
-    box-shadow: 0 10px 18px -16px rgb(0 0 0 / 0.9);
+    border-bottom: 2px solid rgb(108 110 81 / 0.35);
+    box-shadow: 0 10px 18px -16px rgb(57 49 47 / 0.6);
   }
   .shelf__label {
     display: flex;
@@ -70,8 +70,8 @@ const ch = chapters.find((c) => c.id === 'stack')!;
     font-size: var(--step-2);
     line-height: 1;
     color: var(--bone);
-    border: 1px solid rgb(232 220 194 / 0.55);
-    outline: 1px solid rgb(232 220 194 / 0.25);
+    border: 1px solid rgb(108 110 81 / 0.6);
+    outline: 1px solid rgb(108 110 81 / 0.3);
     outline-offset: -5px;
     transition:
       color var(--dur-base) var(--ease-out),
@@ -100,7 +100,7 @@ const ch = chapters.find((c) => c.id === 'stack')!;
   .shelf__items li {
     padding: var(--space-1) var(--space-2);
     border: 1px solid var(--line);
-    background: rgb(232 220 194 / 0.03);
+    background: var(--card);
     color: var(--bone);
     font-size: var(--text-small);
     transition:
@@ -114,7 +114,7 @@ const ch = chapters.find((c) => c.id === 'stack')!;
   }
   .shelf:hover .shelf__items li {
     translate: 0 -4px;
-    border-color: rgb(232 220 194 / 0.4);
+    border-color: rgb(108 110 81 / 0.6);
   }
   @media (min-width: 960px) {
     .shelf {

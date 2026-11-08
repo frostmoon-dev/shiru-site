@@ -67,8 +67,8 @@ p {
   text-wrap: pretty;
 }
 ::selection {
-  background: var(--blood);
-  color: var(--bone);
+  background: var(--sage);
+  color: var(--cocoa);
 }
 
 /* ---------- Tone surfaces ---------- */
@@ -80,7 +80,7 @@ p {
 [data-tone='bone'],
 [data-tone='sepia'] {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012 .9' numOctaves='3' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .25 0 0 0 0 .12 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E"),
-    radial-gradient(ellipse at 50% 40%, transparent 55%, rgb(92 14 18 / 0.12));
+    radial-gradient(ellipse at 50% 40%, transparent 55%, rgb(108 110 81 / 0.1));
   color-scheme: light;
 }
 
@@ -261,26 +261,19 @@ a:active {
 .atmosphere__grain {
   position: absolute;
   inset: -50%;
-  opacity: 0.075;
-  mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .9 0 0 0 0 .86 0 0 0 0 .76 0 0 0 1.4 -.2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.09;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .42 0 0 0 0 .36 0 0 0 0 .3 0 0 0 1.4 -.2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 .atmosphere__vignette {
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse 120% 90% at 50% 45%, transparent 58%, rgb(5 3 4 / 0.55) 100%);
+  background: radial-gradient(ellipse 120% 90% at 50% 45%, transparent 60%, rgb(124 109 103 / 0.18) 100%);
 }
 @media (max-width: 640px) {
   .atmosphere__grain {
     opacity: 0.05;
   }
-}
-/* the hero is meant to be near-black: the film dust there does the texturing */
-html.at-hero .atmosphere__grain {
-  opacity: 0.025;
-}
-html.at-hero .atmosphere__vignette {
-  opacity: 0.4;
 }
 .atmosphere__grain,
 .atmosphere__vignette {
@@ -332,6 +325,12 @@ html.at-hero .atmosphere__vignette {
   opacity: 0;
   pointer-events: none;
   color: inherit;
+  mix-blend-mode: multiply;
+}
+.ghost-title__echo::before {
+  content: attr(data-text);
+}
+[data-tone='night'] .ghost-title__echo {
   mix-blend-mode: screen;
 }
 [data-tone='bone'] .ghost-title__echo,
@@ -365,17 +364,18 @@ html.at-hero .atmosphere__vignette {
   width: 8px;
   height: 8px;
   margin: -4px 0 0 -4px;
-  background: #f3ead6;
+  background: #d9bd7a;
   box-shadow:
-    0 0 6px 2px rgb(243 234 214 / 0.9),
-    0 0 22px 8px rgb(201 162 74 / 0.35);
+    0 0 6px 2px rgb(217 189 122 / 0.75),
+    0 0 22px 8px rgb(168 138 74 / 0.25);
 }
 .lumos__halo {
   width: 520px;
   height: 520px;
   margin: -260px 0 0 -260px;
-  background: radial-gradient(circle, rgb(243 234 214 / 0.16) 0, rgb(232 220 194 / 0.07) 28%, transparent 62%);
-  mix-blend-mode: screen;
+  /* a lantern carried over the page: warm, faint, multiplied onto the paper */
+  background: radial-gradient(circle, rgb(232 205 140 / 0.3) 0, rgb(232 205 140 / 0.12) 28%, transparent 62%);
+  mix-blend-mode: multiply;
 }
 .lumos__halo.is-flaring {
   animation: lumos-flare 520ms var(--ease-out);
@@ -407,11 +407,16 @@ html.at-hero .atmosphere__vignette {
 :root {
   --container: 75rem; /* 1200px */
   --section-pad: clamp(6rem, 4rem + 7vw, 10rem);
-  --line: rgb(232 220 194 / 0.14);
-  --text-body: #d4c9b1; /* 11.6:1 on void */
+  --line: rgb(57 49 47 / 0.16);
+  --text-body: #4a403b; /* 8.52:1 on parchment */
   --display-1: clamp(3.4rem, 1.2rem + 7.6vw, 8.75rem);
   --display-2: clamp(2.6rem, 1.6rem + 3.4vw, 4.5rem);
   --lead: clamp(1.125rem, 1.02rem + 0.35vw, 1.375rem);
+}
+/* the dusk chapter: hairlines and reading text in parchment */
+[data-tone='night'] {
+  --line: rgb(243 235 226 / 0.2);
+  --text-body: #e7ddd0;
 }
 .container {
   width: min(100% - 2 * var(--gutter), var(--container));
@@ -420,8 +425,8 @@ html.at-hero .atmosphere__vignette {
 .section {
   position: relative;
   padding-block: var(--section-pad);
-  background-color: var(--void);
-  color: var(--bone);
+  background-color: var(--bg, var(--void));
+  color: var(--fg, var(--bone));
 }
 /* each case opens with a hairline across the column */
 .section > .container::before {
@@ -461,13 +466,13 @@ h3,
   letter-spacing: 0.16em;
   text-transform: uppercase;
   line-height: 1.4;
-  color: var(--muted);
+  color: var(--accent-text, var(--muted));
 }
 .lead {
   font-size: var(--lead);
   font-style: italic;
   line-height: 1.55;
-  color: var(--bone);
+  color: var(--fg, var(--bone));
   max-width: 38ch;
 }
 .body-copy {
@@ -521,5 +526,5 @@ h3,
   inset: 0;
   width: 100%;
   height: 100%;
-  mix-blend-mode: screen;
+  mix-blend-mode: multiply;
 }

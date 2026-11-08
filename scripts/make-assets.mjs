@@ -29,26 +29,26 @@ const heroFont = readFileSync('src/assets/fonts/american-horror-story/AmericanHo
 const og = `<!doctype html><html><head>${fonts}<style>
 @font-face{font-family:Hero;src:url(data:font/otf;base64,${heroFont}) format('opentype')}
 html,body{margin:0;width:1200px;height:630px;overflow:hidden}
-body{background:#050304;position:relative;font-family:'Atkinson Hyperlegible Next';font-weight:700;color:#e8dcc2}
-.light{position:absolute;right:-60px;top:-40px;width:720px;height:720px;background:radial-gradient(circle at 55% 40%,rgba(217,210,189,.16),transparent 60%)}
-.kicker{position:absolute;left:96px;top:150px;font-size:20px;letter-spacing:.16em;color:#a8916c}
-.title{position:absolute;left:90px;top:190px;font-family:Hero;font-size:190px;line-height:1;color:#e8dcc2;letter-spacing:.02em;font-feature-settings:'ss04' 1,'liga' 0,'dlig' 0}
-.ghost{color:transparent;-webkit-text-stroke:0;opacity:.18;transform:translate(6px,-3px);color:#e8dcc2}
+body{background:#f3ebe2;position:relative;font-family:'Atkinson Hyperlegible Next';font-weight:700;color:#39312f}
+.light{position:absolute;right:-80px;top:-60px;width:760px;height:760px;background:radial-gradient(circle at 55% 40%,rgba(186,188,156,.55),transparent 62%)}
+.kicker{position:absolute;left:96px;top:150px;font-size:20px;letter-spacing:.16em;color:#585a40}
+.title{position:absolute;left:90px;top:190px;font-family:Hero;font-size:190px;line-height:1;color:#39312f;letter-spacing:.02em;font-feature-settings:'ss04' 1,'liga' 0,'dlig' 0}
+.ghost{-webkit-text-stroke:0;opacity:.14;transform:translate(6px,-3px);color:#6c6e51}
 .tag{position:absolute;left:96px;top:440px;font-size:24px;letter-spacing:.12em}
-.sub{position:absolute;left:96px;top:486px;font-size:18px;letter-spacing:.08em;color:#a8916c}
-.line{position:absolute;left:96px;top:420px;width:60px;height:2px;background:#a3141b}
-.grain{position:absolute;inset:0;background:url("data:image/svg+xml,${encodeURIComponent(grain)}");mix-blend-mode:overlay;opacity:.55}
-.vig{position:absolute;inset:0;background:radial-gradient(ellipse at 40% 50%,transparent 45%,rgba(5,3,4,.85))}
+.sub{position:absolute;left:96px;top:486px;font-size:18px;letter-spacing:.08em;color:#665852}
+.line{position:absolute;left:96px;top:420px;width:60px;height:2px;background:#a88a4a}
+.grain{position:absolute;inset:0;background:url("data:image/svg+xml,${encodeURIComponent(grain)}");mix-blend-mode:multiply;opacity:.04}
+.vig{position:absolute;inset:0;background:radial-gradient(ellipse at 40% 50%,transparent 55%,rgba(124,109,103,.14))}
 </style></head><body><div class="light"></div><div class="kicker">CASE NO. 0 · SUBJECT: UNKNOWN</div>
 <div class="title ghost">Teha</div><div class="title">Teha</div><div class="line"></div>
 <div class="tag">BUILDS LEDGERS BY DAY. TRANSLATES GHOSTS BY NIGHT.</div><div class="sub">ERP DEVELOPER · ENGLISH–MALAY TRANSLATOR · KEEPER OF A LORE ARCHIVE</div>
 <div class="grain"></div><div class="vig"></div></body></html>`;
 
-// Icons: Teha's black velvet bow. Small sizes sit on transparency with a pale bone rim so the
-// dark ribbon still reads on dark and light browser tabs; large sizes sit in a pool of moonlight.
+// Icons: Teha's black velvet bow. Small sizes sit on transparency with a parchment rim so the
+// dark ribbon still reads on dark and light browser tabs; large sizes sit on a parchment plate.
 const bow = readFileSync('src/assets/design/bow.png').toString('base64');
-const iconHtml = (size, solid) => `<!doctype html><html><body style="margin:0;width:${size}px;height:${size}px;background:${solid ? 'radial-gradient(circle at 50% 45%,#2a2730,#050304 70%)' : 'transparent'};display:grid;place-items:center">
-<img src="data:image/png;base64,${bow}" style="width:${solid ? 74 : 94}%;height:auto;filter:${solid ? 'brightness(1.5) drop-shadow(0 0 ' + size / 40 + 'px rgb(232 220 194 / .45))' : 'brightness(1.6) drop-shadow(0 0 .6px #e8dcc2) drop-shadow(0 0 .6px #e8dcc2)'}"></body></html>`;
+const iconHtml = (size, solid) => `<!doctype html><html><body style="margin:0;width:${size}px;height:${size}px;background:${solid ? 'radial-gradient(circle at 50% 45%,#faf5ee,#e1cfbd 75%)' : 'transparent'};display:grid;place-items:center">
+<img src="data:image/png;base64,${bow}" style="width:${solid ? 74 : 94}%;height:auto;filter:${solid ? 'sepia(.25) drop-shadow(0 ' + size / 60 + 'px ' + size / 30 + 'px rgb(57 49 47 / .3))' : 'brightness(1.4) drop-shadow(0 0 .6px #f3ebe2) drop-shadow(0 0 .6px #f3ebe2)'}"></body></html>`;
 
 mkdirSync('src/assets/placeholder', { recursive: true });
 const browser = await chromium.launch();

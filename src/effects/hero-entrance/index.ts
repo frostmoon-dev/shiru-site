@@ -3,9 +3,9 @@ import { gsap } from '../../lib/motion';
 
 /**
  * The hero arrives after the intro: the name sharpens out of a blur, the newspaper slides in
- * from its corner, the hand rises from below, the tagline surfaces,
- * and the eye (the menu) opens with "Navigate.". The lines type themselves
- * (typewriter effect) and "keeps me awake" glitches (CSS) on their own.
+ * from its corner, the roses rise from below, the tagline surfaces,
+ * and the quail (the menu) hops in with "Navigate.". The lines type themselves
+ * (typewriter effect) and "keeps me awake" is underlined in ink (CSS) on their own.
  *
  * Elements marked [data-enter] are hidden by CSS until this runs (with an 8 s CSS fail-safe).
  * The name is never hidden, only blurred, so it still counts as painted for LCP.
@@ -47,7 +47,7 @@ const heroEntrance: EffectFactory = () => {
           .fromTo(el.querySelector('.hero__cta'), { ...wipe }, { ...wiped, duration: 0.8, ease: 'power2.inOut' }, 1.9);
         const menu = q('.dock__btn');
         if (menu && document.documentElement.classList.contains('at-hero'))
-          tl.from(menu.querySelector('.dock__eye'), { scaleY: 0.05, opacity: 0, duration: 0.7, ease: 'power3.out', clearProps: 'transform,opacity' }, 1.6).fromTo(
+          tl.from(menu.querySelector('.dock__eye'), { y: 14, opacity: 0, duration: 0.6, ease: 'back.out(2.2)', clearProps: 'transform,opacity' }, 1.6).fromTo(
             menu.querySelector('.dock__label'),
             { ...wipe },
             { ...wiped, duration: 0.6, ease: 'power2.inOut' },

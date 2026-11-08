@@ -2,7 +2,7 @@
 import { ahs } from '../lib/ahs';
 import { Image } from 'astro:assets';
 import { hero, homeChapters, ui, work, workChapters } from '../content/site';
-import { collage } from '../content/photos';
+import { cutouts } from '../content/photos';
 import { workPath } from '../lib/mode';
 import Icon from './Icon.astro';
 
@@ -50,8 +50,8 @@ const brand = isWork ? { label: work.heading, href: workPath, aria: `${work.name
 </header>
 
 <!--
-  The eye is the navigation: same place on every page (bottom right). It watches the cursor,
-  blinks now and then, and opens the chapter list right above it. Its label says where you are.
+  The quail is the navigation: same place on every page (bottom right). It hops now and then,
+  turns to face the pointer, and opens the chapter list right above it. Its label says where you are.
 -->
 <div class="dock" data-dock>
   <nav class="dock__panel" id="dock-menu" aria-label={ui.menuTitle} hidden data-dock-panel>
@@ -88,7 +88,7 @@ const brand = isWork ? { label: work.heading, href: workPath, aria: `${work.name
     <span class="dock__label" data-dock-label data-resting={home ? hero.navigate : 'Navigate.'}>{home ? hero.navigate : 'Navigate.'}</span>
     <span class="visually-hidden"> {ui.menuOpen}</span>
     <span class="dock__eye" data-eye>
-      <Image class="dock__eyeball" src={collage.eye} alt="" widths={[96, 192]} sizes="96px" loading="eager" decoding="async" />
+      <Image class="dock__eyeball" src={cutouts.quail} alt="" widths={[96, 192]} sizes="96px" loading="eager" decoding="async" />
       <span class="dock__lid dock__lid--top" aria-hidden="true"></span>
       <span class="dock__lid dock__lid--bottom" aria-hidden="true"></span>
     </span>
@@ -107,7 +107,7 @@ const brand = isWork ? { label: work.heading, href: workPath, aria: `${work.name
     padding: var(--space-2) var(--gutter);
     pointer-events: none;
     color: var(--bone);
-    background: linear-gradient(to bottom, rgb(5 3 4 / 0.92), rgb(5 3 4 / 0));
+    background: linear-gradient(to bottom, rgb(243 235 226 / 0.94), rgb(243 235 226 / 0));
     transition: background var(--dur-base);
   }
   :global(html.at-hero) .site-nav {
@@ -164,7 +164,7 @@ const brand = isWork ? { label: work.heading, href: workPath, aria: `${work.name
     text-transform: uppercase;
     color: var(--bone);
     text-decoration: none;
-    background: rgb(5 3 4 / 0.6);
+    background: rgb(243 235 226 / 0.7);
   }
   .chapter-index__work:hover,
   .chapter-index__work:focus-visible {
@@ -179,24 +179,24 @@ const brand = isWork ? { label: work.heading, href: workPath, aria: `${work.name
       display: none;
     }
   }
-  /* over the light Wonderland chapter the bar turns to paper and ink */
-  :global(html.nav-light) .site-nav {
-    --focus: #a3141b;
-    background: linear-gradient(to bottom, rgb(239 230 210 / 0.95), rgb(239 230 210 / 0));
-    color: #1b1214;
+  /* over the one dark chapter (the glasshouse at dusk) the bar turns to dusk and parchment */
+  :global(html.nav-dark) .site-nav {
+    --focus: var(--parchment);
+    background: linear-gradient(to bottom, rgb(42 42 31 / 0.94), rgb(42 42 31 / 0));
+    color: var(--parchment);
   }
-  :global(html.nav-light) .chapter-index__home,
-  :global(html.nav-light) .chapter-index__link,
-  :global(html.nav-light) .sound-toggle {
-    color: #1b1214;
+  :global(html.nav-dark) .chapter-index__home,
+  :global(html.nav-dark) .chapter-index__link,
+  :global(html.nav-dark) .sound-toggle {
+    color: var(--parchment);
   }
-  :global(html.nav-light) .chapter-index__now {
-    color: #5a463b;
+  :global(html.nav-dark) .chapter-index__now {
+    color: #d8cdbd;
   }
-  :global(html.nav-light) .chapter-index__work {
-    color: #1b1214;
-    background: rgb(239 230 210 / 0.7);
-    border-color: rgb(27 18 20 / 0.35);
+  :global(html.nav-dark) .chapter-index__work {
+    color: var(--parchment);
+    background: rgb(42 42 31 / 0.6);
+    border-color: rgb(243 235 226 / 0.35);
   }
   .chapter-index__now {
     font-weight: 700;
@@ -217,9 +217,9 @@ const brand = isWork ? { label: work.heading, href: workPath, aria: `${work.name
       visibility: hidden;
     }
   }
-  /* on the hero it sits over the newspaper, so it gets a dark disc to stay readable */
+  /* on the hero it sits over the newspaper, so it gets a paper disc to stay readable */
   :global(html.at-hero) .sound-toggle {
-    background: rgb(5 3 4 / 0.85);
+    background: rgb(243 235 226 / 0.9);
     border: 1px solid var(--line);
     border-radius: 50%;
   }
@@ -285,7 +285,7 @@ const brand = isWork ? { label: work.heading, href: workPath, aria: `${work.name
     right: calc(100% + var(--space-1));
     bottom: 40%;
     padding: var(--space-1) var(--space-2);
-    background: rgb(5 3 4 / 0.95);
+    background: rgb(250 245 238 / 0.96);
     border: 1px solid var(--line);
   }
   .dock__label::after {
@@ -310,67 +310,47 @@ const brand = isWork ? { label: work.heading, href: workPath, aria: `${work.name
   .dock__btn[aria-expanded='true'] .dock__label::after {
     transform: scaleX(1);
   }
-  /* the socket: a round window the eyeball shifts inside; two lids close over it to blink */
+  /* the quail: it hops now and then, turns to face the pointer, and perks up when you reach for it */
   .dock__eye {
     position: relative;
     display: block;
     width: var(--dock-w);
-    aspect-ratio: 1;
-    border-radius: 50%;
-    overflow: hidden;
-    background: #0b0909;
-    box-shadow:
-      0 0 0 1px var(--line),
-      0 0 24px rgb(232 220 194 / 0.08);
+    transform-origin: 50% 100%;
+    scale: var(--face, 1) 1;
     transition:
       scale var(--dur-base) var(--ease-out),
-      box-shadow var(--dur-base) var(--ease-out);
+      translate var(--dur-base) var(--ease-out);
   }
   .dock__eye :global(.dock__eyeball) {
-    position: absolute;
-    left: -9%;
-    top: -9%;
-    width: 118%;
-    height: 118%;
-    max-width: none;
-    object-fit: cover;
-    translate: var(--look-x, 0px) var(--look-y, 0px);
-    transition: translate 0.25s var(--ease-out);
+    display: block;
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(0 6px 8px rgb(57 49 47 / 0.25));
   }
-  .dock__lid {
-    position: absolute;
-    left: 0;
-    right: 0;
-    height: 51%;
-    background: var(--void);
-    scale: 1 0;
-    transition: scale 0.09s ease-in;
+  .dock__eye.is-blinking {
+    animation: quail-hop 0.42s var(--ease-out);
   }
-  .dock__lid--top {
-    top: 0;
-    transform-origin: 50% 0;
-  }
-  .dock__lid--bottom {
-    bottom: 0;
-    transform-origin: 50% 100%;
-  }
-  .dock__eye.is-blinking .dock__lid {
-    scale: 1 1;
+  @keyframes quail-hop {
+    40% {
+      translate: 0 -10px;
+      rotate: -6deg;
+    }
   }
   .dock__btn:hover .dock__eye,
   .dock__btn:focus-visible .dock__eye,
   .dock__btn[aria-expanded='true'] .dock__eye {
-    scale: 1.06;
-    box-shadow:
-      0 0 0 1px var(--bone),
-      0 0 30px rgb(232 220 194 / 0.16);
+    translate: 0 -4px;
+  }
+  .dock__lid {
+    display: none;
   }
 
   .dock__panel {
     min-width: 18rem;
     padding: var(--space-3);
-    background: rgb(5 3 4 / 0.96);
+    background: rgb(250 245 238 / 0.97);
     border: 1px solid var(--line);
+    box-shadow: 0 18px 40px rgb(57 49 47 / 0.18);
   }
   .dock__panel[hidden] {
     display: none;
@@ -564,10 +544,10 @@ const brand = isWork ? { label: work.heading, href: workPath, aria: `${work.name
 
   function blink(eye: HTMLElement) {
     eye.classList.add('is-blinking');
-    window.setTimeout(() => eye.classList.remove('is-blinking'), 140);
+    window.setTimeout(() => eye.classList.remove('is-blinking'), 440);
   }
 
-  // The eye follows the cursor a little and blinks at uneven intervals. Mouse only; still under reduced motion.
+  // The quail hops at uneven intervals and turns to face the pointer (mouse only). Still under reduced motion.
   let eyeTimer = 0;
   let eyeTracking = false;
   function setupEye() {
@@ -596,12 +576,8 @@ const brand = isWork ? { label: work.heading, href: workPath, aria: `${work.name
           const eye = document.querySelector<HTMLElement>('[data-eye]');
           if (!eye) return;
           const r = eye.getBoundingClientRect();
-          const dx = e.clientX - (r.left + r.width / 2);
-          const dy = e.clientY - (r.top + r.height / 2);
-          const d = Math.hypot(dx, dy) || 1;
-          const reach = Math.min(1, d / 400) * r.width * 0.08;
-          eye.style.setProperty('--look-x', `${((dx / d) * reach).toFixed(1)}px`);
-          eye.style.setProperty('--look-y', `${((dy / d) * reach).toFixed(1)}px`);
+          // the bird faces right in the picture; it turns round when the pointer is to its left
+          eye.style.setProperty('--face', e.clientX < r.left ? '-1' : '1');
         });
       },
       { passive: true },

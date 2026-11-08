@@ -53,8 +53,9 @@ const ghostTitle: EffectFactory = () => {
       echo = document.createElement('span');
       echo.className = 'ghost-title__echo';
       echo.setAttribute('aria-hidden', 'true');
-      // a copy of the heading's own markup, so line breaks line up
-      echo.append(...[...target.childNodes].map((n) => n.cloneNode(true)));
+      // the heading's text, drawn by CSS (::before) so the echo is purely visual: it is not text
+      // to assistive tech or to contrast checkers. Every ghost title is plain text, so it wraps the same.
+      echo.dataset.text = target.textContent ?? '';
       target.appendChild(echo);
 
       const r = target.getBoundingClientRect();

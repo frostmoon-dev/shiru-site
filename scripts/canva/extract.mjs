@@ -16,7 +16,8 @@ const SLIDES = [
   // the personal page
   { name: '01-hero', path: '/', section: '#top', nav: true },
   { name: '02-down-the-rabbit-hole', path: '/', section: '#rabbit-hole' },
-  { name: '03-a-deck-of-curiosities', path: '/', section: '#curiosities' },
+  { name: '03-small-living-things', path: '/', section: '#curiosities' },
+  { name: '03b-written-in-the-stars', path: '/', section: '#stars' },
   { name: '04-tea-at-midnight', path: '/', section: '#tea' },
   // the seal breaks, the envelope drops away and only the paper is left
   { name: '05-tea-letter-open', path: '/', section: '#tea', open: '[data-seal]' },

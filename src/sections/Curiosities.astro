@@ -1,5 +1,5 @@
 ---
-import { Image, getImage } from 'astro:assets';
+import { Image } from 'astro:assets';
 import { chapters, curiosities, ui, type Curiosity } from '../content/site';
 import { cutouts } from '../content/photos';
 import SectionHead from '../components/SectionHead.astro';
@@ -19,47 +19,36 @@ const GLYPHS: Record<string, string> = {
   music: 'M24 47V16l23-7v31 M24 23l23-7 M19 42a5 5 0 1 0 0 10 5 5 0 1 0 0-10z M42 35a5 5 0 1 0 0 10 5 5 0 1 0 0-10z',
   rose: 'M32 30c-6 0-10-4-10-9s5-9 10-9 10 4 10 9-4 9-10 9z M27 21c3-4 7-4 10 0 M32 30v26 M32 43c-6-3-11-1-13 4 M32 48c5-4 10-3 12 1',
 };
-const back = await getImage({ src: cutouts.cardBack, width: 800, format: 'webp', quality: 80 });
 ---
 
 <!--
-  Wonderland: the one light chapter. A checkered floor runs off into the distance, white roses
-  get painted red as you scroll, a small bird hops across now and then, and the hobbies are a
-  deck of playing cards the Queen deals out when you arrive.
+  The herbarium: the hobbies are specimen cards, each one mounted with two strips of tape and a
+  numbered label, laid out on graph paper with roses in the corners. Turn one over to read it.
 -->
-<section id={ch.id} class="section deck wonder" data-tone="paper" aria-labelledby="curiosities-title">
-  <div class="wonder__scene" aria-hidden="true">
-    <div class="wonder__floor"></div>
-    <div class="wonder__roses wonder__roses--left" data-effect="paint-red">
-      <Image class="wonder__rose" src={cutouts.roses} alt="" widths={[320, 640]} sizes="22vw" loading="lazy" decoding="async" />
-      <Image class="wonder__rose wonder__rose--red" src={cutouts.roses} alt="" widths={[320, 640]} sizes="22vw" loading="lazy" decoding="async" />
-    </div>
-    <div class="wonder__roses wonder__roses--right" data-effect="paint-red">
-      <Image class="wonder__rose" src={cutouts.roses} alt="" widths={[320, 640]} sizes="22vw" loading="lazy" decoding="async" />
-      <Image class="wonder__rose wonder__rose--red" src={cutouts.roses} alt="" widths={[320, 640]} sizes="22vw" loading="lazy" decoding="async" />
-    </div>
-    <span class="wonder__bird"><Image src={cutouts.quail} alt="" width={160} loading="lazy" decoding="async" /></span>
+<section id={ch.id} class="section deck herbarium" data-tone="void" aria-labelledby="curiosities-title">
+  <div class="herbarium__scene" aria-hidden="true">
+    <Image class="herbarium__roses herbarium__roses--left" src={cutouts.roses} alt="" widths={[320, 640]} sizes="22vw" loading="lazy" decoding="async" />
+    <Image class="herbarium__roses herbarium__roses--right" src={cutouts.roses} alt="" widths={[320, 640]} sizes="22vw" loading="lazy" decoding="async" />
   </div>
   <div class="container">
     <SectionHead id="curiosities-title" kicker={ui.caseNo(ch.numeral, ch.label)} title={curiosities.title} lead={curiosities.lead} />
 
-    <ul class="deck__cards" data-effect="deal" style={`--card-back:url(${back.src})`}>
+    <ul class="deck__cards" data-effect="deal">
       {
         (curiosities.cards as Curiosity[]).map((c) => (
           <li class="tarot" data-tarot>
             <div class="tarot__inner">
               {/* the face: numeral, a drawing, the name. The whole face is the button that turns it. */}
-              <div class:list={['tarot__face tarot__front', (c.suit === '♥' || c.suit === '♦') && 'is-red']} data-front>
-                <span class="tarot__index tarot__index--top" aria-hidden="true">
-                  <span>{c.numeral}</span>
-                  <span>{c.suit}</span>
-                </span>
-                <span class="tarot__index tarot__index--bottom" aria-hidden="true">
-                  <span>{c.numeral}</span>
-                  <span>{c.suit}</span>
+              <div class="tarot__face tarot__front" data-front>
+                <span class="tarot__label" aria-hidden="true">
+                  Specimen <span class="tarot__no">No. {c.numeral}</span>
                 </span>
                 {c.image ? (
-                  <Image class="tarot__art" src={cutouts[c.image]} alt="" widths={[240, 480]} sizes="(max-width: 599px) 50vw, 16rem" loading="lazy" decoding="async" />
+                  <span class="tarot__mount">
+                    <Image class="tarot__art" src={cutouts[c.image]} alt="" widths={[240, 480]} sizes="(max-width: 599px) 50vw, 16rem" loading="lazy" decoding="async" />
+                    <span class="tarot__tape tarot__tape--a" aria-hidden="true" />
+                    <span class="tarot__tape tarot__tape--b" aria-hidden="true" />
+                  </span>
                 ) : (
                   <svg class="tarot__glyph" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
                     <path d={GLYPHS[c.glyph]} />
@@ -75,7 +64,7 @@ const back = await getImage({ src: cutouts.cardBack, width: 800, format: 'webp',
               {/* the back: what it's about */}
               <div class="tarot__face tarot__back" id={`card-${c.id}`} data-back>
                 <p class="tarot__back-title" aria-hidden="true">
-                  {c.numeral} {c.suit} · {c.title}
+                  No. {c.numeral} · {c.title}
                 </p>
                 <p class="tarot__body">{c.body}</p>
                 {c.items && (
@@ -113,119 +102,52 @@ const back = await getImage({ src: cutouts.cardBack, width: 800, format: 'webp',
 </section>
 
 <style>
-  /* ================= Wonderland ================= */
-  .wonder {
-    /* focus rings in red ink on the light paper */
-    --focus: #a3141b;
-    --ink: #1b1214;
-    --card: #fbf7ee;
-    --heart: #a3141b;
+  /* ================= the herbarium ================= */
+  .herbarium {
     isolation: isolate;
     overflow: hidden;
-    color: var(--ink);
+    /* faint graph paper, like a botanist's notebook */
     background:
-      radial-gradient(ellipse at 50% 0%, rgb(255 255 255 / 0.65), transparent 60%),
-      linear-gradient(#efe6d2, #e6dac0 70%, #d9cbab);
+      linear-gradient(rgb(108 110 81 / 0.07) 1px, transparent 1px) 0 0 / 28px 28px,
+      linear-gradient(90deg, rgb(108 110 81 / 0.07) 1px, transparent 1px) 0 0 / 28px 28px,
+      linear-gradient(#efe7da, #e9e0cf);
   }
-  .wonder :global(.section-head .kicker) {
-    color: var(--heart);
-  }
-  .wonder :global(.section-head .display-2) {
-    color: var(--ink);
-  }
-  .wonder :global(.section-head .lead) {
-    color: #3b2a22;
-  }
-  .wonder > .container::before {
-    background: rgb(27 18 20 / 0.18);
-  }
-  .wonder > .container {
+  .herbarium > .container {
     position: relative;
     z-index: 2;
   }
-
-  /* the scene behind the cards */
-  .wonder__scene {
+  .herbarium__scene {
     position: absolute;
     inset: 0;
     z-index: 0;
     pointer-events: none;
   }
-  /* a checkered floor running off to the horizon */
-  .wonder__floor {
+  .herbarium :global(.herbarium__roses) {
     position: absolute;
-    left: -30%;
-    right: -30%;
-    bottom: -8%;
-    height: 62%;
-    background: repeating-conic-gradient(#1b1214 0 25%, #f3ead6 0 50%) 0 0 / 96px 96px;
-    transform: perspective(520px) rotateX(64deg);
-    transform-origin: 50% 100%;
-    mask-image: linear-gradient(to top, #000 30%, transparent 92%);
-    opacity: 0.85;
+    top: 3%;
+    width: clamp(150px, 20vw, 320px);
+    height: auto;
+    opacity: 0.9;
+    filter: drop-shadow(0 8px 12px rgb(57 49 47 / 0.15));
+    animation: roses-sway 9s ease-in-out infinite alternate;
   }
-  /* white roses, painted red as you scroll (the red copy is wiped on over the white one) */
-  .wonder__roses {
-    position: absolute;
-    top: 6%;
-    width: clamp(160px, 22vw, 340px);
-    display: grid;
-  }
-  .wonder__roses--left {
+  .herbarium :global(.herbarium__roses--left) {
     left: -3%;
     rotate: -8deg;
   }
-  .wonder__roses--right {
+  .herbarium :global(.herbarium__roses--right) {
     right: -3%;
-    rotate: 172deg;
-    scale: 1 -1;
+    scale: -1 1;
+    rotate: 8deg;
+    animation-delay: -4s;
   }
-  .wonder__roses :global(.wonder__rose) {
-    grid-area: 1 / 1;
-    width: 100%;
-    height: auto;
-  }
-  .wonder__roses :global(.wonder__rose--red) {
-    filter: sepia(1) saturate(7) hue-rotate(-38deg) brightness(0.62) contrast(1.2);
-    clip-path: inset(0 100% 0 0);
-  }
-  :global(html:not(.js)) .wonder__roses :global(.wonder__rose--red) {
-    clip-path: none;
-  }
-  /* a small bird crosses the floor now and then */
-  .wonder__bird {
-    position: absolute;
-    bottom: 6%;
-    left: 0;
-    width: clamp(56px, 6vw, 90px);
-    translate: -140px 0;
-  }
-  .wonder__bird :global(img) {
-    width: 100%;
-    height: auto;
-  }
-  .wonder.is-live .wonder__bird {
-    animation: bird-cross 16s linear infinite 3s;
-  }
-  .wonder.is-live .wonder__bird :global(img) {
-    animation: bird-hop 0.5s steps(2, end) infinite;
-  }
-  @keyframes bird-cross {
-    0% {
-      translate: -140px 0;
-    }
-    45%,
-    100% {
-      translate: calc(100vw + 140px) 0;
-    }
-  }
-  @keyframes bird-hop {
-    50% {
-      translate: 0 -6px;
+  @keyframes roses-sway {
+    to {
+      translate: 0 6px;
     }
   }
 
-  /* ================= the deck ================= */
+  /* ================= the cards ================= */
   .deck__cards {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -241,7 +163,7 @@ const back = await getImage({ src: cutouts.cardBack, width: 800, format: 'webp',
     /* the card's own width, so the words on its back can size themselves to it */
     container-type: inline-size;
   }
-  /* every card is exactly 5:7, whatever is drawn on it: the faces are laid over the card, not in it */
+  /* every card is exactly 5:7, whatever is mounted on it: the faces are laid over the card */
   .tarot__inner {
     position: relative;
     display: block;
@@ -262,65 +184,75 @@ const back = await getImage({ src: cutouts.cardBack, width: 800, format: 'webp',
     display: flex;
     flex-direction: column;
     backface-visibility: hidden;
-    border-radius: 14px;
+    border-radius: 4px;
     box-shadow:
-      0 1px 0 rgb(255 255 255 / 0.7) inset,
-      0 18px 30px rgb(43 26 18 / 0.28);
+      0 1px 0 rgb(255 255 255 / 0.8) inset,
+      0 16px 28px rgb(57 49 47 / 0.16);
   }
 
-  /* the face: a playing card */
+  /* the face: a mounted specimen on card stock, inside an olive double rule */
   .tarot__front {
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     gap: var(--space-2);
-    padding: var(--space-5) var(--space-4);
+    padding: 12% 10% 11%;
     text-align: center;
-    color: var(--ink);
-    background: radial-gradient(ellipse at 50% 40%, #fffdf7, var(--card) 70%);
-    border: 1px solid rgb(27 18 20 / 0.35);
-    outline: 1px solid rgb(27 18 20 / 0.18);
+    color: var(--cocoa);
+    background: var(--card);
+    border: 1px solid rgb(108 110 81 / 0.55);
+    outline: 1px solid rgb(108 110 81 / 0.3);
     outline-offset: -8px;
     transition: border-color var(--dur-base) var(--ease-out);
   }
-  .tarot__front.is-red {
-    --suit: var(--heart);
+  .tarot__label {
+    font-weight: 700;
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
   }
-  .tarot__index {
-    position: absolute;
+  .tarot__no {
+    color: var(--olive-dk);
+  }
+  /* the specimen, held on by two strips of sage tape */
+  .tarot__mount {
+    position: relative;
     display: grid;
-    justify-items: center;
-    line-height: 1;
-    font-family: var(--font-display);
-    font-feature-settings: 'ss04' 1, 'liga' 0, 'dlig' 0;
-    font-size: var(--step-1);
-    color: var(--suit, var(--ink));
-  }
-  .tarot__index span:last-child {
-    font-family: Georgia, 'Times New Roman', serif;
-    font-size: 0.95em;
-  }
-  /* the corner marks sit inside the inner border line (which is 8px in) */
-  .tarot__index--top {
-    top: 18px;
-    left: 18px;
-  }
-  .tarot__index--bottom {
-    right: 18px;
-    bottom: 18px;
-    rotate: 180deg;
+    place-items: center;
+    width: 70%;
+    flex: 1;
+    min-height: 0;
   }
   .tarot__front :global(.tarot__art) {
     width: auto;
-    max-width: 64%;
+    max-width: 100%;
     height: auto;
-    max-height: 48%;
+    max-height: 100%;
     object-fit: contain;
-    filter: drop-shadow(0 6px 8px rgb(43 26 18 / 0.25));
+    filter: drop-shadow(0 4px 6px rgb(57 49 47 / 0.22));
+  }
+  .tarot__tape {
+    position: absolute;
+    width: 34%;
+    height: 11%;
+    background: rgb(186 188 156 / 0.62);
+    box-shadow: 0 1px 1px rgb(57 49 47 / 0.08);
+    mix-blend-mode: multiply;
+  }
+  .tarot__tape--a {
+    top: 6%;
+    left: -2%;
+    rotate: -24deg;
+  }
+  .tarot__tape--b {
+    bottom: 6%;
+    right: -2%;
+    rotate: -24deg;
   }
   .tarot__glyph {
     width: 44%;
     fill: none;
-    stroke: var(--suit, var(--ink));
+    stroke: var(--olive);
     stroke-width: 1.5;
     stroke-linecap: round;
     stroke-linejoin: round;
@@ -328,7 +260,7 @@ const back = await getImage({ src: cutouts.cardBack, width: 800, format: 'webp',
   .tarot__title {
     font-size: var(--step-2);
     line-height: 1.05;
-    color: var(--ink);
+    color: var(--cocoa);
     text-wrap: balance;
   }
   /* the whole face turns the card */
@@ -337,40 +269,59 @@ const back = await getImage({ src: cutouts.cardBack, width: 800, format: 'webp',
     inset: 0;
     width: 100%;
     border: 0;
-    border-radius: 14px;
+    border-radius: 4px;
     background: transparent;
     cursor: pointer;
   }
   .tarot__turn:focus-visible {
-    outline: 2px solid var(--heart);
+    outline: 2px solid var(--olive-dk);
     outline-offset: 4px;
     box-shadow: none;
   }
   .tarot:not(.is-turned):hover .tarot__front {
-    border-color: var(--heart);
+    border-color: var(--olive);
   }
 
-  /* the back: Teha's black card with the gold frame, the words set inside the frame */
+  /* the back: sage card with a thin gold double frame, the words in cocoa ink */
   .tarot__back {
     transform: rotateY(180deg);
     gap: 0.6em;
-    /* the frame's corner stars reach about 18% in; the words stay inside them */
-    padding: 21% 15% 19%;
+    padding: 16% 13% 14%;
     overflow: hidden;
-    color: #efe6d3;
+    color: var(--cocoa);
+    background: var(--sage);
+    border: 1px solid var(--gold);
+    outline: 1px solid rgb(168 138 74 / 0.7);
+    outline-offset: -9px;
     font-size: clamp(0.78rem, 4.6cqi, 1rem);
-    background: #161414 var(--card-back) center / 100% 100% no-repeat;
-    border: 0;
+  }
+  /* a little gold flourish in each corner */
+  .tarot__back::before,
+  .tarot__back::after {
+    content: '❦';
+    position: absolute;
+    font-size: 0.9em;
+    line-height: 1;
+    color: var(--gold-dk);
+  }
+  .tarot__back::before {
+    top: 16px;
+    left: 16px;
+  }
+  .tarot__back::after {
+    right: 16px;
+    bottom: 16px;
+    rotate: 180deg;
   }
   .tarot__back-title {
     font-weight: 700;
     font-size: 0.72em;
     letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: #d9b46a;
+    color: #3f4130;
   }
   .tarot__body {
-    color: #efe6d3;
+    color: var(--cocoa);
     line-height: 1.55;
   }
   .tarot__items {
@@ -383,24 +334,23 @@ const back = await getImage({ src: cutouts.cardBack, width: 800, format: 'webp',
   }
   .tarot__items li {
     padding: 0.2em 0.5em;
-    border: 1px solid rgb(217 180 106 / 0.5);
+    border: 1px solid rgb(57 49 47 / 0.35);
     font-size: 0.82em;
-    color: #efe6d3;
+    color: var(--cocoa);
   }
   .tarot__links a {
-    color: #e8c98a;
+    color: var(--cocoa);
   }
   .tarot__music {
     align-self: flex-start;
     padding: 0.5em 1em;
     font-size: 0.72em;
-    color: #efe6d3;
-    border-color: #d9b46a;
+    color: var(--cocoa);
+    border-color: var(--cocoa);
   }
   .tarot__music[aria-pressed='true'] {
-    color: var(--card);
-    background: var(--heart);
-    border-color: var(--heart);
+    color: var(--parchment);
+    background: var(--cocoa);
   }
   .tarot__back-btn {
     margin-top: auto;
@@ -413,20 +363,21 @@ const back = await getImage({ src: cutouts.cardBack, width: 800, format: 'webp',
     font-size: 0.72em;
     letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: #d9b46a;
+    color: #3f4130;
     cursor: pointer;
   }
   .tarot__back-btn:hover {
-    color: #efe6d3;
+    color: var(--cocoa);
+    text-decoration: underline;
   }
   .tarot__back-btn:focus-visible {
-    outline: 2px solid #d9b46a;
+    outline: 2px solid var(--cocoa);
   }
 
   /* very small cards (the smallest phones): a little less air, so the longest words still fit */
   @container (max-width: 250px) {
     .tarot__back {
-      padding: 19% 13% 15%;
+      padding: 15% 12% 13%;
       gap: 0.45em;
       font-size: 0.74rem;
     }
@@ -473,21 +424,17 @@ const back = await getImage({ src: cutouts.cardBack, width: 800, format: 'webp',
       flex: 0 0 72vw;
       scroll-snap-align: center;
     }
-    .wonder__roses {
+    .herbarium :global(.herbarium__roses) {
       width: 34vw;
-      top: 2%;
+      top: 1%;
     }
   }
   @media (prefers-reduced-motion: reduce) {
     .tarot__inner {
       transition: none;
     }
-    .wonder.is-live .wonder__bird,
-    .wonder.is-live .wonder__bird :global(img) {
+    .herbarium :global(.herbarium__roses) {
       animation: none;
-    }
-    .wonder__roses :global(.wonder__rose--red) {
-      clip-path: none;
     }
   }
 </style>
@@ -534,29 +481,12 @@ const back = await getImage({ src: cutouts.cardBack, width: 800, format: 'webp',
     new MutationObserver(sync).observe(toggle, { attributes: true, attributeFilter: ['aria-pressed'] });
     sync();
   }
-  // Cards lean toward the pointer (mouse only, not while turned, not under reduced motion);
-  // the bird only crosses while the chapter is on screen.
-  function setupWonder() {
-    const wonder = document.querySelector<HTMLElement>('.wonder');
-    if (!wonder) return;
-    const io = new IntersectionObserver(([e]) => wonder.classList.toggle('is-live', !!e?.isIntersecting));
-    io.observe(wonder);
-    // the top bar turns light while this chapter is under it (a strip at the top of the screen)
-    const under = new IntersectionObserver(([e]) => document.documentElement.classList.toggle('nav-light', !!e?.isIntersecting), {
-      rootMargin: '0px 0px -92% 0px',
-    });
-    under.observe(wonder);
-    document.addEventListener(
-      'astro:before-swap',
-      () => {
-        io.disconnect();
-        under.disconnect();
-        document.documentElement.classList.remove('nav-light');
-      },
-      { once: true },
-    );
+  // Cards lean toward the pointer (mouse only, not while turned, not under reduced motion).
+  function setupTilt() {
+    const deck = document.querySelector<HTMLElement>('.herbarium');
+    if (!deck) return;
     if (!window.matchMedia('(pointer: fine)').matches || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    wonder.querySelectorAll<HTMLElement>('[data-tarot]').forEach((card) => {
+    deck.querySelectorAll<HTMLElement>('[data-tarot]').forEach((card) => {
       const inner = card.querySelector<HTMLElement>('.tarot__inner');
       if (!inner) return;
       card.addEventListener('pointermove', (e) => {
@@ -577,6 +507,6 @@ const back = await getImage({ src: cutouts.cardBack, width: 800, format: 'webp',
   }
   document.addEventListener('astro:page-load', () => {
     setup();
-    setupWonder();
+    setupTilt();
   });
 </script>
