@@ -21,8 +21,8 @@ Canva opens each one as an editable design.
 
 ## Each design has these layers (bottom to top)
 
-1. **Background**: one flattened picture: colours, parchment texture, graph paper, gingham, the glasshouse
-   arches, borders, props drawn in code (clocks, cards).
+1. **Background**: one flattened picture: colours, parchment texture, graph paper, gingham, the dusk sky,
+   borders, props drawn in code (clocks, cards).
 2. **Images**: each photo and cut-out on its own (newspaper, roses, quail, moth, paperclip, keyhole, dragonfly, the résumé preview).
 3. **Text**: every heading, paragraph, label and button label as a real, editable text box.
 

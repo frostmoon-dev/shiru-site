@@ -31,14 +31,11 @@ const cards = (['sun', 'moon', 'rising'] as const)
 {
   hasStars() && ch && (
     <section id={ch.id} class="section stars" data-tone="night" aria-labelledby="stars-title">
-      {/* the glasshouse at dusk: the arched iron framing against the sky, the moon, a slow star wheel, leaves along the glass */}
+      {/* the glasshouse at dusk: the sky, the moon, a slow star wheel, leaves along the glass */}
       <div class="night" aria-hidden="true">
         <div class="night__sky" />
         <Image class="night__moon" src={cutouts.moon} alt="" widths={[240, 480]} sizes="(max-width: 719px) 120px, 16vw" loading="lazy" decoding="async" />
         <Image class="night__chart" src={cutouts.starChart} alt="" widths={[480, 900]} sizes="60vw" loading="lazy" decoding="async" />
-        <svg class="night__frame" viewBox="0 0 1440 600" preserveAspectRatio="xMidYMin slice">
-          <path d="M14 600 V150 Q14 40 120 18 Q226 40 226 150 V600 M120 18 V600 M14 300 H226 M254 600 V150 Q254 40 360 18 Q466 40 466 150 V600 M360 18 V600 M254 300 H466 M494 600 V150 Q494 40 600 18 Q706 40 706 150 V600 M600 18 V600 M494 300 H706 M734 600 V150 Q734 40 840 18 Q946 40 946 150 V600 M840 18 V600 M734 300 H946 M974 600 V150 Q974 40 1080 18 Q1186 40 1186 150 V600 M1080 18 V600 M974 300 H1186 M1214 600 V150 Q1214 40 1320 18 Q1426 40 1426 150 V600 M1320 18 V600 M1214 300 H1426" />
-        </svg>
         <svg class="night__leaves" viewBox="0 0 1440 320" preserveAspectRatio="none">
           <path d="M0 300 C60 230 90 250 120 300 C150 220 200 220 230 300 C260 250 300 200 330 300 C370 240 410 250 440 300 C470 210 520 220 560 300 C600 250 640 230 680 300 C720 220 770 230 800 300 C840 250 880 210 920 300 C960 240 1000 250 1040 300 C1080 220 1120 230 1160 300 C1200 250 1250 220 1290 300 C1330 240 1380 240 1440 300 V320 H0 Z" />
         </svg>
@@ -143,19 +140,6 @@ const cards = (['sun', 'moon', 'rising'] as const)
     to {
       rotate: 360deg;
     }
-  }
-  /* the glasshouse's arched iron framing, silhouetted against the dusk */
-  .night__frame {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-  }
-  .night__frame path {
-    fill: none;
-    stroke: #1f1f17;
-    stroke-width: 5;
-    opacity: 0.55;
   }
   /* leaves pressed against the glass along the bottom */
   .night__leaves {
