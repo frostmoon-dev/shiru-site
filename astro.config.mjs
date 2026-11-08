@@ -36,7 +36,7 @@ export default defineConfig({
   fonts: [
     {
       // Everything else (reading text AND labels): Atkinson Hyperlegible Next (Braille Institute,
-      // 2025, SIL OFL 1.1). Built for legibility; monoline like the AHS lettering, so they sit together.
+      // 2025, SIL OFL 1.1). Built for legibility; plain enough to sit quietly under the storybook headings.
       provider: fontProviders.google(),
       name: 'Atkinson Hyperlegible Next',
       cssVariable: '--font-body',
@@ -46,14 +46,15 @@ export default defineConfig({
       fallbacks: ['Arial', 'sans-serif'],
     },
     {
-      // Display face for every heading: "American Horror Story" by KELGE (2018), supplied by Shiru.
-      // No licence file shipped with it (copyright KELGE): served unmodified. Confirm rights before launch.
+      // Display face for every heading: "Alice in Wonderland" by Marco T.L., supplied by Teha.
+      // Free for NON-COMMERCIAL use only; served unmodified, under its own name, with its read-me
+      // (src/assets/fonts/alice-in-wonderland/Shhhst!.txt, also published at /fonts/Shhhst!.txt).
       provider: fontProviders.local(),
-      name: 'American Horror Story',
+      name: 'Alice in Wonderland',
       cssVariable: '--font-display',
       fallbacks: ['Georgia', 'serif'],
       options: {
-        variants: [{ src: ['./src/assets/fonts/american-horror-story/AmericanHorrorStory-Regular.otf'], weight: 400, style: 'normal' }],
+        variants: [{ src: ['./src/assets/fonts/alice-in-wonderland/Alice_in_Wonderland_3.ttf'], weight: 400, style: 'normal' }],
       },
     },
   ],

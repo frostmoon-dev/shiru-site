@@ -2,7 +2,6 @@ import { Suspense, lazy, useCallback, useEffect, useRef, useState } from 'react'
 import { fit } from './bookLayout';
 import type { Turn } from './GrimoireScene';
 import './grimoire.css';
-import { ahs } from '../lib/ahs';
 
 const GrimoireScene = lazy(() => import('./GrimoireScene'));
 
@@ -243,7 +242,7 @@ export default function GrimoireBook({ entries, labels }: Props) {
                 </p>
                 <h3 id={`gp-${entry.slug}`} className="book__title" ref={i === 0 ? firstPage : undefined} tabIndex={-1}>
                   <span className="visually-hidden">Chapter {entry.numeral}: </span>
-                  {ahs(entry.title)}
+                  {entry.title}
                 </h3>
                 <p className="book__date label">
                   {entry.date ? <time dateTime={entry.date}>{entry.when}</time> : entry.when}

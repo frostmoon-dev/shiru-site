@@ -610,7 +610,7 @@ export const footer = {
   privacy:
     'No cookies, no trackers, no analytics. Your browser remembers only whether you’ve seen the intro this session and which hints you’ve used. Nothing leaves your device unless you send me a letter.',
   copyright: (year: number, name: string) => `© ${year} ${name}. Text and photos all rights reserved.`,
-  fontsCredit: 'Headings in American Horror Story by KELGE. Text in Atkinson Hyperlegible Next by the Braille Institute (SIL OFL).',
+  fontsCredit: 'Headings in Alice in Wonderland by Marco T.L. (free for non-commercial use). Text in Atkinson Hyperlegible Next by the Braille Institute (SIL OFL).',
 };
 
 export const notFound = {

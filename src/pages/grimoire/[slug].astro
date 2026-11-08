@@ -1,5 +1,4 @@
 ---
-import { ahs } from '../../lib/ahs';
 import { workPath } from '../../lib/mode';
 import type { GetStaticPaths } from 'astro';
 import Base from '../../layouts/Base.astro';
@@ -25,7 +24,7 @@ const next = grimoire.entries[i + 1];
     <div class="container">
       <header class="section-head">
         <p class="kicker">Case No. {chapterNo} · Chapter {entry.numeral} · {entry.date ? <time datetime={entry.date}>{entry.when}</time> : entry.when}</p>
-        <h1 id="entry-title" class="display-2" data-effect="ghost-title">{ahs(entry.title)}</h1>
+        <h1 id="entry-title" class="display-2" data-effect="ghost-title">{entry.title}</h1>
         <p class="lead">{entry.excerpt}</p>
       </header>
       <div class="body-copy entry__body">

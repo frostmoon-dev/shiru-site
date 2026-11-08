@@ -31,7 +31,7 @@ Canva opens each one as an editable design.
 Canva can only show the right fonts if they're in your account. Uploading fonts needs Canva Pro,
 Teams or a similar plan (Brand Kit → Fonts → Upload; OTF, TTF or WOFF).
 
-- **American Horror Story** (headings): `src/assets/fonts/american-horror-story/AmericanHorrorStory-Regular.otf`.
+- **Alice in Wonderland** (headings): `src/assets/fonts/alice-in-wonderland/Alice_in_Wonderland_3.ttf` (free for non-commercial use; see the read-me beside it).
   ⚠️ It came with no licence. Check you're allowed to use it before publishing anything made with it.
 - **Atkinson Hyperlegible Next** (everything else): download the family from Google Fonts and upload the
   Regular, Bold and Italic files.

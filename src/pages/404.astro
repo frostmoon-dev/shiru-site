@@ -1,5 +1,4 @@
 ---
-import { ahs } from '../lib/ahs';
 import Base from '../layouts/Base.astro';
 import { Image } from 'astro:assets';
 import { design } from '../content/photos';
@@ -11,7 +10,7 @@ import { notFound } from '../content/site';
     <div class="container lost__grid">
       <header class="section-head">
         <p class="kicker">Case No. ? · Missing</p>
-        <h1 id="lost-title" class="display-2" data-effect="ghost-title">{ahs(notFound.title)}</h1>
+        <h1 id="lost-title" class="display-2" data-effect="ghost-title">{notFound.title}</h1>
         <p class="lead">{notFound.body}</p>
         <p><a class="btn" href="/">{notFound.back}</a></p>
       </header>

@@ -83,7 +83,7 @@ function collect({ sectionSel, nav, darkness, bake }) {
     const [r, g, b, a = '1'] = m[1].split(/[ ,/]+/).filter(Boolean);
     return { hex: [r, g, b].map((v) => Math.round(+v).toString(16).padStart(2, '0')).join(''), alpha: +a };
   };
-  const family = (f) => (/American Horror Story/i.test(f) ? 'American Horror Story' : 'Atkinson Hyperlegible Next');
+  const family = (f) => (/Alice in Wonderland/i.test(f) ? 'Alice in Wonderland' : 'Atkinson Hyperlegible Next');
 
   // images
   const images = [];

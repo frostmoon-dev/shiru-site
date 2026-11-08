@@ -437,8 +437,8 @@ a:active {
   margin-bottom: var(--space-6);
 }
 
-/* American Horror Story face: normal case + ss04 gives round O's; joins off (no "oo" ligature) */
-.ahs,
+/* Alice in Wonderland face: swash capitals, small-cap lowercase. Titles are written in sentence case. */
+.display-face,
 h1,
 h2,
 h3,
@@ -447,7 +447,6 @@ h3,
   font-family: var(--font-display);
   font-weight: 400;
   text-transform: none;
-  font-feature-settings: 'ss04' 1, 'liga' 0, 'dlig' 0;
   font-variant-ligatures: none;
   letter-spacing: 0.015em;
 }

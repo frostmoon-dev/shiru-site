@@ -64,14 +64,12 @@
 }
 .book__numeral {
   font-family: var(--font-display);
-  font-feature-settings: 'ss04' 1, 'liga' 0, 'dlig' 0;
   font-size: var(--step-3);
   line-height: 1;
   color: var(--oxblood);
 }
 .book__title {
   font-family: var(--font-display);
-  font-feature-settings: 'ss04' 1, 'liga' 0, 'dlig' 0;
   font-weight: 400;
   font-size: var(--step-3);
   line-height: 1;

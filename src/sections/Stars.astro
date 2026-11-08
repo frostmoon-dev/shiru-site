@@ -3,7 +3,6 @@ import { Image } from 'astro:assets';
 import { chapters, hasStars, stars, ui } from '../content/site';
 import { cutouts } from '../content/photos';
 import SectionHead from '../components/SectionHead.astro';
-import { ahs } from '../lib/ahs';
 
 // Only built once the signs are filled in (src/content/site.ts → stars).
 const ch = chapters.find((c) => c.id === 'stars');
@@ -58,7 +57,7 @@ const cards = (['sun', 'moon', 'rising'] as const)
                   {c.info.symbol}
                 </span>
               )}
-              <h3 class="star__sign">{ahs(c.sign)}</h3>
+              <h3 class="star__sign">{c.sign}</h3>
               {c.info && (
                 <p class="star__meta">
                   {c.info.element} · {c.info.dates}

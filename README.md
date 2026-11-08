@@ -95,7 +95,7 @@ Two families, nothing else:
 
 | Role | Face | Licence |
 | --- | --- | --- |
-| Every heading (≥ 32px) | American Horror Story (KELGE, 2018), supplied by Shiru | ⚠️ **No licence file shipped with it.** Copyright KELGE; it imitates the show's logo lettering. Confirm usage rights with the author before launch. Served unmodified. |
+| Every heading (≥ 32px) | Alice in Wonderland (Marco T.L.), supplied by Teha | ⚠️ **Free for non-commercial use only** (its read-me: no commercial use, don't rename it, don't distribute edited versions, keep the read-me with it). A personal portfolio should be fine, but if the site is ever used to sell something, buy a licence or swap the face. Served unmodified; the read-me ships beside it and at `/fonts/Shhhst!.txt`. |
 | Everything else: reading text, labels, nav | Atkinson Hyperlegible Next (Braille Institute, 2025) | SIL OFL 1.1 |
 
 Both are self-hosted through the Astro Fonts API with `font-display: swap` and generated fallback

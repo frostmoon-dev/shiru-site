@@ -59,7 +59,7 @@
 
   /* ---- Typography ---- */
   /* Two families, from the Astro Fonts API (astro.config.mjs):
-     --font-display  American Horror Story: every heading, big sizes only (≥ 32px)
+     --font-display  Alice in Wonderland (Marco T.L.): every heading, big sizes only (≥ 32px)
      --font-body     Atkinson Hyperlegible Next: everything you read, and the small caps labels */
   --font-label: var(--font-body);
   --step-0: clamp(1.125rem, 1.08rem + 0.22vw, 1.25rem);        /* 18 → 20px body */

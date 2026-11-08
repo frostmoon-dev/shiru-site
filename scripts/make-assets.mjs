@@ -25,14 +25,14 @@ const motifs = {
   portrait: (n) => `<svg viewBox="0 0 200 200"><ellipse cx="100" cy="80" rx="38" ry="46" fill="#1a1410"/><path d="M30 200c6-60 40-80 70-80s64 20 70 80z" fill="#1a1410"/><path d="M40 52c20-40 100-40 120 0-30-10-90-10-120 0z" fill="#0c0908"/><text x="100" y="196" text-anchor="middle" font-family="Special Elite" font-size="14" fill="#c9b48c">FRAME ${n}</text></svg>`,
 };
 
-const heroFont = readFileSync('src/assets/fonts/american-horror-story/AmericanHorrorStory-Regular.otf').toString('base64');
+const heroFont = readFileSync('src/assets/fonts/alice-in-wonderland/Alice_in_Wonderland_3.ttf').toString('base64');
 const og = `<!doctype html><html><head>${fonts}<style>
-@font-face{font-family:Hero;src:url(data:font/otf;base64,${heroFont}) format('opentype')}
+@font-face{font-family:Hero;src:url(data:font/ttf;base64,${heroFont}) format('truetype')}
 html,body{margin:0;width:1200px;height:630px;overflow:hidden}
 body{background:#f3ebe2;position:relative;font-family:'Atkinson Hyperlegible Next';font-weight:700;color:#39312f}
 .light{position:absolute;right:-80px;top:-60px;width:760px;height:760px;background:radial-gradient(circle at 55% 40%,rgba(186,188,156,.55),transparent 62%)}
 .kicker{position:absolute;left:96px;top:150px;font-size:20px;letter-spacing:.16em;color:#585a40}
-.title{position:absolute;left:90px;top:190px;font-family:Hero;font-size:190px;line-height:1;color:#39312f;letter-spacing:.02em;font-feature-settings:'ss04' 1,'liga' 0,'dlig' 0}
+.title{position:absolute;left:90px;top:190px;font-family:Hero;font-size:190px;line-height:1;color:#39312f;letter-spacing:.02em}
 .ghost{-webkit-text-stroke:0;opacity:.14;transform:translate(6px,-3px);color:#6c6e51}
 .tag{position:absolute;left:96px;top:440px;font-size:24px;letter-spacing:.12em}
 .sub{position:absolute;left:96px;top:486px;font-size:18px;letter-spacing:.08em;color:#665852}
