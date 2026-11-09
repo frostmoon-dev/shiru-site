@@ -41,37 +41,16 @@ export const work = {
   cta: 'See my work',
 } as const;
 
-/**
- * Astrology (personal page). Fill in the signs, e.g. sun: 'Scorpio'. The chapter, its nav entry
- * and its cards only appear once at least the sun sign is set: nothing is shown half-empty.
- */
-export const stars = {
-  title: 'Written in the stars',
-  lead: 'Seen from the glasshouse after dark: three signs the sky chose before I had a say.',
-  sun: 'Gemini',
-  moon: 'Leo',
-  rising: 'Taurus',
-  roles: {
-    sun: { label: 'Sun', note: 'who I am' },
-    moon: { label: 'Moon', note: 'what I feel' },
-    rising: { label: 'Rising', note: 'how I arrive' },
-  },
-};
-export function hasStars() {
-  return stars.sun.trim() !== '';
-}
-
-export type ChapterId = 'rabbit-hole' | 'curiosities' | 'stars' | 'tea' | 'record' | 'stack' | 'history' | 'grimoire' | 'contact';
+export type ChapterId = 'rabbit-hole' | 'curiosities' | 'tea' | 'record' | 'stack' | 'history' | 'grimoire' | 'contact';
 export type Chapter = { id: ChapterId; numeral: string; label: string; title: string };
 
 const NUMERALS = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
 const numbered = (list: Omit<Chapter, 'numeral'>[]): Chapter[] => list.map((c, i) => ({ ...c, numeral: NUMERALS[i]! }));
 
-/** Chapters of the personal page (the astrology chapter only appears once its signs are filled in). */
+/** Chapters of the personal page. */
 export const homeChapters: Chapter[] = numbered([
   { id: 'rabbit-hole', label: 'About', title: 'Down the rabbit hole' },
   { id: 'curiosities', label: 'Hobbies', title: 'Small, living things' },
-  ...(hasStars() ? [{ id: 'stars' as const, label: 'Astrology', title: 'Written in the stars' }] : []),
   { id: 'tea', label: 'Contact', title: 'Tea at midnight' },
 ]);
 
@@ -106,8 +85,7 @@ export const ui = {
 
 export const intro = {
   skip: 'Skip intro',
-  moonLabel: 'The moon is up.',
-  loading: 'Waiting for the moon',
+  label: 'Something stirred in the roses.',
   /** Photos flash past in the intro burst. Replace with real photos (see assets README). */
   frames: [
     { src: 'intro-1', alt: '' },

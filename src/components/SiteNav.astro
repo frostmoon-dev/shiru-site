@@ -178,25 +178,6 @@ const brand = isWork ? { label: work.heading, href: workPath, aria: `${work.name
       display: none;
     }
   }
-  /* over the one dark chapter (the glasshouse at dusk) the bar turns to dusk and parchment */
-  :global(html.nav-dark) .site-nav {
-    --focus: var(--parchment);
-    background: linear-gradient(to bottom, rgb(42 42 31 / 0.94), rgb(42 42 31 / 0));
-    color: var(--parchment);
-  }
-  :global(html.nav-dark) .chapter-index__home,
-  :global(html.nav-dark) .chapter-index__link,
-  :global(html.nav-dark) .sound-toggle {
-    color: var(--parchment);
-  }
-  :global(html.nav-dark) .chapter-index__now {
-    color: #d8cdbd;
-  }
-  :global(html.nav-dark) .chapter-index__work {
-    color: var(--parchment);
-    background: rgb(42 42 31 / 0.6);
-    border-color: rgb(243 235 226 / 0.35);
-  }
   .chapter-index__now {
     font-weight: 700;
     font-size: var(--text-label);

@@ -20,10 +20,8 @@
   --card: #faf5ee;          /* card stock */
 
   --void: var(--parchment);
-  --night: #3a3a2c;         /* the dusk glasshouse (dark olive-cocoa) */
   --blood: var(--olive);
   --blood-lit: var(--olive-dk);
-  --blood-lit-night: var(--sage-pale);
   --oxblood: #4f5139;
   --leather: #4f5240;       /* the grimoire's olive cloth */
   --bone: var(--cocoa);
@@ -42,8 +40,6 @@
   --bone-hi: #2a2422;
   --bone-lo: #4a403b;
   --sepia-lo: #d4bfa9;
-  --night-hi: #4b4c39;
-  --night-lo: #2a2a1f;
   --void-hi: #ece2d6;
   --blood-hi: #7b7d5e;
   --blood-lo: #4f5139;
@@ -136,18 +132,6 @@
   --focus-halo: var(--parchment);
   --error: var(--error-on-paper);
   --success: var(--success-on-paper);
-}
-/* the one dark chapter: the glasshouse at dusk */
-[data-tone='night'] {
-  --bg: var(--night);
-  --fg: var(--parchment);
-  --fg-muted: #d8cdbd;
-  --link: var(--parchment);
-  --accent-text: var(--sage-pale);
-  --focus: var(--parchment);
-  --focus-halo: var(--night);
-  --error: var(--error-on-dark);
-  --success: var(--success-on-dark);
 }
 /* paper surfaces (the letter, cards): card stock with cocoa ink */
 [data-tone='bone'] {

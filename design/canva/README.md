@@ -8,8 +8,7 @@ Canva opens each one as an editable design.
 | `01-hero.pptx` | Personal page · Prologue (hero) |
 | `02-down-the-rabbit-hole.pptx` | Personal page · I About |
 | `03-small-living-things.pptx` | Personal page · II Hobbies (the herbarium, cards face up) |
-| `03b-written-in-the-stars.pptx` | Personal page · III Astrology (the glasshouse at dusk) |
-| `04-tea-at-midnight.pptx` / `05-tea-letter-open.pptx` | Personal page · Contact, envelope sealed and letter out |
+| `04-tea-at-midnight.pptx` / `05-tea-letter-open.pptx` | Personal page · III Contact, envelope sealed and letter out |
 | `06-footer.pptx` | Come back after dark |
 | `07-work-top.pptx` | Work page · top (name, résumé, LinkedIn, email) |
 | `08-on-the-record.pptx` | Work page · I Résumé |
@@ -21,7 +20,7 @@ Canva opens each one as an editable design.
 
 ## Each design has these layers (bottom to top)
 
-1. **Background**: one flattened picture: colours, parchment texture, graph paper, gingham, the dusk sky,
+1. **Background**: one flattened picture: colours, parchment texture, graph paper, gingham,
    borders, props drawn in code (clocks, cards).
 2. **Images**: each photo and cut-out on its own (newspaper, roses, quail, moth, paperclip, keyhole, dragonfly, the résumé preview).
 3. **Text**: every heading, paragraph, label and button label as a real, editable text box.

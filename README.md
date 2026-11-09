@@ -43,7 +43,7 @@ Import the repo in Vercel. The Astro preset is detected and the output is static
 
 ### Two sites from one codebase: personal and work-only
 
-The personal site has everything: `/` is about Teha (hobbies, astrology, contact) and `/work/` is
+The personal site has everything: `/` is about Teha (hobbies, contact) and `/work/` is
 the work page (résumé, tech stack, employment, the career grimoire, a work contact). The work page
 never links back to the personal one for a visitor who opened it directly, and on the personal domain
 it's marked `noindex`. If you have viewed the personal page in the same browser tab, the work page
@@ -51,7 +51,7 @@ adds "← Back to Teha" to the top bar and the quail menu. That link is created 
 per-tab mark, so it is never in the HTML, and the work-only site leaves it out entirely.
 
 To give recruiters **only** the work page, deploy the same repo a second time as a work-only site.
-It builds the work page at `/` and leaves out everything personal: no hero, hobbies, astrology,
+It builds the work page at `/` and leaves out everything personal: no hero, hobbies,
 socials, "Teha", personal email, or the personal social card.
 
 1. In Vercel: **Add New… → Project**, import this same repository again, and give the project a
@@ -64,9 +64,7 @@ Share that address with recruiters. Share the personal one with everyone else.
 ## Edit the words
 
 All copy is in **`src/content/site.ts`**. Images are wired in `src/content/photos.ts`.
-The intro's flash photos are still placeholders (`src/assets/placeholder/intro-*.jpg`). Astrology
-appears once `stars.sun` (and optionally `moon`, `rising`) is filled in; social accounts go in
-`tea.links`. The work page's words live in `work`, `record`, `techStack`, `history` and `grimoire`.
+Social accounts go in `tea.links`. The work page's words live in `work`, `record`, `techStack`, `history` and `grimoire`.
 
 ## Add an effect
 
@@ -83,7 +81,7 @@ src/
   effects/               plug-in effects + runtime.ts (lazy load / unmount / reduced motion)
     _webgl/stage.ts      the one shared WebGL context
   islands/               React islands (the R3F grimoire)
-  sections/              personal: Hero, RabbitHole, Curiosities (hobby cards), Stars (astrology), Tea · work: WorkHeader, Record, Stack, History, Grimoire, Tea (work variant) · Footer, Intro
+  sections/              personal: Hero, RabbitHole, Curiosities (hobby cards), Tea · work: WorkHeader, Record, Stack, History, Grimoire, Tea (work variant) · Footer, Intro
   components/            top chapter index + quail dock menu, section head, close control, icons
   pages/                 index (personal, or the work page in work mode), [...work] (/work/), grimoire/[slug], 404, robots.txt, site.webmanifest
 scripts/                 test + asset scripts (below)
@@ -105,12 +103,12 @@ metrics (`size-adjust`, `ascent-override`, …). To swap a face, change one entr
 
 | What | Where | Note |
 | --- | --- | --- |
-| Vintage cut-outs (Nov 2026): map heart, cassette, gilded mirror, star chart, roses, quail, dragonfly, dried rose, building, open book, witch hat | `src/assets/collage/` | From her Canva SVG exports, recombined with their transparency masks. Hobby cards (mirror, book, hat, map heart, building, cassette, dried rose), the hero and the herbarium (roses), the menu button (quail), the dusk glasshouse (star chart, dragonfly), the fall (mirror, book, keyhole). Cats and iced coffee still use line drawings: there was no cut-out for them. |
+| Vintage cut-outs (Nov 2026): map heart, cassette, gilded mirror, star chart, roses, quail, dragonfly, dried rose, building, open book, witch hat | `src/assets/collage/` | From her Canva SVG exports, recombined with their transparency masks. Hobby cards (mirror, book, hat, map heart, building, cassette, dried rose), the hero, the herbarium and the intro (roses), the menu button (quail), the fall (mirror, book, keyhole). Cats and iced coffee still use line drawings: there was no cut-out for them. |
 | Résumé | `public/media/Nurfatihah-Muhammad-CV.pdf` | Her Canva CV with the phone number removed (the contact line was re-set in Poppins, the CV's own font). Preview image: `src/assets/cv/cv-page.png`. ⚠️ The PDF predates her LOGISTEED role; the site text follows LinkedIn. Replace the PDF (same name) and re-render the preview when the CV is updated. |
 | Hooded girl illustration | `src/assets/portrait/shiru.jpg` | Not used since the hero follows the Canva design. ⚠️ If it comes back, confirm you have the artist's permission. |
-| Revised designs (Oct 2026): bow (now the favicon), hamster (no longer used), lace frame, torn edge, brush stroke, scroll banner, pastry (no longer used), gingham, archive frame, peek photo, pocket watch | `src/assets/design/` | Cut from her revised Canva pages. Lace, torn edge and brush were vector shapes, exported at 3×. The torn newspaper and paperclip are in `src/assets/collage/`; the moth (pinned in the lace frame) comes from her cut-out sheets. |
+| Revised designs (Oct 2026): bow (now the favicon), hamster (no longer used), lace frame, torn edge, brush stroke, scroll banner, pastry (no longer used), gingham, archive frame, peek photo, pocket watch | `src/assets/design/` | Cut from her revised Canva pages. Lace, torn edge and brush were vector shapes, exported at 3×. The torn newspaper and paperclip are in `src/assets/collage/`; the butterfly (pinned in the lace frame, and the intro) comes from her cut-out sheets. |
 | Cut-outs: eye and hand (no longer used), moth, keyhole, envelope, torn letter paper | `src/assets/collage/` | Cut from the Canva sheets she supplied. The torn-page and heart pieces with lorem-ipsum text weren't used. |
-| The moon, cat, iced coffee, card back and envelope (Nov 2026) | `src/assets/collage/moon.png`, `cat.png`, `iced-coffee.png`, `card-back.png`, `envelope.png` | From her Canva SVG export, recombined with their masks. The moon (with its own glow) rises in the intro's arched window; the card back is no longer used (the herbarium cards draw their own sage backs). |
+| The moon, cat, iced coffee, card back and envelope (Nov 2026) | `src/assets/collage/moon.png`, `cat.png`, `iced-coffee.png`, `card-back.png`, `envelope.png` | From her Canva SVG export, recombined with their masks. The moon is no longer used; the card back is no longer used (the herbarium cards draw their own sage backs). |
 | Sound effects | `public/media/sfx/` | Page turn (grimoire), playing card (hobby cards), paper crackle (the letter leaving the envelope). Trimmed, mono, 96 kbps; played only when sound is on. Free sounds she supplied; check each one's licence before launch. |
 | Background music: *The Tea Party That Never Ended* (Teha's track, made with Suno) | `public/media/theme.mp3` | Re-encoded to 112 kbps MP3 (~2.6 MB, 3:03), cover art and tags stripped, trailing silence trimmed so the loop doesn't gap. Off by default; downloaded only when a visitor switches sound on, then looped and faded in. ⚠️ Before launch, confirm your Suno plan's current terms allow public use of the track. |
 | Gingham (the contact chapter) | CSS / SVG pattern | Redrawn from her reference image as a pattern, so no image file is needed. |
@@ -140,7 +138,7 @@ The scripts use the machine's global Playwright; add `playwright` as a devDepend
 - The quail dock is the menu (it turns to face a mouse pointer and hops now and then; both stop under reduced motion). On wide screens it sits in the empty right margin; where that margin is too
   narrow (below 86rem) it tucks away while you scroll down and returns when you scroll up, reach the end,
   or tab to it.
-- The intro is an arched window drawn in ink, a dusk sky and a rising moon: no flashes. It is skippable, plays once per
+- The intro is roses opening and a butterfly fluttering in: no flashes. It is skippable, plays once per
   session, and is replaced by a calm fade under reduced motion or save-data. Deep links (`/#tea`) skip it.
 - Without JavaScript all text, links and the case files are readable; the grimoire is a plain list and the
   form posts to `mailto:`.

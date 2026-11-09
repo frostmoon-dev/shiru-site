@@ -2,10 +2,10 @@ import type { EffectFactory } from '../types';
 import { gsap, lockScroll } from '../../lib/motion';
 
 /**
- * The intro: the glasshouse at dusk. A gothic arched window is drawn line by line in olive ink,
- * the dusk fills its glass, the moon rises inside it, leaves climb from the sill, then the page
- * opens onto the hero. ≤ 3 s, skippable (button or Esc), once per session. No flashes.
- * Reduced motion: the finished drawing for a moment, then a plain fade.
+ * The intro: roses open in two corners, a butterfly flutters in along a wandering curve, settles
+ * in the middle with a few slow wing beats, then lifts away past the roses as the page opens onto
+ * the hero. ≤ 3 s, skippable (button or Esc), once per session. No flashes.
+ * Reduced motion: the butterfly resting among the roses for a moment, then a plain fade.
  */
 const SEEN = 'site:intro-seen';
 
@@ -32,6 +32,8 @@ const introEffect: EffectFactory = () => {
     node.style.opacity = '0';
     window.setTimeout(() => {
       document.documentElement.classList.remove('intro-pending');
+      // the wing beats are loose tweens (not on the timeline): stop them with the intro
+      gsap.killTweensOf(node.querySelectorAll('.intro__wings, .intro__fly'));
       node.style.opacity = '';
       node.style.transition = '';
       lockScroll(false);
@@ -63,29 +65,47 @@ const introEffect: EffectFactory = () => {
     mount(target, _opts, env) {
       const full = start(target, !env.saveData);
       if (!document.documentElement.classList.contains('intro-pending')) return;
-      const ink = [...target.querySelectorAll<SVGGeometryElement>('.intro__ink > *, .intro__leaves > *')];
-      // each line starts undrawn: its dash is as long as the line, offset by all of it
-      ink.forEach((p) => {
-        const len = p.getTotalLength();
-        gsap.set(p, { strokeDasharray: len, strokeDashoffset: len });
-      });
-      const frame = ink.filter((p) => p.closest('.intro__ink'));
-      const leaves = ink.filter((p) => p.closest('.intro__leaves'));
-      const speed = full ? 1 : 0.6; // arrived late: the same drawing, quicker
-      tl = gsap.timeline({ onComplete: finish, defaults: { ease: 'power2.inOut' } });
-      tl.to(frame, { strokeDashoffset: 0, duration: 1.1 * speed, stagger: 0.06 * speed }, 0)
-        .fromTo(target.querySelector('.intro__dusk'), { opacity: 0 }, { opacity: 1, duration: 0.9 * speed, ease: 'power1.out' }, 0.35 * speed)
-        .fromTo(target.querySelector('.intro__moon'), { y: 230, opacity: 0.4 }, { y: 0, opacity: 1, duration: 1.3 * speed, ease: 'power2.out' }, 0.5 * speed)
-        .to(leaves, { strokeDashoffset: 0, duration: 0.8 * speed, stagger: 0.07 * speed }, 1.0 * speed)
-        // a breath at the finished drawing before the page opens
-        .to({}, { duration: 0.35 * speed });
+      const fly = target.querySelector<HTMLElement>('.intro__fly');
+      const wings = target.querySelector<HTMLElement>('.intro__wings');
+      const roses = target.querySelectorAll<HTMLElement>('.intro__roses');
+      const s = full ? 1 : 0.6; // arrived late: the same flight, quicker
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+
+      tl = gsap.timeline({ onComplete: finish });
+      // the roses open in their corners
+      tl.from(roses, { scale: 0.35, rotate: '-=18', opacity: 0, filter: 'blur(6px)', duration: 0.9 * s, ease: 'back.out(1.4)', stagger: 0.18 * s }, 0);
+      // wings beat fast while it flies (scaleX folds them shut and open again, seen from above)
+      const beat = gsap.to(wings, { scaleX: 0.18, duration: 0.09, ease: 'sine.inOut', yoyo: true, repeat: -1 });
+      tl.add(() => beat.kill(), 1.25 * s);
+      // in from the lower left along a loose, wandering curve, banking into each turn
+      tl.fromTo(
+        fly,
+        { x: -0.62 * w, y: 0.42 * h, rotate: -28, scale: 0.55, opacity: 0 },
+        {
+          keyframes: [
+            { x: -0.34 * w, y: 0.08 * h, rotate: -12, scale: 0.75, opacity: 1, duration: 0.45 * s, ease: 'sine.out' },
+            { x: -0.12 * w, y: 0.16 * h, rotate: 14, scale: 0.88, duration: 0.4 * s, ease: 'sine.inOut' },
+            { x: 0, y: 0, rotate: 0, scale: 1, duration: 0.4 * s, ease: 'power2.out' },
+          ],
+        },
+        0.1 * s,
+      )
+        // settled: two slow beats, the way they do when they land
+        .fromTo(wings, { scaleX: 1 }, { scaleX: 0.35, duration: 0.2 * s, ease: 'sine.inOut', yoyo: true, repeat: 3 }, 1.25 * s)
+        // and away, up past the far roses, as the page opens
+        .add(() => {
+          gsap.to(wings, { scaleX: 0.18, duration: 0.08, ease: 'sine.inOut', yoyo: true, repeat: -1 });
+        }, 2.05 * s)
+        .to(fly, { x: 0.5 * w, y: -0.55 * h, rotate: 24, scale: 0.6, duration: 0.5 * s, ease: 'power2.in' }, 2.05 * s);
     },
     unmount() {
       tl?.kill();
+      if (el) gsap.killTweensOf(el.querySelectorAll('.intro__wings, .intro__fly'));
       if (onKey) document.removeEventListener('keydown', onKey);
     },
     reducedMotion(target) {
-      // No motion: the finished drawing for a moment, then a plain fade.
+      // No motion: the butterfly at rest among the roses for a moment, then a plain fade.
       if (!start(target, false) && !document.documentElement.classList.contains('intro-pending')) return;
       window.setTimeout(finish, 1200);
     },
