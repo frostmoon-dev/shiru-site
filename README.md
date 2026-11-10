@@ -66,6 +66,20 @@ Share that address with recruiters. Share the personal one with everyone else.
 All copy is in **`src/content/site.ts`**. Images are wired in `src/content/photos.ts`.
 Social accounts go in `tea.links`. The work page's words live in `work`, `record`, `techStack`, `history` and `grimoire`.
 
+## The quiet strangeness (personal page only)
+
+The page is soft, and slightly alive. None of this appears on the work page, and all of it stops
+under `prefers-reduced-motion`. The words are in `haunt` in `src/content/site.ts`; set a note to
+`''` and it disappears.
+
+| What | How to find it | Where it lives |
+| --- | --- | --- |
+| The pinned butterfly can leave | Press the butterfly in the lace frame (About). It pulls free, settles around the page, flees the cursor, and comes back when you press the empty pin. It stays loose for the rest of the visit. | `src/effects/wanderer`; landing spots are any element with `data-perch` |
+| Roses wilt while watched | Stay on the hero or the hobbies for a while. Look away and they are fresh again; with a mouse, bring the cursor's light near and they revive. | `src/effects/wilt` |
+| Notes in the margins | Five handwritten lines. With a mouse they can only be read inside the cursor's light; on a phone each one surfaces as you scroll past. | `src/effects/marginalia`, `src/components/MarginNote.astro` |
+| The wax seal has a pulse | The heart on the envelope beats slowly, and faster under the cursor. With sound on you can hear it. (Also on the work page's envelope: it reads as "press me".) | `src/sections/Tea.astro`, `sfx('heart')` |
+| The page notices you leaving | Switch to another tab: this one's title changes. Come back and the light dips once. | `src/components/HomePage.astro`, `src/lib/gutter.ts` |
+
 ## Add an effect
 
 See [`EFFECTS.md`](EFFECTS.md). In short: create `src/effects/<name>/index.ts` exporting a factory
@@ -95,8 +109,9 @@ Two families, nothing else:
 | --- | --- | --- |
 | Every heading (≥ 32px) | Alice in Wonderland (Marco T.L.), supplied by Teha | ⚠️ **Free for non-commercial use only** (its read-me: no commercial use, don't rename it, don't distribute edited versions, keep the read-me with it). A personal portfolio should be fine, but if the site is ever used to sell something, buy a licence or swap the face. Served unmodified; the read-me ships beside it and at `/fonts/Shhhst!.txt`. |
 | Everything else: reading text, labels, nav | Atkinson Hyperlegible Next (Braille Institute, 2025) | SIL OFL 1.1 |
+| The handwriting in the margins (personal page only) | La Belle Aurore (Kimberly Geswein) | SIL OFL 1.1. Loaded only on the personal page, and only fetched when a note is on it. |
 
-Both are self-hosted through the Astro Fonts API with `font-display: swap` and generated fallback
+All three are self-hosted through the Astro Fonts API with `font-display: swap` and generated fallback
 metrics (`size-adjust`, `ascent-override`, …). To swap a face, change one entry in `astro.config.mjs`.
 
 ## Images and media supplied by Teha
@@ -131,7 +146,10 @@ The scripts use the machine's global Playwright; add `playwright` as a devDepend
 ## Accessibility and motion notes
 
 - Everything works by keyboard; overlays close with Esc, their close button, and the browser Back button.
-- `prefers-reduced-motion`: no flicker, jitter, ghosts, intro flashes or static; the envelope opens instantly.
+- `prefers-reduced-motion`: no flicker, jitter, ghosts, intro flashes or static; the envelope opens instantly. The butterfly stays
+  pinned (no button is offered), the roses never wilt, the seal is still and the light never dips.
+- The margin notes and the loose butterfly are decoration: hidden from screen readers and never in the way of a click.
+  The one control (unpin / call back the butterfly) is a real, labelled button, and the frame's caption announces the change.
 - Sound is off by default and never autoplays. The speaker button (top right, also on the hero) starts the
   background music and small effects; music keeps playing across pages, pauses in a hidden tab, and fades out
   when switched off.

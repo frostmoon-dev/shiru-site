@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
-import { hero, work } from '../content/site';
+import { haunt, hero, work } from '../content/site';
+import MarginNote from '../components/MarginNote.astro';
 import { collage, cutouts } from '../content/photos';
 ---
 
@@ -20,15 +21,16 @@ import { collage, cutouts } from '../content/photos';
       fetchpriority="high"
       decoding="async"
     />
-    <!-- a spray of roses rising in from the bottom corner (the old hand's place and motion) -->
-    <span class="hero__hand-wrap" data-enter>
+    <!-- a spray of roses rising in from the bottom corner. They lose their colour while you watch (effects/wilt). -->
+    <span class="hero__hand-wrap" data-enter data-perch="0.6 0.34" data-effect="wilt">
       <Image class="hero__hand" src={cutouts.roses} alt="" widths={[320, 640]} sizes="clamp(160px, 22vw, 340px)" loading="eager" decoding="async" />
     </span>
   </div>
+  <MarginNote text={haunt.notes.hero} tilt={-4} class="hero__note" />
 
   <div class="hero__content container">
     <p class="hero__kicker kicker" data-enter>{hero.kicker}</p>
-    <h1 id="hero-title" class="hero__title display-1">{hero.name}</h1>
+    <h1 id="hero-title" class="hero__title display-1" data-perch="end">{hero.name}</h1>
     <p
       class="hero__lines"
       data-effect="typewriter"
@@ -97,6 +99,21 @@ import { collage, cutouts } from '../content/photos';
     55% {
       rotate: 2deg;
       translate: 4px -6px;
+    }
+  }
+
+  /* a line in the margin beside the roses (wide screens only: a phone has no margin to spare) */
+  .hero :global(.hero__note) {
+    position: absolute;
+    left: clamp(180px, 24vw, 370px);
+    bottom: 6.5%;
+    z-index: var(--z-content);
+    margin: 0;
+    white-space: nowrap;
+  }
+  @media (max-width: 899px) {
+    .hero :global(.hero__note) {
+      display: none;
     }
   }
 

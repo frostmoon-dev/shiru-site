@@ -83,6 +83,31 @@ export const ui = {
   noWebgl: 'This book won’t open here. The pages still read fine.',
 };
 
+/**
+ * The quiet strangeness of the personal page: soft things that are slightly alive.
+ * Every line here is yours to rewrite; set a note to '' and it disappears.
+ */
+export const haunt = {
+  /**
+   * Handwriting in the margins. With a mouse it can only be read where the cursor's light falls;
+   * on a phone each note surfaces for a moment as you scroll past, then sinks back into the paper.
+   */
+  notes: {
+    hero: 'they were fine before you looked.',
+    about: 'don’t tap the glass.',
+    hobbies: 'one of these is still warm.',
+    tea: 'the third cup isn’t mine.',
+    footer: 'you’ve been here before.',
+  },
+  /** The pinned butterfly in the lace frame: press it and it pulls free and wanders the page. */
+  release: 'Unpin the butterfly',
+  recall: 'Call the butterfly back to its pin',
+  /** The frame's caption once it has gone. */
+  freed: 'It was only resting.',
+  /** The browser tab's title while the visitor is looking at another tab. */
+  awayTitle: 'The tea is going cold…',
+};
+
 export const intro = {
   skip: 'Skip intro',
   label: 'Something stirred in the roses.',
@@ -113,7 +138,7 @@ export const about = {
   /** Lead under the title. */
   card: 'I build and fix systems to keep everything in balance. Some things, however, refuse to be fixed. Perhaps that is the difference between the sentient and the lifeless.',
   sweet: 'Pinned at midnight. It still moves, sometimes.',
-  sweetAlt: 'A pale moth, pinned like a specimen.',
+  sweetAlt: 'A pale butterfly, pinned like a specimen.',
   body: [
     'By day, I’m an ERP developer. I spend my time shaping business logic, extending existing systems, and bringing new functionality into existence. I have a particular fondness for starting with a requirement, following its logic, and turning an idea into something tangible. There’s a certain pleasure in creating order where there was once only possibility.',
     'By night, I tend to wander a little further into my own imagination. I have a habit of collecting interests, entertaining peculiar ideas, and turning passing thoughts into projects. Some become websites, some become experiments, and others remain little fragments of something I haven’t quite figured out yet. I enjoy the process of bringing an idea into existence, even if I occasionally leave a trail of unfinished things behind me.',

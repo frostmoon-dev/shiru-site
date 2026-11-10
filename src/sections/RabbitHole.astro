@@ -1,11 +1,15 @@
 ---
 import { Image, getImage } from 'astro:assets';
-import { about, chapters, ui } from '../content/site';
+import { about, chapters, haunt, ui } from '../content/site';
+import MarginNote from '../components/MarginNote.astro';
 import { collage, cutouts, design } from '../content/photos';
 import SectionHead from '../components/SectionHead.astro';
 
 const ch = chapters.find((c) => c.id === 'rabbit-hole')!;
 const lace = await getImage({ src: design.lace, width: 960, format: 'webp', quality: 80 });
+// the loose butterfly (effects/wanderer): the same cut-out, small
+const loose = await getImage({ src: collage.moth, width: 160, format: 'webp', quality: 80 });
+const wanderer = { src: loose.src, release: haunt.release, recall: haunt.recall, pinned: about.sweet, freed: haunt.freed };
 ---
 
 <section id={ch.id} class="section about" data-tone="void" aria-labelledby="about-title" data-effect="fall-parallax">
@@ -21,13 +25,17 @@ const lace = await getImage({ src: design.lace, width: 960, format: 'webp', qual
     <SectionHead id="about-title" kicker={ui.caseNo(ch.numeral, ch.label)} title={about.title} lead={about.card} />
 
     <div class="about__grid">
-      <figure class="lace" style={`--lace:url(${lace.src})`} data-effect="reveal" data-effect-options='{"type":"settle"}'>
-        <span class="lace__specimen">
-          <Image class="lace__moth" src={collage.moth} alt={about.sweetAlt} widths={[240, 480]} sizes="14rem" loading="lazy" decoding="async" />
-          <span class="lace__pin" aria-hidden="true"></span>
-        </span>
-        <figcaption class="lace__caption">{about.sweet}</figcaption>
-      </figure>
+      <div class="about__specimen">
+        <figure class="lace" style={`--lace:url(${lace.src})`} data-effect="reveal" data-effect-options='{"type":"settle"}' data-perch="0.85 0.1">
+          {/* press the butterfly and it pulls free of its pin (effects/wanderer adds the button) */}
+          <span class="lace__specimen" data-effect="wanderer" data-effect-eager data-effect-options={JSON.stringify(wanderer)}>
+            <Image class="lace__moth" src={collage.moth} alt={about.sweetAlt} widths={[240, 480]} sizes="14rem" loading="lazy" decoding="async" />
+            <span class="lace__pin" aria-hidden="true"></span>
+          </span>
+          <figcaption class="lace__caption">{about.sweet}</figcaption>
+        </figure>
+        <MarginNote text={haunt.notes.about} tilt={-5} align="right" />
+      </div>
 
       <div class="about__text">
         <div class="body-copy" data-effect="reveal" data-effect-options='{"type":"rise","targets":"p","stagger":0.15}'>
@@ -57,7 +65,7 @@ const lace = await getImage({ src: design.lace, width: 960, format: 'webp', qual
             ))
           }
         </dl>
-        <p class="about__warning" data-effect="flicker-jitter" data-effect-options='{"every":[5,11],"jitter":false}'>{about.warning}</p>
+        <p class="about__warning" data-effect="flicker-jitter" data-effect-options='{"every":[5,11],"jitter":false}' data-perch="end">{about.warning}</p>
       </div>
     </div>
   </div>
@@ -137,11 +145,14 @@ const lace = await getImage({ src: design.lace, width: 960, format: 'webp', qual
   }
 
   /* the lace frame: a gothic doily on black, holding one pinned specimen */
+  .about__specimen {
+    justify-self: start;
+    width: min(100%, 26rem);
+  }
   .lace {
     position: relative;
     isolation: isolate;
-    justify-self: start;
-    width: min(100%, 26rem);
+    width: 100%;
     aspect-ratio: 960 / 1378;
     display: grid;
     grid-template-columns: minmax(0, 1fr);
@@ -199,6 +210,57 @@ const lace = await getImage({ src: design.lace, width: 960, format: 'webp', qual
     background: radial-gradient(circle at 35% 35%, #e3cd8f, #7d6630 70%);
     box-shadow: 0 2px 3px rgb(0 0 0 / 0.6);
   }
+  /* the button that unpins it (added by effects/wanderer): the whole specimen is the target */
+  .lace :global(.lace__release) {
+    --focus: var(--parchment);
+    --focus-halo: transparent;
+    position: absolute;
+    inset: -10% -8%;
+    z-index: 2;
+    padding: 0;
+    border: 0;
+    border-radius: var(--radius-1);
+    background: transparent;
+    cursor: pointer;
+  }
+  /* under the cursor it struggles: the same twitch, much more often, and the pin gives a little */
+  .lace__specimen:has(:global(.lace__release:hover)) .lace__moth,
+  .lace__specimen:has(:global(.lace__release:focus-visible)) .lace__moth {
+    animation-duration: 1.3s;
+  }
+  .lace__specimen:has(:global(.lace__release:hover)) .lace__pin {
+    animation: pin-give 1.3s steps(1, end) infinite;
+  }
+  @keyframes pin-give {
+    0%,
+    82% {
+      rotate: 8deg;
+    }
+    83% {
+      rotate: 11deg;
+    }
+    86.5%,
+    100% {
+      rotate: 8deg;
+    }
+  }
+  /* gone: only the pin, and the pale shape the dust left around where it was */
+  .lace__specimen:global(.is-empty) .lace__moth {
+    visibility: hidden;
+    animation: none;
+  }
+  .lace__specimen::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgb(243 235 226 / 0.09);
+    mask: var(--moth) center / contain no-repeat;
+    opacity: 0;
+    transition: opacity 1.2s var(--ease-out) 0.3s;
+  }
+  .lace__specimen:global(.is-empty)::before {
+    opacity: 1;
+  }
   @keyframes moth-twitch {
     0%,
     82% {
@@ -251,7 +313,7 @@ const lace = await getImage({ src: design.lace, width: 960, format: 'webp', qual
     }
   }
   @media (max-width: 959px) {
-    .lace {
+    .about__specimen {
       justify-self: center;
     }
   }

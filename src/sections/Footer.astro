@@ -1,5 +1,6 @@
 ---
-import { footer, site, work } from '../content/site';
+import { footer, haunt, site, work } from '../content/site';
+import MarginNote from '../components/MarginNote.astro';
 import { isWorkSite } from '../lib/mode';
 
 interface Props {
@@ -17,6 +18,7 @@ const year = new Date().getFullYear();
     <p class="kicker">Case closed · for now</p>
     <p class="footer__line display-face" data-effect="typewriter" data-effect-options={JSON.stringify({ typo: footer.typo })}>{footer.line}</p>
     <p class="footer__mail"><a href={`mailto:${email}`}>{email}</a></p>
+    {!asWork && <MarginNote text={haunt.notes.footer} tilt={-3} />}
 
     <div class="footer__base">
       <p>{footer.privacy}</p>

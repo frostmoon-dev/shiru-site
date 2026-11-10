@@ -17,7 +17,7 @@ const Tag = level;
 
 <header class:list={['section-head', cls]}>
   <p class="kicker">{kicker}</p>
-  <Tag id={id} class="display-2" data-effect="ghost-title">{title}</Tag>
+  <Tag id={id} class="display-2" data-effect="ghost-title" data-perch="end">{title}</Tag>
   {lead && <p class="lead" data-effect="reveal">{lead}</p>}
   <slot />
 </header>

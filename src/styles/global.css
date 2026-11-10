@@ -384,6 +384,131 @@ a:active {
   }
 }
 
+/* ---------- Handwriting in the margins (effects/marginalia) ---------- */
+.margin-note {
+  --mx: -9999px;
+  --my: -9999px;
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  margin-top: var(--space-3);
+  font-family: var(--font-hand), cursive;
+  font-size: clamp(1.3rem, 1.1rem + 0.7vw, 1.75rem);
+  line-height: 1.25;
+  color: #4a4c35; /* a shade under olive-dk: pencil pressed a little harder */
+  rotate: var(--tilt, -3deg);
+  transform-origin: 0 50%;
+  pointer-events: none;
+  user-select: none;
+  /* nothing to see until the effect decides how it may be read */
+  opacity: 0;
+}
+.margin-note--right {
+  margin-left: auto;
+  transform-origin: 100% 50%;
+}
+/* the text is drawn here, so it is decoration to assistive tech and to contrast checkers alike */
+.margin-note::before {
+  content: attr(data-note);
+}
+/* mouse: legible only inside the cursor's light */
+.margin-note.is-lightsensitive {
+  opacity: 1;
+  mask-image: radial-gradient(circle 13rem at var(--mx) var(--my), #000 0, #000 32%, rgb(0 0 0 / 0.55) 62%, transparent 100%);
+}
+/* touch: it surfaces as you pass, then sinks back */
+.margin-note.is-surfacing,
+.margin-note.is-faint {
+  opacity: 0.62;
+}
+.margin-note:not(.is-lightsensitive) {
+  transition: opacity 2.6s var(--ease-out);
+}
+.margin-note.is-surfacing {
+  transition-duration: 1.4s;
+}
+.margin-note.is-faint {
+  opacity: 0.4;
+}
+
+/* ---------- Flowers that wilt while watched (effects/wilt) ---------- */
+/* both states list the same functions in the same order, so the browser can blend between them */
+.wilts {
+  filter: saturate(1) sepia(0) brightness(1) contrast(1);
+  /* revived by the cursor's light: back in a breath */
+  transition: filter 1.5s var(--ease-out);
+}
+.wilts.is-wilting {
+  filter: saturate(0.22) sepia(0.6) brightness(0.8) contrast(0.92);
+  /* dying takes most of a minute */
+  transition: filter 46s linear;
+}
+.wilts.is-fresh {
+  transition: none;
+}
+
+/* ---------- The loose butterfly (effects/wanderer) ---------- */
+.wanderer {
+  --w: 60px;
+  --lift: 0;
+  position: absolute;
+  left: 0;
+  top: 0;
+  /* over the page, under the top bar, the menu and every overlay */
+  z-index: 30;
+  width: var(--w);
+  pointer-events: none;
+  visibility: hidden;
+  will-change: transform;
+  /* the higher it flies, the further and softer its shadow falls */
+  filter: drop-shadow(0 calc(3px + var(--lift) * 16px) calc(3px + var(--lift) * 9px) rgb(57 49 47 / calc(0.3 - var(--lift) * 0.12)));
+}
+.wanderer.is-out {
+  visibility: visible;
+}
+.wanderer__wings {
+  display: block;
+  width: 100%;
+  height: auto;
+  will-change: transform;
+}
+@media print {
+  .wanderer {
+    display: none;
+  }
+}
+
+/* ---------- The light gutters (lib/gutter) ---------- */
+.atmosphere::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--cocoa);
+  opacity: 0;
+}
+.atmosphere.is-guttering::after {
+  animation: gutter 640ms linear;
+}
+/* two shallow dips, like a bulb when something else in the house draws power. It only darkens. */
+@keyframes gutter {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.1;
+  }
+  24% {
+    opacity: 0.02;
+  }
+  42% {
+    opacity: 0.075;
+  }
+  70% {
+    opacity: 0.015;
+  }
+}
+
 /* ---------- Typewriter caret (effects/typewriter) ---------- */
 .typewriter__caret {
   color: var(--blood-lit);

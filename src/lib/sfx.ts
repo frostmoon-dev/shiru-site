@@ -1,13 +1,13 @@
 /**
  * Optional sound, OFF by default, never autoplays. Switching it on starts the background music
  * ("The Tea Party That Never Ended", public/media/theme.mp3, looped, faded in) and the small
- * synthesised effects (page turns, the seal, the book's creak). The music file is only downloaded the first time sound is switched on.
+ * synthesised effects (page turns, the seal, the book's creak, the heartbeat in the wax). The music file is only downloaded the first time sound is switched on.
  * It keeps playing across page navigations, pauses while the tab is hidden, and fades out when
  * switched off (resuming from the same point next time).
  *
  * Components call `sfx('page')`; nothing plays unless the visitor switched sound on.
  */
-export type Sfx = 'page' | 'creak' | 'seal' | 'hat' | 'card' | 'paper';
+export type Sfx = 'page' | 'creak' | 'seal' | 'hat' | 'card' | 'paper' | 'heart';
 
 /** Recorded effects (public/media/sfx), fetched the first time sound is switched on. The rest are synthesised. */
 const RECORDED: Partial<Record<Sfx, string>> = {
@@ -123,6 +123,26 @@ export function sfx(name: Sfx) {
   }
   if (name === 'card' || name === 'paper') return; // recorded only
   const t = c.currentTime;
+  if (name === 'heart') {
+    // lub-dub: two soft, low thumps, timed to the wax seal's beat (felt more than heard)
+    [0, 0.19].forEach((at, i) => {
+      const o = c.createOscillator();
+      o.type = 'triangle';
+      o.frequency.setValueAtTime(i ? 78 : 92, t + at);
+      o.frequency.exponentialRampToValueAtTime(44, t + at + 0.16);
+      const lp = c.createBiquadFilter();
+      lp.type = 'lowpass';
+      lp.frequency.value = 320;
+      const og = c.createGain();
+      og.gain.setValueAtTime(0.0001, t + at);
+      og.gain.exponentialRampToValueAtTime(i ? 0.45 : 0.65, t + at + 0.015);
+      og.gain.exponentialRampToValueAtTime(0.0001, t + at + 0.21);
+      o.connect(lp).connect(og).connect(master!);
+      o.start(t + at);
+      o.stop(t + at + 0.23);
+    });
+    return;
+  }
   const g = c.createGain();
   g.connect(master);
   if (name === 'page' || name === 'seal') {

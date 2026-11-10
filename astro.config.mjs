@@ -46,6 +46,17 @@ export default defineConfig({
       fallbacks: ['Arial', 'sans-serif'],
     },
     {
+      // The handwriting in the margins (personal page only): La Belle Aurore by Kimberly Geswein,
+      // SIL OFL 1.1. Only downloaded when a note is actually on the page.
+      provider: fontProviders.google(),
+      name: 'La Belle Aurore',
+      cssVariable: '--font-hand',
+      weights: [400],
+      styles: ['normal'],
+      subsets: ['latin'],
+      fallbacks: ['cursive'],
+    },
+    {
       // Display face for every heading: "Alice in Wonderland" by Marco T.L., supplied by Teha.
       // Free for NON-COMMERCIAL use only; served unmodified, under its own name, with its read-me
       // (src/assets/fonts/alice-in-wonderland/Shhhst!.txt, also published at /fonts/Shhhst!.txt).

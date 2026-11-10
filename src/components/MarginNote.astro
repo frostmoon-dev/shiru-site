@@ -1,0 +1,28 @@
+---
+/**
+ * A handwritten note in the margin: decoration, not content. It is drawn by CSS from `data-note`
+ * (so it is never read out or counted as text) and only shows where the cursor's light falls.
+ * See effects/marginalia.
+ */
+interface Props {
+  text: string;
+  /** Degrees of tilt; handwriting never sits level. */
+  tilt?: number;
+  /** "left" | "right": which edge it hugs when it sits in the flow of a section. */
+  align?: 'left' | 'right';
+  class?: string;
+}
+const { text, tilt = -3, align = 'left', class: className } = Astro.props;
+---
+
+{
+  text.trim() && (
+    <span
+      class:list={['margin-note', `margin-note--${align}`, className]}
+      aria-hidden="true"
+      data-effect="marginalia"
+      data-note={text}
+      style={`--tilt:${tilt}deg`}
+    />
+  )
+}

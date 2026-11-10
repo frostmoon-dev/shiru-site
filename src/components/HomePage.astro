@@ -7,6 +7,7 @@ import RabbitHole from '../sections/RabbitHole.astro';
 import Curiosities from '../sections/Curiosities.astro';
 import Tea from '../sections/Tea.astro';
 import Footer from '../sections/Footer.astro';
+import { haunt } from '../content/site';
 ---
 
 <Base page="home">
@@ -16,4 +17,27 @@ import Footer from '../sections/Footer.astro';
   <Curiosities />
   <Tea />
   <Footer slot="footer" page="home" />
+  {/* read by the script below: what the browser tab says while you are away */}
+  <span hidden data-away-title={haunt.awayTitle}></span>
 </Base>
+
+<script>
+  import { gutter } from '../lib/gutter';
+
+  // The page notices when you leave. While this tab is in the background its title changes;
+  // when you come back the title is put right and the light dips once, as if something had
+  // been waiting. Only on the personal page: the marker element exists nowhere else.
+  let real = '';
+  document.addEventListener('visibilitychange', () => {
+    const away = document.querySelector<HTMLElement>('[data-away-title]')?.dataset.awayTitle;
+    if (document.hidden) {
+      if (!away) return;
+      real = document.title;
+      document.title = away;
+    } else if (real) {
+      document.title = real;
+      real = '';
+      gutter();
+    }
+  });
+</script>

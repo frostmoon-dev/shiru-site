@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
-import { chapters, curiosities, ui, type Curiosity } from '../content/site';
+import { chapters, curiosities, haunt, ui, type Curiosity } from '../content/site';
+import MarginNote from '../components/MarginNote.astro';
 import { cutouts } from '../content/photos';
 import SectionHead from '../components/SectionHead.astro';
 
@@ -26,16 +27,21 @@ const GLYPHS: Record<string, string> = {
 -->
 <section id={ch.id} class="section deck herbarium" data-tone="void" aria-labelledby="curiosities-title">
   <div class="herbarium__scene" aria-hidden="true">
-    <Image class="herbarium__roses herbarium__roses--left" src={cutouts.roses} alt="" widths={[320, 640]} sizes="22vw" loading="lazy" decoding="async" />
-    <Image class="herbarium__roses herbarium__roses--right" src={cutouts.roses} alt="" widths={[320, 640]} sizes="22vw" loading="lazy" decoding="async" />
+    {/* each spray dries out while it is watched and comes back under the cursor's light (effects/wilt) */}
+    <span class="herbarium__roses herbarium__roses--left" data-effect="wilt" data-effect-options='{"grace":6000}' data-perch="0.45 0.62">
+      <Image src={cutouts.roses} alt="" widths={[320, 640]} sizes="22vw" loading="lazy" decoding="async" />
+    </span>
+    <span class="herbarium__roses herbarium__roses--right" data-effect="wilt" data-effect-options='{"grace":11000}'>
+      <Image src={cutouts.roses} alt="" widths={[320, 640]} sizes="22vw" loading="lazy" decoding="async" />
+    </span>
   </div>
   <div class="container">
     <SectionHead id="curiosities-title" kicker={ui.caseNo(ch.numeral, ch.label)} title={curiosities.title} lead={curiosities.lead} />
 
     <ul class="deck__cards" data-effect="deal">
       {
-        (curiosities.cards as Curiosity[]).map((c) => (
-          <li class="tarot" data-tarot>
+        (curiosities.cards as Curiosity[]).map((c, i) => (
+          <li class="tarot" data-tarot data-perch={i % 3 === 1 ? '0.86 0.02' : undefined} data-perch-min="720">
             <div class="tarot__inner">
               {/* the face: numeral, a drawing, the name. The whole face is the button that turns it. */}
               <div class="tarot__face tarot__front" data-front>
@@ -97,6 +103,7 @@ const GLYPHS: Record<string, string> = {
         ))
       }
     </ul>
+    <MarginNote text={haunt.notes.hobbies} tilt={-3} align="right" class="herbarium__note" />
   </div>
 </section>
 
@@ -121,20 +128,24 @@ const GLYPHS: Record<string, string> = {
     z-index: 0;
     pointer-events: none;
   }
-  .herbarium :global(.herbarium__roses) {
+  .herbarium__roses {
     position: absolute;
     top: 3%;
     width: clamp(150px, 20vw, 320px);
-    height: auto;
     opacity: 0.9;
-    filter: drop-shadow(0 8px 12px rgb(57 49 47 / 0.15));
     animation: roses-sway 9s ease-in-out infinite alternate;
   }
-  .herbarium :global(.herbarium__roses--left) {
+  .herbarium__roses :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(0 8px 12px rgb(57 49 47 / 0.15));
+  }
+  .herbarium__roses--left {
     left: -3%;
     rotate: -8deg;
   }
-  .herbarium :global(.herbarium__roses--right) {
+  .herbarium__roses--right {
     right: -3%;
     scale: -1 1;
     rotate: 8deg;
@@ -222,11 +233,12 @@ const GLYPHS: Record<string, string> = {
     flex: 1;
     min-height: 0;
   }
+  /* fills the mount and is fitted inside it, so a tall specimen (the dried rose) can't spill out of its card */
   .tarot__front :global(.tarot__art) {
-    width: auto;
-    max-width: 100%;
-    height: auto;
-    max-height: 100%;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
     object-fit: contain;
     filter: drop-shadow(0 4px 6px rgb(57 49 47 / 0.22));
   }
@@ -423,7 +435,7 @@ const GLYPHS: Record<string, string> = {
       flex: 0 0 72vw;
       scroll-snap-align: center;
     }
-    .herbarium :global(.herbarium__roses) {
+    .herbarium__roses {
       width: 34vw;
       top: 1%;
     }
@@ -432,7 +444,7 @@ const GLYPHS: Record<string, string> = {
     .tarot__inner {
       transition: none;
     }
-    .herbarium :global(.herbarium__roses) {
+    .herbarium__roses {
       animation: none;
     }
   }
